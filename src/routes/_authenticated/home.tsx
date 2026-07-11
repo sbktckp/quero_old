@@ -120,33 +120,33 @@ function HomeDashboard() {
         {/* Mock Tests row */}
         <section>
           <div className="flex items-center justify-between mb-3">
-            <h2 className="font-semibold">Mock Tests</h2>
-            <Link to="/coming-soon/$feature" params={{ feature: "rankings" }} className="text-xs text-primary font-semibold flex items-center">
-              View Rank <ChevronRight size={14} />
+            <h2 className="font-semibold">Tests</h2>
+            <Link to="/tests/new" search={{ type: "custom" }} className="text-xs text-primary font-semibold flex items-center">
+              Create <ChevronRight size={14} />
             </Link>
           </div>
           <div className="flex gap-2 overflow-x-auto pb-1">
-            {[
-              { label: "Full Test", to: "full" },
-              { label: "Subject Test", to: "subject" },
-              { label: "Chapter Test", to: "chapter" },
-              { label: "Topic Test", to: "topic" },
-            ].map((t, i) => (
-              <Link
-                key={t.to}
-                to={t.to === "subject" ? "/subject/$slug" : "/coming-soon/$feature"}
-                params={t.to === "subject" ? { slug: "physics" } : { feature: `${t.to}-test` }}
-                className={`shrink-0 rounded-full px-4 py-2 text-xs font-semibold ${i === 0 ? "gradient-primary text-primary-foreground" : "bg-card border border-border"}`}
-              >
-                {t.label}
-              </Link>
-            ))}
+            <Link to="/subject/$slug" params={{ slug: "physics" }}
+              className="shrink-0 rounded-full px-4 py-2 text-xs font-semibold gradient-primary text-primary-foreground">
+              Subject Test
+            </Link>
+            <Link to="/tests/new" search={{ type: "chapter" }} className="shrink-0 rounded-full px-4 py-2 text-xs font-semibold bg-card border border-border">Chapter Test</Link>
+            <Link to="/tests/new" search={{ type: "topic" }} className="shrink-0 rounded-full px-4 py-2 text-xs font-semibold bg-card border border-border">Topic Test</Link>
+            <Link to="/tests/new" search={{ type: "custom" }} className="shrink-0 rounded-full px-4 py-2 text-xs font-semibold bg-card border border-border">Custom Test</Link>
           </div>
         </section>
 
         {/* Feature list rows */}
         <section className="space-y-2">
-          <FeatureRow icon={BookOpen} label="PYQ Library" to="pyq-library" />
+          <Link to="/pyq" className="flex items-center justify-between rounded-2xl bg-card border border-border p-4 shadow-card hover:border-primary/30 transition">
+            <div className="flex items-center gap-3">
+              <div className="h-9 w-9 rounded-xl bg-primary-soft flex items-center justify-center">
+                <BookOpen size={18} className="text-primary" />
+              </div>
+              <span className="font-medium text-sm">PYQ Library</span>
+            </div>
+            <ChevronRight size={18} className="text-muted-foreground" />
+          </Link>
           <FeatureRow icon={FileText} label="Flashcards" to="flashcards" />
           <FeatureRow icon={Calendar} label="Revision Planner" to="revision-planner" />
           <FeatureRow icon={HelpCircle} label="Doubt Solver" to="doubt-solver" />
