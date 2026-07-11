@@ -170,6 +170,9 @@ export type Database = {
           difficulty: string | null
           explanation: string | null
           id: string
+          is_pyq: boolean
+          pyq_exam: string | null
+          pyq_year: number | null
           question_text: string
           subject_id: string
           topic_id: string | null
@@ -182,6 +185,9 @@ export type Database = {
           difficulty?: string | null
           explanation?: string | null
           id?: string
+          is_pyq?: boolean
+          pyq_exam?: string | null
+          pyq_year?: number | null
           question_text: string
           subject_id: string
           topic_id?: string | null
@@ -194,6 +200,9 @@ export type Database = {
           difficulty?: string | null
           explanation?: string | null
           id?: string
+          is_pyq?: boolean
+          pyq_exam?: string | null
+          pyq_year?: number | null
           question_text?: string
           subject_id?: string
           topic_id?: string | null
@@ -263,6 +272,7 @@ export type Database = {
           created_at: string
           duration_seconds: number
           id: string
+          mode: Database["public"]["Enums"]["test_mode"]
           score: number
           started_at: string
           subject_id: string | null
@@ -278,6 +288,7 @@ export type Database = {
           created_at?: string
           duration_seconds?: number
           id?: string
+          mode?: Database["public"]["Enums"]["test_mode"]
           score?: number
           started_at?: string
           subject_id?: string | null
@@ -293,6 +304,7 @@ export type Database = {
           created_at?: string
           duration_seconds?: number
           id?: string
+          mode?: Database["public"]["Enums"]["test_mode"]
           score?: number
           started_at?: string
           subject_id?: string | null
@@ -360,8 +372,10 @@ export type Database = {
         Row: {
           chapter_id: string | null
           created_at: string
+          created_by: string | null
           duration_seconds: number
           id: string
+          mode: Database["public"]["Enums"]["test_mode"]
           question_count: number
           subject_id: string | null
           test_type: Database["public"]["Enums"]["test_type"]
@@ -372,8 +386,10 @@ export type Database = {
         Insert: {
           chapter_id?: string | null
           created_at?: string
+          created_by?: string | null
           duration_seconds?: number
           id?: string
+          mode?: Database["public"]["Enums"]["test_mode"]
           question_count?: number
           subject_id?: string | null
           test_type: Database["public"]["Enums"]["test_type"]
@@ -384,8 +400,10 @@ export type Database = {
         Update: {
           chapter_id?: string | null
           created_at?: string
+          created_by?: string | null
           duration_seconds?: number
           id?: string
+          mode?: Database["public"]["Enums"]["test_mode"]
           question_count?: number
           subject_id?: string | null
           test_type?: Database["public"]["Enums"]["test_type"]
@@ -519,7 +537,15 @@ export type Database = {
     Enums: {
       app_role: "student" | "admin"
       study_goal: "neet_ug" | "neet_pg"
-      test_type: "full" | "subject" | "chapter" | "topic" | "daily_pyq"
+      test_mode: "timed" | "practice"
+      test_type:
+        | "full"
+        | "subject"
+        | "chapter"
+        | "topic"
+        | "daily_pyq"
+        | "custom"
+        | "pyq"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -649,7 +675,16 @@ export const Constants = {
     Enums: {
       app_role: ["student", "admin"],
       study_goal: ["neet_ug", "neet_pg"],
-      test_type: ["full", "subject", "chapter", "topic", "daily_pyq"],
+      test_mode: ["timed", "practice"],
+      test_type: [
+        "full",
+        "subject",
+        "chapter",
+        "topic",
+        "daily_pyq",
+        "custom",
+        "pyq",
+      ],
     },
   },
 } as const
