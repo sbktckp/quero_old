@@ -67,7 +67,7 @@ function HomeDashboard() {
 
         {/* Daily PYQ Challenge */}
         <motion.div initial={{ y: 8, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
-          <Link to="/coming-soon/$feature" params={{ feature: "daily-pyq" }} className="block rounded-3xl gradient-primary p-5 shadow-elevated text-primary-foreground">
+          <Link to="/pyq" className="block rounded-3xl gradient-primary p-5 shadow-elevated text-primary-foreground">
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-xs uppercase tracking-wider opacity-80">Daily Challenge</div>
