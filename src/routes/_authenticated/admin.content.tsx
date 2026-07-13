@@ -276,7 +276,7 @@ function QuestionsTab() {
     queryKey: ["adm-questions", subjectId, search],
     queryFn: async () => {
       let q = supabase.from("questions").select("id, subject_id, chapter_id, topic_id, question_text, difficulty, is_pyq, pyq_year, pyq_exam").order("created_at", { ascending: false }).limit(100);
-      if (subjectId) q = q.eq("subject_id", subjectId);
+      if (subjectId && subjectId !== "__all__") q = q.eq("subject_id", subjectId);
       if (search.trim()) q = q.ilike("question_text", `%${search.trim()}%`);
       const { data, error } = await q;
       if (error) throw error;
