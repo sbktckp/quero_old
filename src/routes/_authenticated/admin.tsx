@@ -36,8 +36,8 @@ function AdminLayout() {
 
   const tabs = [
     { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
-    { to: "/admin/users", label: "Users", icon: Users },
-    { to: "/admin/content", label: "Content", icon: BookOpen },
+    { to: "/admin/users", label: "Users", icon: Users, exact: false },
+    { to: "/admin/content", label: "Content", icon: BookOpen, exact: false },
   ] as const;
 
   return (
