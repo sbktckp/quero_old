@@ -40,6 +40,13 @@ function HomeDashboard() {
         .eq("user_id", user!.id).order("created_at", { ascending: false }).limit(1).maybeSingle();
       return data;
     },
+  const { data: isAdmin } = useQuery({
+    queryKey: ["is-admin", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data } = await supabase.rpc("has_role", { _user_id: user!.id, _role: "admin" });
+      return !!data;
+    },
   });
 
   return (
@@ -53,9 +60,14 @@ function HomeDashboard() {
             </div>
             <span className="text-lg font-bold">Quero</span>
           </div>
-          <Link to="/search" className="p-2 rounded-full hover:bg-muted">
-            <Search size={20} />
-          </Link>
+          <div className="flex items-center gap-1">
+            {isAdmin && (
+              <Link to="/admin" className="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-primary-soft text-primary">Admin</Link>
+            )}
+            <Link to="/search" className="p-2 rounded-full hover:bg-muted">
+              <Search size={20} />
+            </Link>
+          </div>
         </div>
       </header>
 
