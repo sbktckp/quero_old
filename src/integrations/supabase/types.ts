@@ -526,12 +526,29 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      finalize_attempt: {
+        Args: { _attempt_id: string }
+        Returns: {
+          correct_count: number
+          score: number
+          total_questions: number
+        }[]
+      }
+      get_attempt_review: { Args: { _attempt_id: string }; Returns: Json }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
         Returns: boolean
+      }
+      submit_answer: {
+        Args: { _attempt_id: string; _option_id: string; _question_id: string }
+        Returns: {
+          correct_option_id: string
+          explanation: string
+          is_correct: boolean
+        }[]
       }
     }
     Enums: {
