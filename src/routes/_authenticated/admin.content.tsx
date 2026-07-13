@@ -293,12 +293,10 @@ function QuestionsTab() {
 
   async function openEdit(q: Question) {
     const { data: opts } = await supabase.from("options").select("option_text, sort_order").eq("question_id", q.id).order("sort_order");
-    // is_correct excluded from client-side reads (secured); we can't display which is correct here, admin re-selects on edit
-    const { data: correctId } = await supabase.rpc("get_attempt_review", { _attempt_id: "00000000-0000-0000-0000-000000000000" }).select().maybeSingle().then(() => ({ data: null })); // no-op
-    void correctId;
+    // is_correct is not readable client-side (secured). Admin re-marks the correct option on edit.
     setEditing({
       ...q,
-      options: (opts ?? []).map((o) => ({ text: o.option_text, is_correct: false })),
+      options: (opts ?? []).map((o, i) => ({ text: o.option_text, is_correct: i === 0 })),
     });
   }
 
