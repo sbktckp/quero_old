@@ -38,7 +38,7 @@ function PyqLibrary() {
   const { data: questions = [], isLoading } = useQuery({
     queryKey: ["pyq-list", year, subjectId, exam],
     queryFn: async () => {
-      let q = supabase.from("questions").select("id, question_text, explanation, pyq_year, pyq_exam, subject_id, subjects(name, slug, color)").eq("is_pyq", true);
+      let q = supabase.from("questions").select("id, question_text, pyq_year, pyq_exam, subject_id, subjects(name, slug, color)").eq("is_pyq", true);
       if (year) q = q.eq("pyq_year", year);
       if (subjectId) q = q.eq("subject_id", subjectId);
       if (exam) q = q.eq("pyq_exam", exam);

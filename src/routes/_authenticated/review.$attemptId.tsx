@@ -7,6 +7,17 @@ export const Route = createFileRoute("/_authenticated/review/$attemptId")({
   component: ReviewPage,
 });
 
+interface ReviewRow {
+  sort_order: number;
+  answer_id: string | null;
+  is_correct: boolean | null;
+  selected_option_id: string | null;
+  question_id: string;
+  question_text: string;
+  explanation: string | null;
+  options: { id: string; option_text: string; is_correct: boolean; sort_order: number }[];
+}
+
 function ReviewPage() {
   const { attemptId } = Route.useParams();
 
@@ -19,14 +30,12 @@ function ReviewPage() {
     },
   });
 
-  const { data: answers = [] } = useQuery({
-    queryKey: ["answers", attemptId],
+  const { data: rows = [] } = useQuery({
+    queryKey: ["attempt-review-rows", attemptId],
     queryFn: async () => {
-      const { data, error } = await supabase.from("answers")
-        .select("*, question:questions(question_text, explanation, options(id, option_text, is_correct, sort_order))")
-        .eq("test_attempt_id", attemptId);
+      const { data, error } = await supabase.rpc("get_attempt_review", { _attempt_id: attemptId });
       if (error) throw error;
-      return data;
+      return (data ?? []) as unknown as ReviewRow[];
     },
   });
 
@@ -54,26 +63,25 @@ function ReviewPage() {
         </div>
 
         <div className="space-y-3">
-          {answers.map((a, i) => {
-            const q = a.question as { question_text: string; explanation: string | null; options: { id: string; option_text: string; is_correct: boolean; sort_order: number }[] };
-            const correctOpt = q.options.find((o) => o.is_correct);
-            const selectedOpt = q.options.find((o) => o.id === a.selected_option_id);
+          {rows.map((r, i) => {
+            const correctOpt = r.options?.find((o) => o.is_correct);
+            const selectedOpt = r.options?.find((o) => o.id === r.selected_option_id);
             return (
-              <div key={a.id} className="rounded-2xl bg-card border border-border p-5 shadow-card">
+              <div key={r.question_id} className="rounded-2xl bg-card border border-border p-5 shadow-card">
                 <div className="flex items-start justify-between gap-3">
                   <div className="text-xs font-semibold text-primary">Q{i + 1}</div>
-                  <span className={`text-xs font-semibold px-2 py-1 rounded-full flex items-center gap-1 ${a.is_correct ? "bg-success/15 text-success" : "bg-destructive/15 text-destructive"}`}>
-                    {a.is_correct ? <><Check size={12} /> Correct</> : <><X size={12} /> Wrong</>}
+                  <span className={`text-xs font-semibold px-2 py-1 rounded-full flex items-center gap-1 ${r.is_correct ? "bg-success/15 text-success" : "bg-destructive/15 text-destructive"}`}>
+                    {r.is_correct ? <><Check size={12} /> Correct</> : <><X size={12} /> Wrong</>}
                   </span>
                 </div>
-                <p className="mt-2 font-medium text-sm">{q.question_text}</p>
+                <p className="mt-2 font-medium text-sm">{r.question_text}</p>
                 <div className="mt-3 space-y-2 text-sm">
-                  <Row label="Your answer" value={selectedOpt?.option_text ?? "Not answered"} tone={a.is_correct ? "success" : "destructive"} />
-                  {!a.is_correct && <Row label="Correct answer" value={correctOpt?.option_text ?? "—"} tone="success" />}
+                  <Row label="Your answer" value={selectedOpt?.option_text ?? "Not answered"} tone={r.is_correct ? "success" : "destructive"} />
+                  {!r.is_correct && <Row label="Correct answer" value={correctOpt?.option_text ?? "—"} tone="success" />}
                 </div>
-                {q.explanation && (
+                {r.explanation && (
                   <div className="mt-3 rounded-xl bg-muted p-3 text-xs text-muted-foreground">
-                    <b>Explanation:</b> {q.explanation}
+                    <b>Explanation:</b> {r.explanation}
                   </div>
                 )}
               </div>
