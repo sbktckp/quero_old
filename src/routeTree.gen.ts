@@ -19,11 +19,17 @@ import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
 import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated/home'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedTestsNewRouteImport } from './routes/_authenticated/tests.new'
 import { Route as AuthenticatedTestAttemptIdRouteImport } from './routes/_authenticated/test.$attemptId'
 import { Route as AuthenticatedSubjectSlugRouteImport } from './routes/_authenticated/subject.$slug'
 import { Route as AuthenticatedReviewAttemptIdRouteImport } from './routes/_authenticated/review.$attemptId'
 import { Route as AuthenticatedComingSoonFeatureRouteImport } from './routes/_authenticated/coming-soon.$feature'
+import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
+import { Route as AuthenticatedAdminContentRouteImport } from './routes/_authenticated/admin.content'
+import { Route as AuthenticatedAdminUsersIdRouteImport } from './routes/_authenticated/admin.users.$id'
+import { Route as AuthenticatedAdminContentImportRouteImport } from './routes/_authenticated/admin.content.import'
 
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
@@ -75,6 +81,16 @@ const AuthenticatedHomeRoute = AuthenticatedHomeRouteImport.update({
   path: '/home',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedTestsNewRoute = AuthenticatedTestsNewRouteImport.update({
   id: '/tests/new',
   path: '/tests/new',
@@ -104,22 +120,51 @@ const AuthenticatedComingSoonFeatureRoute =
     path: '/coming-soon/$feature',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminContentRoute =
+  AuthenticatedAdminContentRouteImport.update({
+    id: '/content',
+    path: '/content',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminUsersIdRoute =
+  AuthenticatedAdminUsersIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => AuthenticatedAdminUsersRoute,
+  } as any)
+const AuthenticatedAdminContentImportRoute =
+  AuthenticatedAdminContentImportRouteImport.update({
+    id: '/import',
+    path: '/import',
+    getParentRoute: () => AuthenticatedAdminContentRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/home': typeof AuthenticatedHomeRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/pyq': typeof AuthenticatedPyqRoute
   '/search': typeof AuthenticatedSearchRoute
+  '/admin/content': typeof AuthenticatedAdminContentRouteWithChildren
+  '/admin/users': typeof AuthenticatedAdminUsersRouteWithChildren
   '/coming-soon/$feature': typeof AuthenticatedComingSoonFeatureRoute
   '/review/$attemptId': typeof AuthenticatedReviewAttemptIdRoute
   '/subject/$slug': typeof AuthenticatedSubjectSlugRoute
   '/test/$attemptId': typeof AuthenticatedTestAttemptIdRoute
   '/tests/new': typeof AuthenticatedTestsNewRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/admin/content/import': typeof AuthenticatedAdminContentImportRoute
+  '/admin/users/$id': typeof AuthenticatedAdminUsersIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -131,11 +176,16 @@ export interface FileRoutesByTo {
   '/profile': typeof AuthenticatedProfileRoute
   '/pyq': typeof AuthenticatedPyqRoute
   '/search': typeof AuthenticatedSearchRoute
+  '/admin/content': typeof AuthenticatedAdminContentRouteWithChildren
+  '/admin/users': typeof AuthenticatedAdminUsersRouteWithChildren
   '/coming-soon/$feature': typeof AuthenticatedComingSoonFeatureRoute
   '/review/$attemptId': typeof AuthenticatedReviewAttemptIdRoute
   '/subject/$slug': typeof AuthenticatedSubjectSlugRoute
   '/test/$attemptId': typeof AuthenticatedTestAttemptIdRoute
   '/tests/new': typeof AuthenticatedTestsNewRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
+  '/admin/content/import': typeof AuthenticatedAdminContentImportRoute
+  '/admin/users/$id': typeof AuthenticatedAdminUsersIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -143,17 +193,23 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/home': typeof AuthenticatedHomeRoute
   '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/pyq': typeof AuthenticatedPyqRoute
   '/_authenticated/search': typeof AuthenticatedSearchRoute
+  '/_authenticated/admin/content': typeof AuthenticatedAdminContentRouteWithChildren
+  '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRouteWithChildren
   '/_authenticated/coming-soon/$feature': typeof AuthenticatedComingSoonFeatureRoute
   '/_authenticated/review/$attemptId': typeof AuthenticatedReviewAttemptIdRoute
   '/_authenticated/subject/$slug': typeof AuthenticatedSubjectSlugRoute
   '/_authenticated/test/$attemptId': typeof AuthenticatedTestAttemptIdRoute
   '/_authenticated/tests/new': typeof AuthenticatedTestsNewRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/_authenticated/admin/content/import': typeof AuthenticatedAdminContentImportRoute
+  '/_authenticated/admin/users/$id': typeof AuthenticatedAdminUsersIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -161,17 +217,23 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/reset-password'
+    | '/admin'
     | '/home'
     | '/notifications'
     | '/onboarding'
     | '/profile'
     | '/pyq'
     | '/search'
+    | '/admin/content'
+    | '/admin/users'
     | '/coming-soon/$feature'
     | '/review/$attemptId'
     | '/subject/$slug'
     | '/test/$attemptId'
     | '/tests/new'
+    | '/admin/'
+    | '/admin/content/import'
+    | '/admin/users/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -183,28 +245,39 @@ export interface FileRouteTypes {
     | '/profile'
     | '/pyq'
     | '/search'
+    | '/admin/content'
+    | '/admin/users'
     | '/coming-soon/$feature'
     | '/review/$attemptId'
     | '/subject/$slug'
     | '/test/$attemptId'
     | '/tests/new'
+    | '/admin'
+    | '/admin/content/import'
+    | '/admin/users/$id'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
     | '/reset-password'
+    | '/_authenticated/admin'
     | '/_authenticated/home'
     | '/_authenticated/notifications'
     | '/_authenticated/onboarding'
     | '/_authenticated/profile'
     | '/_authenticated/pyq'
     | '/_authenticated/search'
+    | '/_authenticated/admin/content'
+    | '/_authenticated/admin/users'
     | '/_authenticated/coming-soon/$feature'
     | '/_authenticated/review/$attemptId'
     | '/_authenticated/subject/$slug'
     | '/_authenticated/test/$attemptId'
     | '/_authenticated/tests/new'
+    | '/_authenticated/admin/'
+    | '/_authenticated/admin/content/import'
+    | '/_authenticated/admin/users/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -286,6 +359,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedHomeRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/tests/new': {
       id: '/_authenticated/tests/new'
       path: '/tests/new'
@@ -321,10 +408,82 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedComingSoonFeatureRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/users': {
+      id: '/_authenticated/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/content': {
+      id: '/_authenticated/admin/content'
+      path: '/content'
+      fullPath: '/admin/content'
+      preLoaderRoute: typeof AuthenticatedAdminContentRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/users/$id': {
+      id: '/_authenticated/admin/users/$id'
+      path: '/$id'
+      fullPath: '/admin/users/$id'
+      preLoaderRoute: typeof AuthenticatedAdminUsersIdRouteImport
+      parentRoute: typeof AuthenticatedAdminUsersRoute
+    }
+    '/_authenticated/admin/content/import': {
+      id: '/_authenticated/admin/content/import'
+      path: '/import'
+      fullPath: '/admin/content/import'
+      preLoaderRoute: typeof AuthenticatedAdminContentImportRouteImport
+      parentRoute: typeof AuthenticatedAdminContentRoute
+    }
   }
 }
 
+interface AuthenticatedAdminContentRouteChildren {
+  AuthenticatedAdminContentImportRoute: typeof AuthenticatedAdminContentImportRoute
+}
+
+const AuthenticatedAdminContentRouteChildren: AuthenticatedAdminContentRouteChildren =
+  {
+    AuthenticatedAdminContentImportRoute: AuthenticatedAdminContentImportRoute,
+  }
+
+const AuthenticatedAdminContentRouteWithChildren =
+  AuthenticatedAdminContentRoute._addFileChildren(
+    AuthenticatedAdminContentRouteChildren,
+  )
+
+interface AuthenticatedAdminUsersRouteChildren {
+  AuthenticatedAdminUsersIdRoute: typeof AuthenticatedAdminUsersIdRoute
+}
+
+const AuthenticatedAdminUsersRouteChildren: AuthenticatedAdminUsersRouteChildren =
+  {
+    AuthenticatedAdminUsersIdRoute: AuthenticatedAdminUsersIdRoute,
+  }
+
+const AuthenticatedAdminUsersRouteWithChildren =
+  AuthenticatedAdminUsersRoute._addFileChildren(
+    AuthenticatedAdminUsersRouteChildren,
+  )
+
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminContentRoute: typeof AuthenticatedAdminContentRouteWithChildren
+  AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRouteWithChildren
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminContentRoute: AuthenticatedAdminContentRouteWithChildren,
+  AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRouteWithChildren,
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedHomeRoute: typeof AuthenticatedHomeRoute
   AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
@@ -339,6 +498,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedHomeRoute: AuthenticatedHomeRoute,
   AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
@@ -364,13 +524,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

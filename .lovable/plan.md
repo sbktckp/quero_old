@@ -1,150 +1,59 @@
-# Phase 2 — Study Tools
+## Admin panel for Quero
 
-Ship in vertical slices. Each slice = schema + RLS + UI + real reads/writes. No mock data, no dead buttons.
+Ground rules
 
-## Slice 1 — Remaining test types + Practice mode (ships first)
+- Zero changes to: submit_answer, finalize_attempt, get_attempt_review, column-level GRANT/REVOKE on questions/options, or the answers unique constraint.
+- No new tables, no new columns. Uses only: profiles, user_roles, subjects, chapters, topics, questions, options, tests, test_attempts.
 
-Reuses Phase 1 `tests`, `test_questions`, `test_attempts`, `answers`, `questions`, `options`. **No new tables.**
+### 1. Access control
 
-Schema tweaks (one migration):
+- Add a `_admin` layout under `_authenticated/_admin/route.tsx` that calls `has_role(auth.uid(), 'admin')` on the client via RPC and redirects non-admins to `/home`.
+- All privileged writes go through server functions using `requireSupabaseAuth` that verify `has_role(_user_id, 'admin')` before touching data. No new tables — writes go straight through `context.supabase` (RLS as user) after the role check, OR through `supabaseAdmin` when RLS blocks legitimate admin edits.
+- Migration adds admin RLS policies where missing so admins can UPDATE/DELETE profiles/user_roles/subjects/chapters/topics/questions/options. It does not touch answers, test_questions, or any of the security-sensitive objects listed above.
 
-- `tests.test_type` already exists (enum). Confirm values: `subject`, `chapter`, `topic`, `custom`, `pyq`.
-- Add `tests.mode` enum (`timed`, `practice`), default `timed`.
-- Add `test_attempts.mode` mirror column so review page knows how to render.
-- `tests.chapter_id`, `tests.topic_id` already exist per Phase 1 schema — verify; add if missing.
+### 2. Routes
 
-UI:
+```
+/admin                     dashboard (stat cards)
+/admin/users               search + list, role column
+/admin/users/$id           profile + test_attempts + role changer
+/admin/content             tabs: Subjects | Chapters | Topics | Questions
+/admin/content/questions/import   bulk importer wizard
+```
 
-- `/tests/new` — builder: pick type (Chapter / Topic / Custom), pick source (chapter dropdown / topic dropdown / multi-select subjects+difficulty for Custom), question count, duration, mode (Timed / Practice). Creates a `tests` row + `test_questions` rows by sampling `questions` with proper filters, then creates an attempt and routes to `/test/$attemptId`.
-- Practice mode in `test/$attemptId`: no timer, show explanation + correct answer immediately after each answer, no final score screen — instead per-question feedback and a "Finish" button.
-- Home: replace hardcoded "Mock test" rows with real `tests` list grouped by type.
+All under `_authenticated/_admin/`.
 
-## Slice 2 — PYQ Library
+### 3. Dashboard
 
-Reuses `questions`. Add columns:
+Six count queries via a single `getAdminStats` server fn: users, questions, subjects, chapters, topics, attempts today, attempts this week (`started_at >= date_trunc('day'/'week', now())`).
 
-- `questions.is_pyq boolean default false`
-- `questions.pyq_year int`
-- `questions.pyq_exam text` (NEET-UG / NEET-PG)
+### 4. Users
 
-Seed ~20 sample PYQ questions across years (real content, tagged).
+- `listUsers({ search })` — joins profiles + user_roles (aggregated), ILIKE on display_name/email.
+- `getUserDetail({ userId })` — profile, roles, recent test_attempts.
+- `setUserRole({ userId, role })` — admin-only server fn; deletes existing rows in user_roles for user then inserts the chosen role. Enum values: 'student', 'admin' (uses existing app_role enum).
 
-UI:
+### 5. Content CRUD
 
-- `/pyq` — filter chips (year, subject, exam). Grid of question cards. Tap → question detail with explanation + "Add to custom test".
-- Optional "Start PYQ test" builds a `tests` row of `test_type='pyq'` on the fly.
+Standard list + dialog forms for Subjects, Chapters (filtered by subject), Topics (filtered by chapter), Questions.
 
-## Slice 3 — Flashcards (SM-2 lite)
+- Question dialog: subject/chapter/topic cascading dropdowns; textareas for question_text/explanation; difficulty select; is_pyq switch revealing pyq_year (number) + pyq_exam (text); dynamic 2–5 options with one radio-style correct selector. Save uses `adminUpsertQuestion` server fn that inserts/updates questions + replaces options atomically.
 
-New table `flashcards`:
+### 6. Bulk importer
 
-- `id, user_id, front, back, subject_id?, chapter_id?, topic_id?, question_id?` (nullable link back to source)
-- `ease_factor numeric default 2.5, interval_days int default 0, repetitions int default 0`
-- `due_at timestamptz default now(), last_reviewed_at, created_at, updated_at`
+Client-side pipeline (no new tables):
 
-RLS: owner-only.
+- Template: static CSV download.
+- Parse: `papaparse` for CSV, `xlsx` (SheetJS) for XLSX, done in a chunked loop with `requestIdleCallback`/`setTimeout` yields to keep UI responsive for 500+ rows.
+- Validation preview: virtualized table (simple windowing) with per-row status (Valid/Warning/Error), inline edit, exclude checkbox, and per-warning "create chapter/topic" checkbox. Duplicate check uses `pg_trgm`-less approximation: exact + normalized (lowercased, whitespace-collapsed) match against existing `questions.question_text` for the same subject — fetched once at preview start.
+- Commit: `bulkImportQuestions` server fn iterating rows. Per row: resolve subject_id (must exist), chapter_id (find or create if flagged), topic_id (find or create if flagged), then `insert into questions` returning id, then `insert into options` (batch). Each row wrapped by a Postgres function `admin_bulk_insert_question(_payload jsonb)` (SECURITY DEFINER, checks `has_role`) so both inserts are one transaction — a single new helper function, not a new table, and it does not touch any protected object.
+- Result: success count + downloadable errors.csv built client-side from the failed rows array.
 
-SM-2 lite (client-side, called on rating 0–5):
+### Technical notes
 
-- q<3 → reps=0, interval=1
-- q≥3 → reps++, interval = reps==1 ? 1 : reps==2 ? 6 : round(prev_interval * ease)
-- ease = max(1.3, ease + (0.1 - (5-q)*(0.08 + (5-q)*0.02)))
-- `due_at = now() + interval_days`
+- New deps: `papaparse`, `xlsx` (via `bun add`).
+- All server fns live in `src/lib/admin.functions.ts`; each starts with a `has_role` check.
+- Admin nav entry added to bottom-nav or a top-right link on `/home`, visible only when `has_role` returns true.
+- No changes to the test engine, review page, or PYQ flow.
 
-UI:
-
-- `/flashcards` — deck list, "Review due (N)", CRUD.
-- `/flashcards/review` — swipe-style queue over `due_at <= now()`, rating buttons (Again / Hard / Good / Easy → q=1/3/4/5).
-- "Save as flashcard" button on question review page.
-
-## Slice 4 — Revision Planner (daily + weekly + calendar)
-
-New table `study_plans`:
-
-- `id, user_id, title, notes, scheduled_date date, scheduled_time time?, duration_minutes int?, subject_id?, chapter_id?, is_recurring bool, recur_weekday int?, completed_at timestamptz?, remind_at timestamptz?, created_at, updated_at`
-
-New table `revision_history`:
-
-- `id, user_id, study_plan_id?, item_type text (test/flashcard/plan), item_id uuid, completed_at, minutes int`
-- Inserted from test submit, flashcard review, plan complete.
-
-UI:
-
-- `/planner` — month calendar (shadcn Calendar) with dots for days that have tasks; day drawer lists tasks with check-off.
-- `/planner/week` — 7-day agenda.
-- Create/edit task dialog.
-
-## Slice 5 — Doubt Solver
-
-Storage bucket `doubt-images` (public read, auth insert).
-
-Tables:
-
-- `doubt_posts(id, user_id, title, body, image_url?, subject_id?, is_solved bool, solved_comment_id?, created_at, updated_at)`
-- `doubt_comments(id, post_id, parent_comment_id?, user_id, body, created_at, updated_at)`
-- `doubt_likes(id, user_id, post_id?, comment_id?, created_at)` — one-of check.
-
-RLS: authenticated read all; author writes own; post author marks solved.
-
-UI:
-
-- `/doubts` feed → `/doubts/$id` thread with nested comments, like button, "Mark solved" for OP.
-- New doubt dialog with image upload (Supabase Storage).
-
-## Slice 6 — Bookmarks
-
-Table `bookmarks(id, user_id, item_type text ('question'|'flashcard'|'doubt'), item_id uuid, created_at, unique(user_id, item_type, item_id))`.
-
-UI: bookmark toggle on question review, flashcard, doubt post. `/bookmarks` list filtered by type.
-
-## Slice 7 — Notifications + Realtime
-
-Table `notifications(id, user_id, type text, title, body, link, is_read bool default false, created_at)`.
-
-Realtime enabled on `notifications`.
-
-DB triggers (auto-insert):
-
-- On `doubt_comments` insert → notify post author (skip self).
-- On `doubt_likes` insert → notify liked-item author (skip self).
-- Planner reminder: `pg_cron` every 5 min → server route that finds `study_plans` with `remind_at <= now() AND remind_at > now() - 5min` and inserts a notification.
-
-UI:
-
-- `/notifications` — live-updating list via `supabase.channel().on('postgres_changes', ...)`, tap to open link, mark-read on view.
-- Bell badge in bottom nav shows unread count (also realtime).
-
-## Order of implementation in this session
-
-I'll do **Slice 1 + Slice 2** end-to-end in this turn (schema + UI + wire everything), then stop for your review before proceeding to slices 3–7 in the next turn. That keeps the "everything works" bar honest.
-
-## Technical notes
-
-- Single migration per slice.
-- All tables: `authenticated` GRANTs, RLS enabled, owner policies via `auth.uid()`.
-- `has_role` reused; no new security-definer functions unless needed.
-- Storage bucket created via `supabase--storage_create_bucket`, not SQL.
-- Realtime enabled via `ALTER PUBLICATION supabase_realtime ADD TABLE ...` in the notifications migration.
-- Reuse existing test engine at `/test/$attemptId` — extend, don't fork.
-
-&nbsp;
-
-- Before completing each slice:
-- - Verify database migration succeeds.
-- - Verify RLS policies work.
-- - Verify CRUD operations.
-- - Verify responsive layout.
-- - Verify no TypeScript errors.
-- - Verify no ESLint errors.
-- - Verify production build passes.
-- - Do not continue to the next slice if any of the above fail.
-
-Question Review:
-
-- Allow bookmarking.
-
-- Allow reporting incorrect questions.
-
-- Allow rating explanation quality (1–5 stars).
-
-- &nbsp;
+confirm supabaseAdmin (the service-role client that bypasses RLS) only ever gets instantiated inside server functions, never in anything shipped to the browser, and that its key lives in a secret. 
