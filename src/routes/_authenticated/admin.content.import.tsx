@@ -192,13 +192,13 @@ function BulkImport() {
     }, { valid: 0, warning: 0, error: 0 } as Record<Status, number>);
   }, [rows]);
 
-  function updateRow(i: number, patch: Partial<ParsedRow> & { raw?: Partial<Row> }) {
+  function updateRow(i: number, patch: { excluded?: boolean; createChapter?: boolean; createTopic?: boolean; raw?: Partial<Row> }) {
     if (!validate || !rows) return;
     setRows((prev) => {
       if (!prev) return prev;
       const next = [...prev];
       const cur = next[i];
-      const newRaw = patch.raw ? { ...cur.raw, ...patch.raw } : cur.raw;
+      const newRaw: Row = patch.raw ? { ...cur.raw, ...patch.raw } : cur.raw;
       const v = validate(newRaw);
       next[i] = { ...cur, ...patch, raw: newRaw, status: v.status, reasons: v.reasons };
       return next;
