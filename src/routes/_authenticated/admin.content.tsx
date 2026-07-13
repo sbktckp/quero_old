@@ -236,12 +236,11 @@ function TopicsTab() {
       {chapterId && (
         <div className="rounded-2xl bg-card border border-border overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="text-xs text-muted-foreground bg-muted/30"><tr><th className="text-left px-4 py-2">Name</th><th className="text-left px-4 py-2">Slug</th><th /></tr></thead>
+            <thead className="text-xs text-muted-foreground bg-muted/30"><tr><th className="text-left px-4 py-2">Name</th><th /></tr></thead>
             <tbody>
               {data.map((t) => (
                 <tr key={t.id} className="border-t border-border">
                   <td className="px-4 py-2 font-medium">{t.name}</td>
-                  <td className="px-4 py-2 text-muted-foreground">{t.slug}</td>
                   <td className="px-4 py-2 text-right">
                     <Button size="icon" variant="ghost" onClick={() => setEditing(t)}><Pencil size={14} /></Button>
                     <Button size="icon" variant="ghost" onClick={() => del(t.id)}><Trash2 size={14} /></Button>
@@ -257,7 +256,6 @@ function TopicsTab() {
           <DialogHeader><DialogTitle>{editing?.id ? "Edit" : "New"} topic</DialogTitle></DialogHeader>
           <div className="space-y-3">
             <div><Label>Name</Label><Input value={editing?.name ?? ""} onChange={(e) => setEditing({ ...editing, name: e.target.value })} /></div>
-            <div><Label>Slug</Label><Input value={editing?.slug ?? ""} placeholder="auto" onChange={(e) => setEditing({ ...editing, slug: e.target.value })} /></div>
           </div>
           <DialogFooter><Button variant="outline" onClick={() => setEditing(null)}>Cancel</Button><Button onClick={save}>Save</Button></DialogFooter>
         </DialogContent>
