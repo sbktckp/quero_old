@@ -19,7 +19,7 @@ export const Route = createFileRoute("/_authenticated/admin/content")({
 
 type Subject = { id: string; name: string; slug: string; sort_order: number | null };
 type Chapter = { id: string; subject_id: string; name: string; slug: string; sort_order: number | null };
-type Topic = { id: string; chapter_id: string; name: string; slug: string | null };
+type Topic = { id: string; chapter_id: string; name: string };
 type Question = {
   id: string; subject_id: string; chapter_id: string | null; topic_id: string | null;
   question_text: string; explanation: string | null; difficulty: string | null;
@@ -206,7 +206,7 @@ function TopicsTab() {
 
   async function save() {
     if (!editing?.name?.trim() || !chapterId) return;
-    const payload = { chapter_id: chapterId, name: editing.name.trim(), slug: editing.slug?.trim() || slugify(editing.name) };
+    const payload = { chapter_id: chapterId, name: editing.name.trim() };
     const { error } = editing.id
       ? await supabase.from("topics").update(payload).eq("id", editing.id)
       : await supabase.from("topics").insert(payload);
