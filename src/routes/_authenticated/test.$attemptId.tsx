@@ -15,9 +15,14 @@ interface QuestionRow {
   question: {
     id: string;
     question_text: string;
-    explanation: string | null;
-    options: { id: string; option_text: string; sort_order: number; is_correct?: boolean }[];
+    options: { id: string; option_text: string; sort_order: number }[];
   };
+}
+
+interface Reveal {
+  correctOptionId: string | null;
+  explanation: string | null;
+  isCorrect: boolean | null;
 }
 
 function TestPage() {
@@ -28,7 +33,7 @@ function TestPage() {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [remaining, setRemaining] = useState<number | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [revealed, setRevealed] = useState<Record<string, boolean>>({});
+  const [reveals, setReveals] = useState<Record<string, Reveal>>({});
 
   const { data: attempt } = useQuery({
     queryKey: ["attempt", attemptId],
@@ -41,25 +46,19 @@ function TestPage() {
   const isPractice = attempt?.mode === "practice";
 
   const { data: questions = [] } = useQuery({
-    queryKey: ["test-questions", attempt?.test_id, isPractice],
+    queryKey: ["test-questions", attempt?.test_id],
     enabled: !!attempt?.test_id,
     queryFn: async () => {
-      // In practice mode we need is_correct + explanation up-front for inline feedback.
-      const opts = isPractice
-        ? "id, option_text, sort_order, is_correct"
-        : "id, option_text, sort_order";
-      const qSel = isPractice
-        ? `sort_order, question:questions(id, question_text, explanation, options(${opts}))`
-        : `sort_order, question:questions(id, question_text, explanation, options(${opts}))`;
+      // Never fetch is_correct / explanation client-side. The server hands those
+      // out via submit_answer (practice) or get_attempt_review (post-submit).
       const { data, error } = await supabase.from("test_questions")
-        .select(qSel)
+        .select("sort_order, question:questions(id, question_text, options(id, option_text, sort_order))")
         .eq("test_id", attempt!.test_id!).order("sort_order");
       if (error) throw error;
       return (data ?? []) as unknown as QuestionRow[];
     },
   });
 
-  // Timer only in timed mode
   useEffect(() => {
     if (!attempt || isPractice) return;
     const started = new Date(attempt.started_at).getTime();
@@ -77,51 +76,44 @@ function TestPage() {
 
   const current = questions[idx];
   const totalQ = questions.length;
+  const currentReveal = current ? reveals[current.question.id] : undefined;
 
-  const currentRevealed = current ? revealed[current.question.id] : false;
-  const correctOptId = useMemo(() => {
-    if (!current || !isPractice) return null;
-    return current.question.options.find((o) => o.is_correct)?.id ?? null;
-  }, [current, isPractice]);
-
-  const selectOption = (qId: string, oId: string) => {
-    if (isPractice && revealed[qId]) return; // locked after reveal
+  const selectOption = async (qId: string, oId: string) => {
+    if (!attempt) return;
+    if (reveals[qId]) return; // locked after reveal (practice) / re-answer (timed) — one shot per question
     setAnswers((a) => ({ ...a, [qId]: oId }));
+
+    const { data, error } = await supabase.rpc("submit_answer", {
+      _attempt_id: attempt.id,
+      _question_id: qId,
+      _option_id: oId,
+    });
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    const row = Array.isArray(data) ? data[0] : data;
     if (isPractice) {
-      setRevealed((r) => ({ ...r, [qId]: true }));
+      setReveals((r) => ({
+        ...r,
+        [qId]: {
+          correctOptionId: row?.correct_option_id ?? null,
+          explanation: row?.explanation ?? null,
+          isCorrect: row?.is_correct ?? null,
+        },
+      }));
     }
   };
 
   const submit = async (auto = false) => {
     if (!user || !attempt || submitting) return;
     setSubmitting(true);
-
-    const questionIds = questions.map((q) => q.question.id);
-    const { data: opts } = await supabase.from("options").select("id, question_id, is_correct").in("question_id", questionIds);
-    const correctMap = new Map<string, string>();
-    opts?.forEach((o) => { if (o.is_correct) correctMap.set(o.question_id, o.id); });
-
-    let correct = 0;
-    const rows = questions.map((q) => {
-      const selected = answers[q.question.id] ?? null;
-      const isCorrect = selected != null && correctMap.get(q.question.id) === selected;
-      if (isCorrect) correct++;
-      return {
-        test_attempt_id: attempt.id,
-        question_id: q.question.id,
-        selected_option_id: selected,
-        is_correct: isCorrect,
-      };
-    });
-
-    await supabase.from("answers").insert(rows);
-    await supabase.from("test_attempts").update({
-      submitted_at: new Date().toISOString(),
-      correct_count: correct,
-      total_questions: totalQ,
-      score: totalQ ? Math.round((correct / totalQ) * 10000) / 100 : 0,
-    }).eq("id", attempt.id);
-
+    const { error } = await supabase.rpc("finalize_attempt", { _attempt_id: attempt.id });
+    if (error) {
+      toast.error(error.message);
+      setSubmitting(false);
+      return;
+    }
     if (auto) toast.info("Time's up — submitting");
     navigate({ to: "/review/$attemptId", params: { attemptId: attempt.id } });
   };
@@ -169,8 +161,9 @@ function TestPage() {
         <div className="mt-5 space-y-3">
           {current.question.options.slice().sort((a, b) => a.sort_order - b.sort_order).map((o, i) => {
             const selected = answers[current.question.id] === o.id;
-            const showAsCorrect = isPractice && currentRevealed && o.id === correctOptId;
-            const showAsWrong = isPractice && currentRevealed && selected && o.id !== correctOptId;
+            const revealed = isPractice && !!currentReveal;
+            const showAsCorrect = revealed && o.id === currentReveal!.correctOptionId;
+            const showAsWrong = revealed && selected && o.id !== currentReveal!.correctOptionId;
             const base = "w-full text-left rounded-2xl border p-4 flex items-center gap-3 transition";
             const cls = showAsCorrect
               ? "border-success bg-success/10"
@@ -196,10 +189,10 @@ function TestPage() {
           })}
         </div>
 
-        {isPractice && currentRevealed && (
+        {isPractice && currentReveal && (
           <div className="mt-4 rounded-2xl border border-border bg-card p-4">
             <div className="text-xs uppercase tracking-wider text-muted-foreground font-semibold mb-1">Explanation</div>
-            <p className="text-sm leading-relaxed">{current.question.explanation ?? "No explanation available."}</p>
+            <p className="text-sm leading-relaxed">{currentReveal.explanation ?? "No explanation available."}</p>
           </div>
         )}
       </main>
