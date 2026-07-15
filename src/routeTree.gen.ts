@@ -30,6 +30,7 @@ import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminContentRouteImport } from './routes/_authenticated/admin.content'
 import { Route as AuthenticatedAdminUsersIdRouteImport } from './routes/_authenticated/admin.users.$id'
 import { Route as AuthenticatedAdminContentImportRouteImport } from './routes/_authenticated/admin.content.import'
+import { Route as AuthenticatedAdminContentGenerateRouteImport } from './routes/_authenticated/admin.content.generate'
 
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
@@ -143,6 +144,12 @@ const AuthenticatedAdminContentImportRoute =
     path: '/import',
     getParentRoute: () => AuthenticatedAdminContentRoute,
   } as any)
+const AuthenticatedAdminContentGenerateRoute =
+  AuthenticatedAdminContentGenerateRouteImport.update({
+    id: '/generate',
+    path: '/generate',
+    getParentRoute: () => AuthenticatedAdminContentRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -163,6 +170,7 @@ export interface FileRoutesByFullPath {
   '/test/$attemptId': typeof AuthenticatedTestAttemptIdRoute
   '/tests/new': typeof AuthenticatedTestsNewRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/admin/content/generate': typeof AuthenticatedAdminContentGenerateRoute
   '/admin/content/import': typeof AuthenticatedAdminContentImportRoute
   '/admin/users/$id': typeof AuthenticatedAdminUsersIdRoute
 }
@@ -184,6 +192,7 @@ export interface FileRoutesByTo {
   '/test/$attemptId': typeof AuthenticatedTestAttemptIdRoute
   '/tests/new': typeof AuthenticatedTestsNewRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
+  '/admin/content/generate': typeof AuthenticatedAdminContentGenerateRoute
   '/admin/content/import': typeof AuthenticatedAdminContentImportRoute
   '/admin/users/$id': typeof AuthenticatedAdminUsersIdRoute
 }
@@ -208,6 +217,7 @@ export interface FileRoutesById {
   '/_authenticated/test/$attemptId': typeof AuthenticatedTestAttemptIdRoute
   '/_authenticated/tests/new': typeof AuthenticatedTestsNewRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/_authenticated/admin/content/generate': typeof AuthenticatedAdminContentGenerateRoute
   '/_authenticated/admin/content/import': typeof AuthenticatedAdminContentImportRoute
   '/_authenticated/admin/users/$id': typeof AuthenticatedAdminUsersIdRoute
 }
@@ -232,6 +242,7 @@ export interface FileRouteTypes {
     | '/test/$attemptId'
     | '/tests/new'
     | '/admin/'
+    | '/admin/content/generate'
     | '/admin/content/import'
     | '/admin/users/$id'
   fileRoutesByTo: FileRoutesByTo
@@ -253,6 +264,7 @@ export interface FileRouteTypes {
     | '/test/$attemptId'
     | '/tests/new'
     | '/admin'
+    | '/admin/content/generate'
     | '/admin/content/import'
     | '/admin/users/$id'
   id:
@@ -276,6 +288,7 @@ export interface FileRouteTypes {
     | '/_authenticated/test/$attemptId'
     | '/_authenticated/tests/new'
     | '/_authenticated/admin/'
+    | '/_authenticated/admin/content/generate'
     | '/_authenticated/admin/content/import'
     | '/_authenticated/admin/users/$id'
   fileRoutesById: FileRoutesById
@@ -436,15 +449,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminContentImportRouteImport
       parentRoute: typeof AuthenticatedAdminContentRoute
     }
+    '/_authenticated/admin/content/generate': {
+      id: '/_authenticated/admin/content/generate'
+      path: '/generate'
+      fullPath: '/admin/content/generate'
+      preLoaderRoute: typeof AuthenticatedAdminContentGenerateRouteImport
+      parentRoute: typeof AuthenticatedAdminContentRoute
+    }
   }
 }
 
 interface AuthenticatedAdminContentRouteChildren {
+  AuthenticatedAdminContentGenerateRoute: typeof AuthenticatedAdminContentGenerateRoute
   AuthenticatedAdminContentImportRoute: typeof AuthenticatedAdminContentImportRoute
 }
 
 const AuthenticatedAdminContentRouteChildren: AuthenticatedAdminContentRouteChildren =
   {
+    AuthenticatedAdminContentGenerateRoute:
+      AuthenticatedAdminContentGenerateRoute,
     AuthenticatedAdminContentImportRoute: AuthenticatedAdminContentImportRoute,
   }
 
