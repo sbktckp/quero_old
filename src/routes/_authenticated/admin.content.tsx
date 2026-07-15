@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Pencil, Trash2, Plus, Upload, Search } from "lucide-react";
+import { Pencil, Trash2, Plus, Upload, Search, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/admin/content")({
@@ -315,6 +315,7 @@ function QuestionsTab() {
           <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search question text" className="pl-9" />
         </div>
         <Link to="/admin/content/import"><Button variant="outline" size="sm"><Upload size={14} /> Bulk import</Button></Link>
+        <Link to="/admin/content/generate"><Button variant="outline" size="sm"><Sparkles size={14} /> Generate with AI</Button></Link>
         <Button size="sm" onClick={() => setEditing({ options: [{ text: "", is_correct: true }, { text: "", is_correct: false }] })}>
           <Plus size={14} /> New question
         </Button>
