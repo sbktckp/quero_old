@@ -315,6 +315,7 @@ function QuestionsTab() {
           <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search question text" className="pl-9" />
         </div>
         <Link to="/admin/content/import"><Button variant="outline" size="sm"><Upload size={14} /> Bulk import</Button></Link>
+        <Link to="/admin/content/generate"><Button variant="outline" size="sm"><Sparkles size={14} /> Generate with AI</Button></Link>
         <Button size="sm" onClick={() => setEditing({ options: [{ text: "", is_correct: true }, { text: "", is_correct: false }] })}>
           <Plus size={14} /> New question
         </Button>
