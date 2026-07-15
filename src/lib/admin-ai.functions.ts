@@ -17,8 +17,9 @@ function gateway() {
   });
 }
 
-async function assertAdmin(ctx: { supabase: { rpc: (fn: string, args: unknown) => Promise<{ data: unknown; error: { message: string } | null }> }; userId: string }) {
-  const { data, error } = await ctx.supabase.rpc("has_role", { _user_id: ctx.userId, _role: "admin" });
+async function assertAdmin(ctx: { supabase: unknown; userId: string }) {
+  const sb = ctx.supabase as { rpc: (fn: "has_role", args: { _user_id: string; _role: "admin" | "student" }) => Promise<{ data: boolean | null; error: { message: string } | null }> };
+  const { data, error } = await sb.rpc("has_role", { _user_id: ctx.userId, _role: "admin" });
   if (error) throw new Error(error.message);
   if (!data) throw new Error("Forbidden");
 }
