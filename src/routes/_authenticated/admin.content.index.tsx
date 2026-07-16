@@ -13,7 +13,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Pencil, Trash2, Plus, Upload, Search, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/_authenticated/admin/content")({
+export const Route = createFileRoute("/_authenticated/admin/content/")({
   component: ContentAdmin,
 });
 
