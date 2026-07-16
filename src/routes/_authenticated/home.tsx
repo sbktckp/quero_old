@@ -2,8 +2,13 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import { useUserGoal } from "@/lib/user-goal";
 import { BottomNav } from "@/components/bottom-nav";
-import { Search, ChevronRight, Trophy, Flame, BookOpen, FileText, Calendar, HelpCircle, Users, Atom, FlaskConical, Leaf, Bug } from "lucide-react";
+import {
+  Search, ChevronRight, Trophy, Flame, BookOpen, FileText, Calendar, HelpCircle, Users,
+  Atom, FlaskConical, Leaf, Bug, Bone, HeartPulse, Pill, Microscope, Fingerprint, Ear,
+  Eye, Stethoscope, Scissors, Baby, Hand, Brain, Scan, Syringe,
+} from "lucide-react";
 import { motion } from "framer-motion";
 
 export const Route = createFileRoute("/_authenticated/home")({
@@ -12,14 +17,24 @@ export const Route = createFileRoute("/_authenticated/home")({
 
 const ICONS: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
   physics: Atom, chemistry: FlaskConical, botany: Leaf, zoology: Bug,
+  anatomy: Bone, physiology: HeartPulse, biochemistry: FlaskConical, pharmacology: Pill,
+  pathology: Microscope, microbiology: Bug, "forensic-medicine": Fingerprint,
+  "community-medicine": Users, ent: Ear, ophthalmology: Eye,
+  "general-medicine": Stethoscope, "general-surgery": Scissors, obgyn: Baby,
+  pediatrics: Baby, orthopedics: Bone, dermatology: Hand, psychiatry: Brain,
+  radiology: Scan, anaesthesia: Syringe,
 };
 
 function HomeDashboard() {
   const { user } = useAuth();
+  const { goal, examType } = useUserGoal();
   const { data: subjects = [] } = useQuery({
-    queryKey: ["subjects"],
+    queryKey: ["subjects", goal],
     queryFn: async () => {
-      const { data, error } = await supabase.from("subjects").select("*").order("sort_order");
+      const { data, error } = await supabase.from("subjects").select("*")
+        .filter("exam_type", "eq", examType)
+        .filter("is_active", "eq", true)
+        .order("sort_order");
       if (error) throw error; return data;
     },
   });
