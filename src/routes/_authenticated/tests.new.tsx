@@ -40,9 +40,13 @@ function NewTestPage() {
   const [durationMinutes, setDurationMinutes] = useState(15);
   const [submitting, setSubmitting] = useState(false);
 
+  const { goal, examType } = useUserGoal();
   const { data: subjects = [] } = useQuery({
-    queryKey: ["subjects"],
-    queryFn: async () => (await supabase.from("subjects").select("*").order("sort_order")).data ?? [],
+    queryKey: ["subjects", goal],
+    queryFn: async () => (await supabase.from("subjects").select("*")
+      .filter("exam_type", "eq", examType)
+      .filter("is_active", "eq", true)
+      .order("sort_order")).data ?? [],
   });
   const { data: chapters = [] } = useQuery({
     queryKey: ["chapters", subjectId],
