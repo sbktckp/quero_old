@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import { useUserGoal } from "@/lib/user-goal";
 import { ArrowLeft, Timer, BookOpen } from "lucide-react";
 import { useState, useMemo } from "react";
 import { toast } from "sonner";
@@ -39,9 +40,13 @@ function NewTestPage() {
   const [durationMinutes, setDurationMinutes] = useState(15);
   const [submitting, setSubmitting] = useState(false);
 
+  const { goal, examType } = useUserGoal();
   const { data: subjects = [] } = useQuery({
-    queryKey: ["subjects"],
-    queryFn: async () => (await supabase.from("subjects").select("*").order("sort_order")).data ?? [],
+    queryKey: ["subjects", goal],
+    queryFn: async () => (await supabase.from("subjects").select("*")
+      .filter("exam_type", "eq", examType)
+      .filter("is_active", "eq", true)
+      .order("sort_order")).data ?? [],
   });
   const { data: chapters = [] } = useQuery({
     queryKey: ["chapters", subjectId],
