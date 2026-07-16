@@ -77,8 +77,40 @@ function ProfilePage() {
           </div>
         </div>
 
+        <div className="rounded-2xl bg-card border border-border shadow-card p-5 space-y-3">
+          <div className="text-xs uppercase tracking-wider text-muted-foreground">Exam goal</div>
+          <div className="grid grid-cols-2 gap-2">
+            {([
+              { v: "neet_ug", l: "NEET UG" },
+              { v: "neet_pg", l: "NEET PG" },
+            ] as const).map((o) => {
+              const active = prefs?.goal === o.v;
+              return (
+                <button
+                  key={o.v}
+                  disabled={savingGoal || active}
+                  onClick={async () => {
+                    if (!user || active) return;
+                    setSavingGoal(true);
+                    const { error } = await supabase.from("user_preferences")
+                      .update({ goal: o.v })
+                      .eq("user_id", user.id);
+                    setSavingGoal(false);
+                    if (error) { toast.error(error.message); return; }
+                    toast.success(`Switched to ${o.l}`);
+                    qc.invalidateQueries({ queryKey: ["prefs", user.id] });
+                    qc.invalidateQueries({ queryKey: ["user-goal", user.id] });
+                  }}
+                  className={`rounded-2xl border px-4 py-3 text-sm font-semibold transition ${active ? "border-primary bg-primary-soft text-primary" : "border-border bg-card"}`}
+                >
+                  {o.l}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
         <div className="rounded-2xl bg-card border border-border shadow-card divide-y divide-border">
-          <Row label="Exam" value={prefs?.goal === "neet_pg" ? "NEET PG" : prefs?.goal === "neet_ug" ? "NEET UG" : "—"} />
           <Row label="Exam year" value={prefs?.exam_year ? String(prefs.exam_year) : "—"} />
           <Row label="Language" value={prefs?.language ? prefs.language[0].toUpperCase() + prefs.language.slice(1) : "—"} />
           <button onClick={() => navigate({ to: "/onboarding" })} className="w-full flex items-center justify-between px-5 py-4 text-left">
