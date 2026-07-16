@@ -28,10 +28,16 @@ function Onboarding() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    supabase.from("subjects").select("id,name,slug").order("sort_order").then(({ data }) => {
-      if (data) setSubjects(data);
-    });
-  }, []);
+    if (!goal) { setSubjects([]); setWeak([]); return; }
+    const examType = goal === "neet_pg" ? "NEET_PG" : "NEET_UG";
+    supabase.from("subjects").select("id,name,slug")
+      .filter("exam_type", "eq", examType)
+      .filter("is_active", "eq", true)
+      .order("sort_order")
+      .then(({ data }) => { if (data) setSubjects(data); });
+    // Clear weak selections when goal changes so we never carry cross-exam slugs
+    setWeak([]);
+  }, [goal]);
 
   const toggleWeak = (slug: string) => setWeak((w) => w.includes(slug) ? w.filter(s => s !== slug) : [...w, slug]);
 
