@@ -154,7 +154,7 @@ function HomeDashboard() {
             </Link>
           </div>
           <div className="flex gap-2 overflow-x-auto pb-1">
-            <Link to="/subject/$slug" params={{ slug: "physics" }}
+            <Link to="/subject/$slug" params={{ slug: subjects[0]?.slug ?? "physics" }}
               className="shrink-0 rounded-full px-4 py-2 text-xs font-semibold gradient-primary text-primary-foreground">
               Subject Test
             </Link>
