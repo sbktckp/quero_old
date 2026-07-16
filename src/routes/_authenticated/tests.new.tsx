@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import { useUserGoal } from "@/lib/user-goal";
 import { ArrowLeft, Timer, BookOpen } from "lucide-react";
 import { useState, useMemo } from "react";
 import { toast } from "sonner";
