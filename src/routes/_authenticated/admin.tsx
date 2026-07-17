@@ -2,7 +2,7 @@ import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-r
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
-import { Loader2, LayoutDashboard, Users, BookOpen, ArrowLeft } from "lucide-react";
+import { Loader2, LayoutDashboard, Users, BookOpen, ArrowLeft, CreditCard } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminLayout,
