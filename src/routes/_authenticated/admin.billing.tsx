@@ -164,7 +164,7 @@ function PlanDialog({ open, onOpenChange, plan, adminId }: { open: boolean; onOp
   const [price, setPrice] = useState<string>(plan ? String(plan.price_inr) : "0");
 
   // reset when plan changes
-  useMemo(() => {
+  useEffect(() => {
     setName(plan?.name ?? "");
     setTier(plan?.tier ?? "premium");
     setPeriod(plan?.billing_period ?? "monthly");
@@ -301,7 +301,7 @@ function CouponDialog({ open, onOpenChange, coupon, plans }: { open: boolean; on
   const [minP, setMinP] = useState(coupon?.min_purchase ? String(coupon.min_purchase) : "");
   const [planId, setPlanId] = useState<string>(coupon?.plan_restriction ?? "none");
 
-  useMemo(() => {
+  useEffect(() => {
     setCode(coupon?.code ?? "");
     setType(coupon?.discount_type ?? "percentage");
     setValue(String(coupon?.discount_value ?? "10"));
