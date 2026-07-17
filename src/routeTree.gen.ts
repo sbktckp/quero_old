@@ -27,6 +27,7 @@ import { Route as AuthenticatedSubjectSlugRouteImport } from './routes/_authenti
 import { Route as AuthenticatedReviewAttemptIdRouteImport } from './routes/_authenticated/review.$attemptId'
 import { Route as AuthenticatedComingSoonFeatureRouteImport } from './routes/_authenticated/coming-soon.$feature'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
+import { Route as AuthenticatedAdminBillingRouteImport } from './routes/_authenticated/admin.billing'
 import { Route as AuthenticatedAdminContentIndexRouteImport } from './routes/_authenticated/admin.content.index'
 import { Route as AuthenticatedAdminUsersIdRouteImport } from './routes/_authenticated/admin.users.$id'
 import { Route as AuthenticatedAdminContentImportRouteImport } from './routes/_authenticated/admin.content.import'
@@ -126,6 +127,12 @@ const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
   path: '/users',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminBillingRoute =
+  AuthenticatedAdminBillingRouteImport.update({
+    id: '/billing',
+    path: '/billing',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminContentIndexRoute =
   AuthenticatedAdminContentIndexRouteImport.update({
     id: '/content/',
@@ -162,6 +169,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof AuthenticatedProfileRoute
   '/pyq': typeof AuthenticatedPyqRoute
   '/search': typeof AuthenticatedSearchRoute
+  '/admin/billing': typeof AuthenticatedAdminBillingRoute
   '/admin/users': typeof AuthenticatedAdminUsersRouteWithChildren
   '/coming-soon/$feature': typeof AuthenticatedComingSoonFeatureRoute
   '/review/$attemptId': typeof AuthenticatedReviewAttemptIdRoute
@@ -184,6 +192,7 @@ export interface FileRoutesByTo {
   '/profile': typeof AuthenticatedProfileRoute
   '/pyq': typeof AuthenticatedPyqRoute
   '/search': typeof AuthenticatedSearchRoute
+  '/admin/billing': typeof AuthenticatedAdminBillingRoute
   '/admin/users': typeof AuthenticatedAdminUsersRouteWithChildren
   '/coming-soon/$feature': typeof AuthenticatedComingSoonFeatureRoute
   '/review/$attemptId': typeof AuthenticatedReviewAttemptIdRoute
@@ -209,6 +218,7 @@ export interface FileRoutesById {
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/pyq': typeof AuthenticatedPyqRoute
   '/_authenticated/search': typeof AuthenticatedSearchRoute
+  '/_authenticated/admin/billing': typeof AuthenticatedAdminBillingRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRouteWithChildren
   '/_authenticated/coming-soon/$feature': typeof AuthenticatedComingSoonFeatureRoute
   '/_authenticated/review/$attemptId': typeof AuthenticatedReviewAttemptIdRoute
@@ -234,6 +244,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/pyq'
     | '/search'
+    | '/admin/billing'
     | '/admin/users'
     | '/coming-soon/$feature'
     | '/review/$attemptId'
@@ -256,6 +267,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/pyq'
     | '/search'
+    | '/admin/billing'
     | '/admin/users'
     | '/coming-soon/$feature'
     | '/review/$attemptId'
@@ -280,6 +292,7 @@ export interface FileRouteTypes {
     | '/_authenticated/profile'
     | '/_authenticated/pyq'
     | '/_authenticated/search'
+    | '/_authenticated/admin/billing'
     | '/_authenticated/admin/users'
     | '/_authenticated/coming-soon/$feature'
     | '/_authenticated/review/$attemptId'
@@ -428,6 +441,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/billing': {
+      id: '/_authenticated/admin/billing'
+      path: '/billing'
+      fullPath: '/admin/billing'
+      preLoaderRoute: typeof AuthenticatedAdminBillingRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/content/': {
       id: '/_authenticated/admin/content/'
       path: '/content'
@@ -474,6 +494,7 @@ const AuthenticatedAdminUsersRouteWithChildren =
   )
 
 interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminBillingRoute: typeof AuthenticatedAdminBillingRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRouteWithChildren
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedAdminContentGenerateRoute: typeof AuthenticatedAdminContentGenerateRoute
@@ -482,6 +503,7 @@ interface AuthenticatedAdminRouteChildren {
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminBillingRoute: AuthenticatedAdminBillingRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRouteWithChildren,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   AuthenticatedAdminContentGenerateRoute:
