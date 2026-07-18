@@ -167,7 +167,7 @@ function TestPage() {
         </div>
 
         <div className="mt-5 space-y-3">
-          {current.question.options.slice().sort((a, b) => a.sort_order - b.sort_order).map((o, i) => {
+          {seededShuffle(current.question.options.slice().sort((a, b) => a.sort_order - b.sort_order), `o:${attempt.id}:${current.question.id}`).map((o, i) => {
             const selected = answers[current.question.id] === o.id;
             const revealed = isPractice && !!currentReveal;
             const showAsCorrect = revealed && o.id === currentReveal!.correctOptionId;
