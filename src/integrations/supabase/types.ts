@@ -101,6 +101,250 @@ export type Database = {
           },
         ]
       }
+      college_cutoffs: {
+        Row: {
+          category: string
+          closing_rank: number
+          college_id: string
+          counseling_body: string
+          created_at: string
+          id: string
+          opening_rank: number | null
+          quota: string | null
+          round: string
+          state: string | null
+          year: number
+        }
+        Insert: {
+          category: string
+          closing_rank: number
+          college_id: string
+          counseling_body: string
+          created_at?: string
+          id?: string
+          opening_rank?: number | null
+          quota?: string | null
+          round: string
+          state?: string | null
+          year: number
+        }
+        Update: {
+          category?: string
+          closing_rank?: number
+          college_id?: string
+          counseling_body?: string
+          created_at?: string
+          id?: string
+          opening_rank?: number | null
+          quota?: string | null
+          round?: string
+          state?: string | null
+          year?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "college_cutoffs_college_id_fkey"
+            columns: ["college_id"]
+            isOneToOne: false
+            referencedRelation: "colleges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      college_reviews: {
+        Row: {
+          academics_rating: number | null
+          campus_life_rating: number | null
+          college_id: string
+          created_at: string
+          faculty_rating: number | null
+          hostel_rating: number | null
+          id: string
+          internship_rating: number | null
+          is_verified: boolean
+          mess_rating: number | null
+          patient_exposure_rating: number | null
+          review_text: string | null
+          safety_rating: number | null
+          user_id: string
+        }
+        Insert: {
+          academics_rating?: number | null
+          campus_life_rating?: number | null
+          college_id: string
+          created_at?: string
+          faculty_rating?: number | null
+          hostel_rating?: number | null
+          id?: string
+          internship_rating?: number | null
+          is_verified?: boolean
+          mess_rating?: number | null
+          patient_exposure_rating?: number | null
+          review_text?: string | null
+          safety_rating?: number | null
+          user_id: string
+        }
+        Update: {
+          academics_rating?: number | null
+          campus_life_rating?: number | null
+          college_id?: string
+          created_at?: string
+          faculty_rating?: number | null
+          hostel_rating?: number | null
+          id?: string
+          internship_rating?: number | null
+          is_verified?: boolean
+          mess_rating?: number | null
+          patient_exposure_rating?: number | null
+          review_text?: string | null
+          safety_rating?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "college_reviews_college_id_fkey"
+            columns: ["college_id"]
+            isOneToOne: false
+            referencedRelation: "colleges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      colleges: {
+        Row: {
+          annual_fees_max: number | null
+          annual_fees_min: number | null
+          bond_amount: number | null
+          bond_years: number | null
+          city: string | null
+          created_at: string
+          created_by: string | null
+          hostel_available: boolean
+          id: string
+          institution_type: string
+          is_active: boolean
+          name: string
+          nmc_recognized: boolean
+          state: string
+          total_seats: number | null
+          updated_at: string
+        }
+        Insert: {
+          annual_fees_max?: number | null
+          annual_fees_min?: number | null
+          bond_amount?: number | null
+          bond_years?: number | null
+          city?: string | null
+          created_at?: string
+          created_by?: string | null
+          hostel_available?: boolean
+          id?: string
+          institution_type: string
+          is_active?: boolean
+          name: string
+          nmc_recognized?: boolean
+          state: string
+          total_seats?: number | null
+          updated_at?: string
+        }
+        Update: {
+          annual_fees_max?: number | null
+          annual_fees_min?: number | null
+          bond_amount?: number | null
+          bond_years?: number | null
+          city?: string | null
+          created_at?: string
+          created_by?: string | null
+          hostel_available?: boolean
+          id?: string
+          institution_type?: string
+          is_active?: boolean
+          name?: string
+          nmc_recognized?: boolean
+          state?: string
+          total_seats?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      counseling_articles: {
+        Row: {
+          category: string | null
+          content: string
+          created_at: string
+          id: string
+          is_published: boolean
+          slug: string
+          sort_order: number
+          summary: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          content: string
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          slug: string
+          sort_order?: number
+          summary?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          content?: string
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          slug?: string
+          sort_order?: number
+          summary?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      counseling_events: {
+        Row: {
+          counseling_body: string
+          created_at: string
+          end_date: string | null
+          event_type: string
+          id: string
+          is_active: boolean
+          notes: string | null
+          start_date: string
+          title: string
+          year: number
+        }
+        Insert: {
+          counseling_body: string
+          created_at?: string
+          end_date?: string | null
+          event_type: string
+          id?: string
+          is_active?: boolean
+          notes?: string | null
+          start_date: string
+          title: string
+          year: number
+        }
+        Update: {
+          counseling_body?: string
+          created_at?: string
+          end_date?: string | null
+          event_type?: string
+          id?: string
+          is_active?: boolean
+          notes?: string | null
+          start_date?: string
+          title?: string
+          year?: number
+        }
+        Relationships: []
+      }
       coupons: {
         Row: {
           code: string

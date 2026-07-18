@@ -6,6 +6,7 @@ import { useUserGoal } from "@/lib/user-goal";
 import { BottomNav } from "@/components/bottom-nav";
 import {
   Search, ChevronRight, Trophy, Flame, BookOpen, FileText, Calendar, HelpCircle, Users,
+  GraduationCap,
   Atom, FlaskConical, Leaf, Bug, Bone, HeartPulse, Pill, Microscope, Fingerprint, Ear,
   Eye, Stethoscope, Scissors, Baby, Hand, Brain, Scan, Syringe,
 } from "lucide-react";
@@ -179,6 +180,20 @@ function HomeDashboard() {
           <FeatureRow icon={Calendar} label="Revision Planner" to="revision-planner" />
           <FeatureRow icon={HelpCircle} label="Doubt Solver" to="doubt-solver" />
           <FeatureRow icon={Users} label="Study Groups" to="study-groups" />
+          {goal === "neet_ug" && (
+            <Link to="/counseling" className="flex items-center justify-between rounded-2xl bg-card border border-border p-4 shadow-card hover:border-primary/30 transition">
+              <div className="flex items-center gap-3">
+                <div className="h-9 w-9 rounded-xl bg-primary-soft flex items-center justify-center">
+                  <GraduationCap size={18} className="text-primary" />
+                </div>
+                <div>
+                  <div className="font-medium text-sm">Counseling Guide</div>
+                  <div className="text-[10px] text-muted-foreground">Predictor · Colleges · Calendar</div>
+                </div>
+              </div>
+              <ChevronRight size={18} className="text-muted-foreground" />
+            </Link>
+          )}
         </section>
 
         {/* Leaderboard + Streak */}
