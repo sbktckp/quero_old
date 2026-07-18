@@ -6,6 +6,7 @@ import { useUserGoal } from "@/lib/user-goal";
 import { BottomNav } from "@/components/bottom-nav";
 import {
   Search, ChevronRight, Trophy, Flame, BookOpen, FileText, Calendar, HelpCircle, Users,
+  GraduationCap,
   Atom, FlaskConical, Leaf, Bug, Bone, HeartPulse, Pill, Microscope, Fingerprint, Ear,
   Eye, Stethoscope, Scissors, Baby, Hand, Brain, Scan, Syringe,
 } from "lucide-react";
