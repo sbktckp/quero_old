@@ -132,6 +132,23 @@ function ProfilePage() {
         <button onClick={logout} className="w-full flex items-center justify-center gap-2 rounded-2xl border border-destructive/30 bg-destructive/5 text-destructive px-5 py-3.5 font-semibold">
           <LogOut size={18} /> Log Out
         </button>
+
+        <button
+          onClick={async () => {
+            if (!confirm("This permanently deletes your profile, preferences, and test history. This cannot be undone. Continue?")) return;
+            if (!confirm("Are you absolutely sure? Type OK on the next prompt to confirm.")) return;
+            const conf = prompt("Type DELETE to confirm");
+            if (conf !== "DELETE") { toast.info("Cancelled"); return; }
+            const { error } = await supabase.rpc("delete_my_account");
+            if (error) { toast.error(error.message); return; }
+            await supabase.auth.signOut();
+            toast.success("Account deleted");
+            navigate({ to: "/auth" });
+          }}
+          className="w-full flex items-center justify-center gap-2 rounded-2xl border border-destructive bg-destructive text-destructive-foreground px-5 py-3.5 font-semibold"
+        >
+          Delete my account
+        </button>
       </main>
 
       <BottomNav />
