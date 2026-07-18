@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Pencil, Trash2, Plus, Upload, Search, Sparkles } from "lucide-react";
 import { toast } from "sonner";
+import { logAdminAction } from "@/lib/admin-log";
 
 export const Route = createFileRoute("/_authenticated/admin/content/")({
   component: ContentAdmin,
@@ -72,6 +73,7 @@ function SubjectsTab() {
     if (!confirm("Delete this subject? Chapters/topics/questions under it may be affected.")) return;
     const { error } = await supabase.from("subjects").delete().eq("id", id);
     if (error) return toast.error(error.message);
+    await logAdminAction("subject.delete", "subjects", id);
     qc.invalidateQueries({ queryKey: ["adm-subjects"] });
   }
 
@@ -143,6 +145,7 @@ function ChaptersTab() {
     if (!confirm("Delete chapter?")) return;
     const { error } = await supabase.from("chapters").delete().eq("id", id);
     if (error) return toast.error(error.message);
+    await logAdminAction("chapter.delete", "chapters", id);
     qc.invalidateQueries({ queryKey: ["adm-chapters", subjectId] });
   }
 
@@ -217,6 +220,7 @@ function TopicsTab() {
     if (!confirm("Delete topic?")) return;
     const { error } = await supabase.from("topics").delete().eq("id", id);
     if (error) return toast.error(error.message);
+    await logAdminAction("topic.delete", "topics", id);
     qc.invalidateQueries({ queryKey: ["adm-topics", chapterId] });
   }
 
@@ -288,6 +292,7 @@ function QuestionsTab() {
     if (!confirm("Delete this question?")) return;
     const { error } = await supabase.from("questions").delete().eq("id", id);
     if (error) return toast.error(error.message);
+    await logAdminAction("question.delete", "questions", id);
     qc.invalidateQueries({ queryKey: ["adm-questions"] });
   }
 

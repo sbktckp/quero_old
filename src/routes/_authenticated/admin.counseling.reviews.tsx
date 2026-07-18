@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { BadgeCheck, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { logAdminAction } from "@/lib/admin-log";
 
 export const Route = createFileRoute("/_authenticated/admin/counseling/reviews")({
   component: AdminReviews,
@@ -27,7 +28,7 @@ function AdminReviews() {
     onError: (e: any) => toast.error(e.message),
   });
   const remove = useMutation({
-    mutationFn: async (id: string) => { const { error } = await supabase.from("college_reviews").delete().eq("id", id); if (error) throw error; },
+    mutationFn: async (id: string) => { const { error } = await supabase.from("college_reviews").delete().eq("id", id); if (error) throw error; await logAdminAction("review.delete", "college_reviews", id); },
     onSuccess: () => { toast.success("Removed"); qc.invalidateQueries({ queryKey: ["admin-reviews"] }); },
   });
 

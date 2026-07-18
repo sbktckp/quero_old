@@ -5,6 +5,7 @@ import { useAuth } from "@/lib/auth";
 import { useEffect, useState, useMemo } from "react";
 import { Clock, ArrowLeft, CheckCircle2, XCircle } from "lucide-react";
 import { toast } from "sonner";
+import { seededShuffle } from "@/lib/seeded-shuffle";
 
 export const Route = createFileRoute("/_authenticated/test/$attemptId")({
   component: TestPage,
@@ -45,7 +46,7 @@ function TestPage() {
 
   const isPractice = attempt?.mode === "practice";
 
-  const { data: questions = [] } = useQuery({
+  const { data: rawQuestions = [] } = useQuery({
     queryKey: ["test-questions", attempt?.test_id],
     enabled: !!attempt?.test_id,
     queryFn: async () => {
@@ -58,6 +59,13 @@ function TestPage() {
       return (data ?? []) as unknown as QuestionRow[];
     },
   });
+
+  // Display-only shuffle, deterministic per attempt. Scoring uses option IDs
+  // resolved server-side in submit_answer — order here does not affect correctness.
+  const questions = useMemo(() => {
+    if (!attempt?.id || rawQuestions.length === 0) return rawQuestions;
+    return seededShuffle(rawQuestions, `q:${attempt.id}`);
+  }, [rawQuestions, attempt?.id]);
 
   useEffect(() => {
     if (!attempt || isPractice) return;
@@ -159,7 +167,7 @@ function TestPage() {
         </div>
 
         <div className="mt-5 space-y-3">
-          {current.question.options.slice().sort((a, b) => a.sort_order - b.sort_order).map((o, i) => {
+          {seededShuffle(current.question.options.slice().sort((a, b) => a.sort_order - b.sort_order), `o:${attempt.id}:${current.question.id}`).map((o, i) => {
             const selected = answers[current.question.id] === o.id;
             const revealed = isPractice && !!currentReveal;
             const showAsCorrect = revealed && o.id === currentReveal!.correctOptionId;

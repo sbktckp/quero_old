@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import { logAdminAction } from "@/lib/admin-log";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -425,6 +426,7 @@ function SubscriptionsTab() {
     mutationFn: async (subId: string) => {
       const { error } = await supabase.from("subscriptions").update({ status: "cancelled" }).eq("id", subId);
       if (error) throw error;
+      await logAdminAction("subscription.revoke", "subscriptions", subId);
     },
     onSuccess: () => { qc.invalidateQueries({ queryKey: ["admin-subs"] }); toast.success("Subscription revoked"); },
     onError: (e: Error) => toast.error(e.message),
@@ -497,6 +499,7 @@ function GrantDialog({ open, onOpenChange, plans, adminId }: { open: boolean; on
       };
       const { error } = await supabase.from("subscriptions").insert(payload);
       if (error) throw error;
+      await logAdminAction("subscription.grant", "subscriptions", selectedUser.id, { plan_id: planId });
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["admin-subs"] });
@@ -596,6 +599,7 @@ function PaymentsTab() {
     mutationFn: async (id: string) => {
       const { error } = await supabase.from("payments").update({ status: "refunded" }).eq("id", id);
       if (error) throw error;
+      await logAdminAction("payment.refund", "payments", id);
     },
     onSuccess: () => { qc.invalidateQueries({ queryKey: ["admin-payments"] }); toast.success("Marked refunded in DB only"); },
     onError: (e: Error) => toast.error(e.message),

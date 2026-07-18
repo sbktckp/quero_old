@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_activity_log: {
+        Row: {
+          action: string
+          admin_id: string
+          created_at: string
+          id: string
+          meta: Json | null
+          target_id: string | null
+          target_table: string | null
+        }
+        Insert: {
+          action: string
+          admin_id: string
+          created_at?: string
+          id?: string
+          meta?: Json | null
+          target_id?: string | null
+          target_table?: string | null
+        }
+        Update: {
+          action?: string
+          admin_id?: string
+          created_at?: string
+          id?: string
+          meta?: Json | null
+          target_id?: string | null
+          target_table?: string | null
+        }
+        Relationships: []
+      }
       answers: {
         Row: {
           answered_at: string
@@ -623,6 +653,27 @@ export type Database = {
           },
         ]
       }
+      rate_limit_events: {
+        Row: {
+          action: string
+          id: number
+          ts: string
+          user_id: string
+        }
+        Insert: {
+          action: string
+          id?: number
+          ts?: string
+          user_id: string
+        }
+        Update: {
+          action?: string
+          id?: number
+          ts?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       subjects: {
         Row: {
           color: string | null
@@ -981,6 +1032,11 @@ export type Database = {
         Returns: undefined
       }
       admin_upsert_question: { Args: { _payload: Json }; Returns: string }
+      delete_my_account: { Args: never; Returns: undefined }
+      enforce_rate_limit: {
+        Args: { _action: string; _max: number; _window_seconds: number }
+        Returns: undefined
+      }
       finalize_attempt: {
         Args: { _attempt_id: string }
         Returns: {
