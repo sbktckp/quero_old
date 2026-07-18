@@ -5,6 +5,7 @@ import { useAuth } from "@/lib/auth";
 import { useEffect, useState, useMemo } from "react";
 import { Clock, ArrowLeft, CheckCircle2, XCircle } from "lucide-react";
 import { toast } from "sonner";
+import { seededShuffle } from "@/lib/seeded-shuffle";
 
 export const Route = createFileRoute("/_authenticated/test/$attemptId")({
   component: TestPage,
