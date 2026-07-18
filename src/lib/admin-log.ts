@@ -19,7 +19,7 @@ export async function logAdminAction(
       action,
       target_table: target_table ?? null,
       target_id: target_id ?? null,
-      meta: meta ?? null,
+      meta: (meta ?? null) as never,
     });
   } catch {
     // ignored
