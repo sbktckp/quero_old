@@ -2,7 +2,7 @@ import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-r
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
-import { Loader2, LayoutDashboard, Users, BookOpen, ArrowLeft, CreditCard, GraduationCap } from "lucide-react";
+import { Loader2, LayoutDashboard, Users, BookOpen, ArrowLeft, CreditCard, GraduationCap, ScrollText } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminLayout,
@@ -40,6 +40,7 @@ function AdminLayout() {
     { to: "/admin/content", label: "Content", icon: BookOpen, exact: false },
     { to: "/admin/counseling", label: "Counseling", icon: GraduationCap, exact: false },
     { to: "/admin/billing", label: "Billing", icon: CreditCard, exact: false },
+    { to: "/admin/activity", label: "Activity", icon: ScrollText, exact: false },
   ] as const;
 
   return (
