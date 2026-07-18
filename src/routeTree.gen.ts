@@ -19,17 +19,34 @@ import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
 import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated/home'
+import { Route as AuthenticatedCounselingRouteImport } from './routes/_authenticated/counseling'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedCounselingIndexRouteImport } from './routes/_authenticated/counseling.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedTestsNewRouteImport } from './routes/_authenticated/tests.new'
 import { Route as AuthenticatedTestAttemptIdRouteImport } from './routes/_authenticated/test.$attemptId'
 import { Route as AuthenticatedSubjectSlugRouteImport } from './routes/_authenticated/subject.$slug'
 import { Route as AuthenticatedReviewAttemptIdRouteImport } from './routes/_authenticated/review.$attemptId'
+import { Route as AuthenticatedCounselingRoadmapRouteImport } from './routes/_authenticated/counseling.roadmap'
+import { Route as AuthenticatedCounselingResourcesRouteImport } from './routes/_authenticated/counseling.resources'
+import { Route as AuthenticatedCounselingPredictorRouteImport } from './routes/_authenticated/counseling.predictor'
+import { Route as AuthenticatedCounselingExplorerRouteImport } from './routes/_authenticated/counseling.explorer'
+import { Route as AuthenticatedCounselingCompareRouteImport } from './routes/_authenticated/counseling.compare'
+import { Route as AuthenticatedCounselingChoiceFillingRouteImport } from './routes/_authenticated/counseling.choice-filling'
+import { Route as AuthenticatedCounselingCalendarRouteImport } from './routes/_authenticated/counseling.calendar'
 import { Route as AuthenticatedComingSoonFeatureRouteImport } from './routes/_authenticated/coming-soon.$feature'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
+import { Route as AuthenticatedAdminCounselingRouteImport } from './routes/_authenticated/admin.counseling'
 import { Route as AuthenticatedAdminBillingRouteImport } from './routes/_authenticated/admin.billing'
+import { Route as AuthenticatedAdminCounselingIndexRouteImport } from './routes/_authenticated/admin.counseling.index'
 import { Route as AuthenticatedAdminContentIndexRouteImport } from './routes/_authenticated/admin.content.index'
+import { Route as AuthenticatedCounselingResourcesSlugRouteImport } from './routes/_authenticated/counseling.resources.$slug'
+import { Route as AuthenticatedCounselingCollegeIdRouteImport } from './routes/_authenticated/counseling.college.$id'
 import { Route as AuthenticatedAdminUsersIdRouteImport } from './routes/_authenticated/admin.users.$id'
+import { Route as AuthenticatedAdminCounselingReviewsRouteImport } from './routes/_authenticated/admin.counseling.reviews'
+import { Route as AuthenticatedAdminCounselingEventsRouteImport } from './routes/_authenticated/admin.counseling.events'
+import { Route as AuthenticatedAdminCounselingCutoffsRouteImport } from './routes/_authenticated/admin.counseling.cutoffs'
+import { Route as AuthenticatedAdminCounselingArticlesRouteImport } from './routes/_authenticated/admin.counseling.articles'
 import { Route as AuthenticatedAdminContentImportRouteImport } from './routes/_authenticated/admin.content.import'
 import { Route as AuthenticatedAdminContentGenerateRouteImport } from './routes/_authenticated/admin.content.generate'
 
@@ -83,11 +100,22 @@ const AuthenticatedHomeRoute = AuthenticatedHomeRouteImport.update({
   path: '/home',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedCounselingRoute = AuthenticatedCounselingRouteImport.update({
+  id: '/counseling',
+  path: '/counseling',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedCounselingIndexRoute =
+  AuthenticatedCounselingIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedCounselingRoute,
+  } as any)
 const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -116,6 +144,48 @@ const AuthenticatedReviewAttemptIdRoute =
     path: '/review/$attemptId',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedCounselingRoadmapRoute =
+  AuthenticatedCounselingRoadmapRouteImport.update({
+    id: '/roadmap',
+    path: '/roadmap',
+    getParentRoute: () => AuthenticatedCounselingRoute,
+  } as any)
+const AuthenticatedCounselingResourcesRoute =
+  AuthenticatedCounselingResourcesRouteImport.update({
+    id: '/resources',
+    path: '/resources',
+    getParentRoute: () => AuthenticatedCounselingRoute,
+  } as any)
+const AuthenticatedCounselingPredictorRoute =
+  AuthenticatedCounselingPredictorRouteImport.update({
+    id: '/predictor',
+    path: '/predictor',
+    getParentRoute: () => AuthenticatedCounselingRoute,
+  } as any)
+const AuthenticatedCounselingExplorerRoute =
+  AuthenticatedCounselingExplorerRouteImport.update({
+    id: '/explorer',
+    path: '/explorer',
+    getParentRoute: () => AuthenticatedCounselingRoute,
+  } as any)
+const AuthenticatedCounselingCompareRoute =
+  AuthenticatedCounselingCompareRouteImport.update({
+    id: '/compare',
+    path: '/compare',
+    getParentRoute: () => AuthenticatedCounselingRoute,
+  } as any)
+const AuthenticatedCounselingChoiceFillingRoute =
+  AuthenticatedCounselingChoiceFillingRouteImport.update({
+    id: '/choice-filling',
+    path: '/choice-filling',
+    getParentRoute: () => AuthenticatedCounselingRoute,
+  } as any)
+const AuthenticatedCounselingCalendarRoute =
+  AuthenticatedCounselingCalendarRouteImport.update({
+    id: '/calendar',
+    path: '/calendar',
+    getParentRoute: () => AuthenticatedCounselingRoute,
+  } as any)
 const AuthenticatedComingSoonFeatureRoute =
   AuthenticatedComingSoonFeatureRouteImport.update({
     id: '/coming-soon/$feature',
@@ -127,11 +197,23 @@ const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
   path: '/users',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminCounselingRoute =
+  AuthenticatedAdminCounselingRouteImport.update({
+    id: '/counseling',
+    path: '/counseling',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminBillingRoute =
   AuthenticatedAdminBillingRouteImport.update({
     id: '/billing',
     path: '/billing',
     getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminCounselingIndexRoute =
+  AuthenticatedAdminCounselingIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedAdminCounselingRoute,
   } as any)
 const AuthenticatedAdminContentIndexRoute =
   AuthenticatedAdminContentIndexRouteImport.update({
@@ -139,11 +221,47 @@ const AuthenticatedAdminContentIndexRoute =
     path: '/content/',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedCounselingResourcesSlugRoute =
+  AuthenticatedCounselingResourcesSlugRouteImport.update({
+    id: '/$slug',
+    path: '/$slug',
+    getParentRoute: () => AuthenticatedCounselingResourcesRoute,
+  } as any)
+const AuthenticatedCounselingCollegeIdRoute =
+  AuthenticatedCounselingCollegeIdRouteImport.update({
+    id: '/college/$id',
+    path: '/college/$id',
+    getParentRoute: () => AuthenticatedCounselingRoute,
+  } as any)
 const AuthenticatedAdminUsersIdRoute =
   AuthenticatedAdminUsersIdRouteImport.update({
     id: '/$id',
     path: '/$id',
     getParentRoute: () => AuthenticatedAdminUsersRoute,
+  } as any)
+const AuthenticatedAdminCounselingReviewsRoute =
+  AuthenticatedAdminCounselingReviewsRouteImport.update({
+    id: '/reviews',
+    path: '/reviews',
+    getParentRoute: () => AuthenticatedAdminCounselingRoute,
+  } as any)
+const AuthenticatedAdminCounselingEventsRoute =
+  AuthenticatedAdminCounselingEventsRouteImport.update({
+    id: '/events',
+    path: '/events',
+    getParentRoute: () => AuthenticatedAdminCounselingRoute,
+  } as any)
+const AuthenticatedAdminCounselingCutoffsRoute =
+  AuthenticatedAdminCounselingCutoffsRouteImport.update({
+    id: '/cutoffs',
+    path: '/cutoffs',
+    getParentRoute: () => AuthenticatedAdminCounselingRoute,
+  } as any)
+const AuthenticatedAdminCounselingArticlesRoute =
+  AuthenticatedAdminCounselingArticlesRouteImport.update({
+    id: '/articles',
+    path: '/articles',
+    getParentRoute: () => AuthenticatedAdminCounselingRoute,
   } as any)
 const AuthenticatedAdminContentImportRoute =
   AuthenticatedAdminContentImportRouteImport.update({
@@ -163,6 +281,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/counseling': typeof AuthenticatedCounselingRouteWithChildren
   '/home': typeof AuthenticatedHomeRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
@@ -170,17 +289,33 @@ export interface FileRoutesByFullPath {
   '/pyq': typeof AuthenticatedPyqRoute
   '/search': typeof AuthenticatedSearchRoute
   '/admin/billing': typeof AuthenticatedAdminBillingRoute
+  '/admin/counseling': typeof AuthenticatedAdminCounselingRouteWithChildren
   '/admin/users': typeof AuthenticatedAdminUsersRouteWithChildren
   '/coming-soon/$feature': typeof AuthenticatedComingSoonFeatureRoute
+  '/counseling/calendar': typeof AuthenticatedCounselingCalendarRoute
+  '/counseling/choice-filling': typeof AuthenticatedCounselingChoiceFillingRoute
+  '/counseling/compare': typeof AuthenticatedCounselingCompareRoute
+  '/counseling/explorer': typeof AuthenticatedCounselingExplorerRoute
+  '/counseling/predictor': typeof AuthenticatedCounselingPredictorRoute
+  '/counseling/resources': typeof AuthenticatedCounselingResourcesRouteWithChildren
+  '/counseling/roadmap': typeof AuthenticatedCounselingRoadmapRoute
   '/review/$attemptId': typeof AuthenticatedReviewAttemptIdRoute
   '/subject/$slug': typeof AuthenticatedSubjectSlugRoute
   '/test/$attemptId': typeof AuthenticatedTestAttemptIdRoute
   '/tests/new': typeof AuthenticatedTestsNewRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/counseling/': typeof AuthenticatedCounselingIndexRoute
   '/admin/content/generate': typeof AuthenticatedAdminContentGenerateRoute
   '/admin/content/import': typeof AuthenticatedAdminContentImportRoute
+  '/admin/counseling/articles': typeof AuthenticatedAdminCounselingArticlesRoute
+  '/admin/counseling/cutoffs': typeof AuthenticatedAdminCounselingCutoffsRoute
+  '/admin/counseling/events': typeof AuthenticatedAdminCounselingEventsRoute
+  '/admin/counseling/reviews': typeof AuthenticatedAdminCounselingReviewsRoute
   '/admin/users/$id': typeof AuthenticatedAdminUsersIdRoute
+  '/counseling/college/$id': typeof AuthenticatedCounselingCollegeIdRoute
+  '/counseling/resources/$slug': typeof AuthenticatedCounselingResourcesSlugRoute
   '/admin/content/': typeof AuthenticatedAdminContentIndexRoute
+  '/admin/counseling/': typeof AuthenticatedAdminCounselingIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -195,15 +330,30 @@ export interface FileRoutesByTo {
   '/admin/billing': typeof AuthenticatedAdminBillingRoute
   '/admin/users': typeof AuthenticatedAdminUsersRouteWithChildren
   '/coming-soon/$feature': typeof AuthenticatedComingSoonFeatureRoute
+  '/counseling/calendar': typeof AuthenticatedCounselingCalendarRoute
+  '/counseling/choice-filling': typeof AuthenticatedCounselingChoiceFillingRoute
+  '/counseling/compare': typeof AuthenticatedCounselingCompareRoute
+  '/counseling/explorer': typeof AuthenticatedCounselingExplorerRoute
+  '/counseling/predictor': typeof AuthenticatedCounselingPredictorRoute
+  '/counseling/resources': typeof AuthenticatedCounselingResourcesRouteWithChildren
+  '/counseling/roadmap': typeof AuthenticatedCounselingRoadmapRoute
   '/review/$attemptId': typeof AuthenticatedReviewAttemptIdRoute
   '/subject/$slug': typeof AuthenticatedSubjectSlugRoute
   '/test/$attemptId': typeof AuthenticatedTestAttemptIdRoute
   '/tests/new': typeof AuthenticatedTestsNewRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
+  '/counseling': typeof AuthenticatedCounselingIndexRoute
   '/admin/content/generate': typeof AuthenticatedAdminContentGenerateRoute
   '/admin/content/import': typeof AuthenticatedAdminContentImportRoute
+  '/admin/counseling/articles': typeof AuthenticatedAdminCounselingArticlesRoute
+  '/admin/counseling/cutoffs': typeof AuthenticatedAdminCounselingCutoffsRoute
+  '/admin/counseling/events': typeof AuthenticatedAdminCounselingEventsRoute
+  '/admin/counseling/reviews': typeof AuthenticatedAdminCounselingReviewsRoute
   '/admin/users/$id': typeof AuthenticatedAdminUsersIdRoute
+  '/counseling/college/$id': typeof AuthenticatedCounselingCollegeIdRoute
+  '/counseling/resources/$slug': typeof AuthenticatedCounselingResourcesSlugRoute
   '/admin/content': typeof AuthenticatedAdminContentIndexRoute
+  '/admin/counseling': typeof AuthenticatedAdminCounselingIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -212,6 +362,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/_authenticated/counseling': typeof AuthenticatedCounselingRouteWithChildren
   '/_authenticated/home': typeof AuthenticatedHomeRoute
   '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
@@ -219,17 +370,33 @@ export interface FileRoutesById {
   '/_authenticated/pyq': typeof AuthenticatedPyqRoute
   '/_authenticated/search': typeof AuthenticatedSearchRoute
   '/_authenticated/admin/billing': typeof AuthenticatedAdminBillingRoute
+  '/_authenticated/admin/counseling': typeof AuthenticatedAdminCounselingRouteWithChildren
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRouteWithChildren
   '/_authenticated/coming-soon/$feature': typeof AuthenticatedComingSoonFeatureRoute
+  '/_authenticated/counseling/calendar': typeof AuthenticatedCounselingCalendarRoute
+  '/_authenticated/counseling/choice-filling': typeof AuthenticatedCounselingChoiceFillingRoute
+  '/_authenticated/counseling/compare': typeof AuthenticatedCounselingCompareRoute
+  '/_authenticated/counseling/explorer': typeof AuthenticatedCounselingExplorerRoute
+  '/_authenticated/counseling/predictor': typeof AuthenticatedCounselingPredictorRoute
+  '/_authenticated/counseling/resources': typeof AuthenticatedCounselingResourcesRouteWithChildren
+  '/_authenticated/counseling/roadmap': typeof AuthenticatedCounselingRoadmapRoute
   '/_authenticated/review/$attemptId': typeof AuthenticatedReviewAttemptIdRoute
   '/_authenticated/subject/$slug': typeof AuthenticatedSubjectSlugRoute
   '/_authenticated/test/$attemptId': typeof AuthenticatedTestAttemptIdRoute
   '/_authenticated/tests/new': typeof AuthenticatedTestsNewRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/_authenticated/counseling/': typeof AuthenticatedCounselingIndexRoute
   '/_authenticated/admin/content/generate': typeof AuthenticatedAdminContentGenerateRoute
   '/_authenticated/admin/content/import': typeof AuthenticatedAdminContentImportRoute
+  '/_authenticated/admin/counseling/articles': typeof AuthenticatedAdminCounselingArticlesRoute
+  '/_authenticated/admin/counseling/cutoffs': typeof AuthenticatedAdminCounselingCutoffsRoute
+  '/_authenticated/admin/counseling/events': typeof AuthenticatedAdminCounselingEventsRoute
+  '/_authenticated/admin/counseling/reviews': typeof AuthenticatedAdminCounselingReviewsRoute
   '/_authenticated/admin/users/$id': typeof AuthenticatedAdminUsersIdRoute
+  '/_authenticated/counseling/college/$id': typeof AuthenticatedCounselingCollegeIdRoute
+  '/_authenticated/counseling/resources/$slug': typeof AuthenticatedCounselingResourcesSlugRoute
   '/_authenticated/admin/content/': typeof AuthenticatedAdminContentIndexRoute
+  '/_authenticated/admin/counseling/': typeof AuthenticatedAdminCounselingIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -238,6 +405,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/admin'
+    | '/counseling'
     | '/home'
     | '/notifications'
     | '/onboarding'
@@ -245,17 +413,33 @@ export interface FileRouteTypes {
     | '/pyq'
     | '/search'
     | '/admin/billing'
+    | '/admin/counseling'
     | '/admin/users'
     | '/coming-soon/$feature'
+    | '/counseling/calendar'
+    | '/counseling/choice-filling'
+    | '/counseling/compare'
+    | '/counseling/explorer'
+    | '/counseling/predictor'
+    | '/counseling/resources'
+    | '/counseling/roadmap'
     | '/review/$attemptId'
     | '/subject/$slug'
     | '/test/$attemptId'
     | '/tests/new'
     | '/admin/'
+    | '/counseling/'
     | '/admin/content/generate'
     | '/admin/content/import'
+    | '/admin/counseling/articles'
+    | '/admin/counseling/cutoffs'
+    | '/admin/counseling/events'
+    | '/admin/counseling/reviews'
     | '/admin/users/$id'
+    | '/counseling/college/$id'
+    | '/counseling/resources/$slug'
     | '/admin/content/'
+    | '/admin/counseling/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -270,15 +454,30 @@ export interface FileRouteTypes {
     | '/admin/billing'
     | '/admin/users'
     | '/coming-soon/$feature'
+    | '/counseling/calendar'
+    | '/counseling/choice-filling'
+    | '/counseling/compare'
+    | '/counseling/explorer'
+    | '/counseling/predictor'
+    | '/counseling/resources'
+    | '/counseling/roadmap'
     | '/review/$attemptId'
     | '/subject/$slug'
     | '/test/$attemptId'
     | '/tests/new'
     | '/admin'
+    | '/counseling'
     | '/admin/content/generate'
     | '/admin/content/import'
+    | '/admin/counseling/articles'
+    | '/admin/counseling/cutoffs'
+    | '/admin/counseling/events'
+    | '/admin/counseling/reviews'
     | '/admin/users/$id'
+    | '/counseling/college/$id'
+    | '/counseling/resources/$slug'
     | '/admin/content'
+    | '/admin/counseling'
   id:
     | '__root__'
     | '/'
@@ -286,6 +485,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/_authenticated/admin'
+    | '/_authenticated/counseling'
     | '/_authenticated/home'
     | '/_authenticated/notifications'
     | '/_authenticated/onboarding'
@@ -293,17 +493,33 @@ export interface FileRouteTypes {
     | '/_authenticated/pyq'
     | '/_authenticated/search'
     | '/_authenticated/admin/billing'
+    | '/_authenticated/admin/counseling'
     | '/_authenticated/admin/users'
     | '/_authenticated/coming-soon/$feature'
+    | '/_authenticated/counseling/calendar'
+    | '/_authenticated/counseling/choice-filling'
+    | '/_authenticated/counseling/compare'
+    | '/_authenticated/counseling/explorer'
+    | '/_authenticated/counseling/predictor'
+    | '/_authenticated/counseling/resources'
+    | '/_authenticated/counseling/roadmap'
     | '/_authenticated/review/$attemptId'
     | '/_authenticated/subject/$slug'
     | '/_authenticated/test/$attemptId'
     | '/_authenticated/tests/new'
     | '/_authenticated/admin/'
+    | '/_authenticated/counseling/'
     | '/_authenticated/admin/content/generate'
     | '/_authenticated/admin/content/import'
+    | '/_authenticated/admin/counseling/articles'
+    | '/_authenticated/admin/counseling/cutoffs'
+    | '/_authenticated/admin/counseling/events'
+    | '/_authenticated/admin/counseling/reviews'
     | '/_authenticated/admin/users/$id'
+    | '/_authenticated/counseling/college/$id'
+    | '/_authenticated/counseling/resources/$slug'
     | '/_authenticated/admin/content/'
+    | '/_authenticated/admin/counseling/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -385,12 +601,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedHomeRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/counseling': {
+      id: '/_authenticated/counseling'
+      path: '/counseling'
+      fullPath: '/counseling'
+      preLoaderRoute: typeof AuthenticatedCounselingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/counseling/': {
+      id: '/_authenticated/counseling/'
+      path: '/'
+      fullPath: '/counseling/'
+      preLoaderRoute: typeof AuthenticatedCounselingIndexRouteImport
+      parentRoute: typeof AuthenticatedCounselingRoute
     }
     '/_authenticated/admin/': {
       id: '/_authenticated/admin/'
@@ -427,6 +657,55 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedReviewAttemptIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/counseling/roadmap': {
+      id: '/_authenticated/counseling/roadmap'
+      path: '/roadmap'
+      fullPath: '/counseling/roadmap'
+      preLoaderRoute: typeof AuthenticatedCounselingRoadmapRouteImport
+      parentRoute: typeof AuthenticatedCounselingRoute
+    }
+    '/_authenticated/counseling/resources': {
+      id: '/_authenticated/counseling/resources'
+      path: '/resources'
+      fullPath: '/counseling/resources'
+      preLoaderRoute: typeof AuthenticatedCounselingResourcesRouteImport
+      parentRoute: typeof AuthenticatedCounselingRoute
+    }
+    '/_authenticated/counseling/predictor': {
+      id: '/_authenticated/counseling/predictor'
+      path: '/predictor'
+      fullPath: '/counseling/predictor'
+      preLoaderRoute: typeof AuthenticatedCounselingPredictorRouteImport
+      parentRoute: typeof AuthenticatedCounselingRoute
+    }
+    '/_authenticated/counseling/explorer': {
+      id: '/_authenticated/counseling/explorer'
+      path: '/explorer'
+      fullPath: '/counseling/explorer'
+      preLoaderRoute: typeof AuthenticatedCounselingExplorerRouteImport
+      parentRoute: typeof AuthenticatedCounselingRoute
+    }
+    '/_authenticated/counseling/compare': {
+      id: '/_authenticated/counseling/compare'
+      path: '/compare'
+      fullPath: '/counseling/compare'
+      preLoaderRoute: typeof AuthenticatedCounselingCompareRouteImport
+      parentRoute: typeof AuthenticatedCounselingRoute
+    }
+    '/_authenticated/counseling/choice-filling': {
+      id: '/_authenticated/counseling/choice-filling'
+      path: '/choice-filling'
+      fullPath: '/counseling/choice-filling'
+      preLoaderRoute: typeof AuthenticatedCounselingChoiceFillingRouteImport
+      parentRoute: typeof AuthenticatedCounselingRoute
+    }
+    '/_authenticated/counseling/calendar': {
+      id: '/_authenticated/counseling/calendar'
+      path: '/calendar'
+      fullPath: '/counseling/calendar'
+      preLoaderRoute: typeof AuthenticatedCounselingCalendarRouteImport
+      parentRoute: typeof AuthenticatedCounselingRoute
+    }
     '/_authenticated/coming-soon/$feature': {
       id: '/_authenticated/coming-soon/$feature'
       path: '/coming-soon/$feature'
@@ -441,12 +720,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/counseling': {
+      id: '/_authenticated/admin/counseling'
+      path: '/counseling'
+      fullPath: '/admin/counseling'
+      preLoaderRoute: typeof AuthenticatedAdminCounselingRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/billing': {
       id: '/_authenticated/admin/billing'
       path: '/billing'
       fullPath: '/admin/billing'
       preLoaderRoute: typeof AuthenticatedAdminBillingRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/counseling/': {
+      id: '/_authenticated/admin/counseling/'
+      path: '/'
+      fullPath: '/admin/counseling/'
+      preLoaderRoute: typeof AuthenticatedAdminCounselingIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminCounselingRoute
     }
     '/_authenticated/admin/content/': {
       id: '/_authenticated/admin/content/'
@@ -455,12 +748,54 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminContentIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/counseling/resources/$slug': {
+      id: '/_authenticated/counseling/resources/$slug'
+      path: '/$slug'
+      fullPath: '/counseling/resources/$slug'
+      preLoaderRoute: typeof AuthenticatedCounselingResourcesSlugRouteImport
+      parentRoute: typeof AuthenticatedCounselingResourcesRoute
+    }
+    '/_authenticated/counseling/college/$id': {
+      id: '/_authenticated/counseling/college/$id'
+      path: '/college/$id'
+      fullPath: '/counseling/college/$id'
+      preLoaderRoute: typeof AuthenticatedCounselingCollegeIdRouteImport
+      parentRoute: typeof AuthenticatedCounselingRoute
+    }
     '/_authenticated/admin/users/$id': {
       id: '/_authenticated/admin/users/$id'
       path: '/$id'
       fullPath: '/admin/users/$id'
       preLoaderRoute: typeof AuthenticatedAdminUsersIdRouteImport
       parentRoute: typeof AuthenticatedAdminUsersRoute
+    }
+    '/_authenticated/admin/counseling/reviews': {
+      id: '/_authenticated/admin/counseling/reviews'
+      path: '/reviews'
+      fullPath: '/admin/counseling/reviews'
+      preLoaderRoute: typeof AuthenticatedAdminCounselingReviewsRouteImport
+      parentRoute: typeof AuthenticatedAdminCounselingRoute
+    }
+    '/_authenticated/admin/counseling/events': {
+      id: '/_authenticated/admin/counseling/events'
+      path: '/events'
+      fullPath: '/admin/counseling/events'
+      preLoaderRoute: typeof AuthenticatedAdminCounselingEventsRouteImport
+      parentRoute: typeof AuthenticatedAdminCounselingRoute
+    }
+    '/_authenticated/admin/counseling/cutoffs': {
+      id: '/_authenticated/admin/counseling/cutoffs'
+      path: '/cutoffs'
+      fullPath: '/admin/counseling/cutoffs'
+      preLoaderRoute: typeof AuthenticatedAdminCounselingCutoffsRouteImport
+      parentRoute: typeof AuthenticatedAdminCounselingRoute
+    }
+    '/_authenticated/admin/counseling/articles': {
+      id: '/_authenticated/admin/counseling/articles'
+      path: '/articles'
+      fullPath: '/admin/counseling/articles'
+      preLoaderRoute: typeof AuthenticatedAdminCounselingArticlesRouteImport
+      parentRoute: typeof AuthenticatedAdminCounselingRoute
     }
     '/_authenticated/admin/content/import': {
       id: '/_authenticated/admin/content/import'
@@ -479,6 +814,33 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedAdminCounselingRouteChildren {
+  AuthenticatedAdminCounselingArticlesRoute: typeof AuthenticatedAdminCounselingArticlesRoute
+  AuthenticatedAdminCounselingCutoffsRoute: typeof AuthenticatedAdminCounselingCutoffsRoute
+  AuthenticatedAdminCounselingEventsRoute: typeof AuthenticatedAdminCounselingEventsRoute
+  AuthenticatedAdminCounselingReviewsRoute: typeof AuthenticatedAdminCounselingReviewsRoute
+  AuthenticatedAdminCounselingIndexRoute: typeof AuthenticatedAdminCounselingIndexRoute
+}
+
+const AuthenticatedAdminCounselingRouteChildren: AuthenticatedAdminCounselingRouteChildren =
+  {
+    AuthenticatedAdminCounselingArticlesRoute:
+      AuthenticatedAdminCounselingArticlesRoute,
+    AuthenticatedAdminCounselingCutoffsRoute:
+      AuthenticatedAdminCounselingCutoffsRoute,
+    AuthenticatedAdminCounselingEventsRoute:
+      AuthenticatedAdminCounselingEventsRoute,
+    AuthenticatedAdminCounselingReviewsRoute:
+      AuthenticatedAdminCounselingReviewsRoute,
+    AuthenticatedAdminCounselingIndexRoute:
+      AuthenticatedAdminCounselingIndexRoute,
+  }
+
+const AuthenticatedAdminCounselingRouteWithChildren =
+  AuthenticatedAdminCounselingRoute._addFileChildren(
+    AuthenticatedAdminCounselingRouteChildren,
+  )
+
 interface AuthenticatedAdminUsersRouteChildren {
   AuthenticatedAdminUsersIdRoute: typeof AuthenticatedAdminUsersIdRoute
 }
@@ -495,6 +857,7 @@ const AuthenticatedAdminUsersRouteWithChildren =
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminBillingRoute: typeof AuthenticatedAdminBillingRoute
+  AuthenticatedAdminCounselingRoute: typeof AuthenticatedAdminCounselingRouteWithChildren
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRouteWithChildren
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedAdminContentGenerateRoute: typeof AuthenticatedAdminContentGenerateRoute
@@ -504,6 +867,8 @@ interface AuthenticatedAdminRouteChildren {
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminBillingRoute: AuthenticatedAdminBillingRoute,
+  AuthenticatedAdminCounselingRoute:
+    AuthenticatedAdminCounselingRouteWithChildren,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRouteWithChildren,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   AuthenticatedAdminContentGenerateRoute:
@@ -515,8 +880,58 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
 const AuthenticatedAdminRouteWithChildren =
   AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
 
+interface AuthenticatedCounselingResourcesRouteChildren {
+  AuthenticatedCounselingResourcesSlugRoute: typeof AuthenticatedCounselingResourcesSlugRoute
+}
+
+const AuthenticatedCounselingResourcesRouteChildren: AuthenticatedCounselingResourcesRouteChildren =
+  {
+    AuthenticatedCounselingResourcesSlugRoute:
+      AuthenticatedCounselingResourcesSlugRoute,
+  }
+
+const AuthenticatedCounselingResourcesRouteWithChildren =
+  AuthenticatedCounselingResourcesRoute._addFileChildren(
+    AuthenticatedCounselingResourcesRouteChildren,
+  )
+
+interface AuthenticatedCounselingRouteChildren {
+  AuthenticatedCounselingCalendarRoute: typeof AuthenticatedCounselingCalendarRoute
+  AuthenticatedCounselingChoiceFillingRoute: typeof AuthenticatedCounselingChoiceFillingRoute
+  AuthenticatedCounselingCompareRoute: typeof AuthenticatedCounselingCompareRoute
+  AuthenticatedCounselingExplorerRoute: typeof AuthenticatedCounselingExplorerRoute
+  AuthenticatedCounselingPredictorRoute: typeof AuthenticatedCounselingPredictorRoute
+  AuthenticatedCounselingResourcesRoute: typeof AuthenticatedCounselingResourcesRouteWithChildren
+  AuthenticatedCounselingRoadmapRoute: typeof AuthenticatedCounselingRoadmapRoute
+  AuthenticatedCounselingIndexRoute: typeof AuthenticatedCounselingIndexRoute
+  AuthenticatedCounselingCollegeIdRoute: typeof AuthenticatedCounselingCollegeIdRoute
+}
+
+const AuthenticatedCounselingRouteChildren: AuthenticatedCounselingRouteChildren =
+  {
+    AuthenticatedCounselingCalendarRoute: AuthenticatedCounselingCalendarRoute,
+    AuthenticatedCounselingChoiceFillingRoute:
+      AuthenticatedCounselingChoiceFillingRoute,
+    AuthenticatedCounselingCompareRoute: AuthenticatedCounselingCompareRoute,
+    AuthenticatedCounselingExplorerRoute: AuthenticatedCounselingExplorerRoute,
+    AuthenticatedCounselingPredictorRoute:
+      AuthenticatedCounselingPredictorRoute,
+    AuthenticatedCounselingResourcesRoute:
+      AuthenticatedCounselingResourcesRouteWithChildren,
+    AuthenticatedCounselingRoadmapRoute: AuthenticatedCounselingRoadmapRoute,
+    AuthenticatedCounselingIndexRoute: AuthenticatedCounselingIndexRoute,
+    AuthenticatedCounselingCollegeIdRoute:
+      AuthenticatedCounselingCollegeIdRoute,
+  }
+
+const AuthenticatedCounselingRouteWithChildren =
+  AuthenticatedCounselingRoute._addFileChildren(
+    AuthenticatedCounselingRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+  AuthenticatedCounselingRoute: typeof AuthenticatedCounselingRouteWithChildren
   AuthenticatedHomeRoute: typeof AuthenticatedHomeRoute
   AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
@@ -532,6 +947,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+  AuthenticatedCounselingRoute: AuthenticatedCounselingRouteWithChildren,
   AuthenticatedHomeRoute: AuthenticatedHomeRoute,
   AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
