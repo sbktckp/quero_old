@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from "@/components/ui/label";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { logAdminAction } from "@/lib/admin-log";
 
 export const Route = createFileRoute("/_authenticated/admin/counseling/")({
   component: AdminColleges,
@@ -61,6 +62,7 @@ function AdminColleges() {
     mutationFn: async (id: string) => {
       const { error } = await supabase.from("colleges").delete().eq("id", id);
       if (error) throw error;
+      await logAdminAction("college.delete", "colleges", id);
     },
     onSuccess: () => { toast.success("Deleted"); qc.invalidateQueries({ queryKey: ["admin-colleges"] }); },
     onError: (e: any) => toast.error(e.message),
