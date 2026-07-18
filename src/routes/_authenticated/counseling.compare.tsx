@@ -91,7 +91,7 @@ function Compare() {
               </tr>
             </thead>
             <tbody>
-              {[
+              {([
                 ["Type", (c: any) => <Badge variant="secondary">{c.institution_type}</Badge>],
                 ["Location", (c: any) => `${c.city ?? "—"}, ${c.state}`],
                 ["Annual fees (₹)", (c: any) => c.annual_fees_min || c.annual_fees_max ? `${c.annual_fees_min ?? "?"} – ${c.annual_fees_max ?? "?"}` : "—"],
@@ -100,10 +100,10 @@ function Compare() {
                 ["Bond", (c: any) => c.bond_years ? `${c.bond_years} yr${c.bond_amount ? ` / ₹${c.bond_amount}` : ""}` : "None"],
                 ["NMC recognized", (c: any) => c.nmc_recognized ? "Yes" : "No"],
                 ["Avg. review rating", (c: any) => avg[c.id] != null ? `${avg[c.id]} / 5` : "No reviews"],
-              ].map(([label, render]) => (
-                <tr key={label as string} className="border-t border-border">
+              ] as [string, (c: any) => React.ReactNode][]).map(([label, render]) => (
+                <tr key={label} className="border-t border-border">
                   <td className="p-2 sticky left-0 bg-background font-medium text-muted-foreground">{label}</td>
-                  {selected.map((c) => <td key={c.id} className="p-2 align-top">{(render as (c: any) => React.ReactNode)(c)}</td>)}
+                  {selected.map((c) => <td key={c.id} className="p-2 align-top">{render(c)}</td>)}
                 </tr>
               ))}
             </tbody>
