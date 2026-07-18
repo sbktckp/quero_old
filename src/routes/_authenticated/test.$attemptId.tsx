@@ -46,7 +46,7 @@ function TestPage() {
 
   const isPractice = attempt?.mode === "practice";
 
-  const { data: questions = [] } = useQuery({
+  const { data: rawQuestions = [] } = useQuery({
     queryKey: ["test-questions", attempt?.test_id],
     enabled: !!attempt?.test_id,
     queryFn: async () => {
@@ -59,6 +59,13 @@ function TestPage() {
       return (data ?? []) as unknown as QuestionRow[];
     },
   });
+
+  // Display-only shuffle, deterministic per attempt. Scoring uses option IDs
+  // resolved server-side in submit_answer — order here does not affect correctness.
+  const questions = useMemo(() => {
+    if (!attempt?.id || rawQuestions.length === 0) return rawQuestions;
+    return seededShuffle(rawQuestions, `q:${attempt.id}`);
+  }, [rawQuestions, attempt?.id]);
 
   useEffect(() => {
     if (!attempt || isPractice) return;
