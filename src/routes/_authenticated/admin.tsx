@@ -38,6 +38,7 @@ function AdminLayout() {
     { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
     { to: "/admin/users", label: "Users", icon: Users, exact: false },
     { to: "/admin/content", label: "Content", icon: BookOpen, exact: false },
+    { to: "/admin/counseling", label: "Counseling", icon: GraduationCap, exact: false },
     { to: "/admin/billing", label: "Billing", icon: CreditCard, exact: false },
   ] as const;
 
