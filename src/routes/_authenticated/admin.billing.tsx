@@ -599,6 +599,7 @@ function PaymentsTab() {
     mutationFn: async (id: string) => {
       const { error } = await supabase.from("payments").update({ status: "refunded" }).eq("id", id);
       if (error) throw error;
+      await logAdminAction("payment.refund", "payments", id);
     },
     onSuccess: () => { qc.invalidateQueries({ queryKey: ["admin-payments"] }); toast.success("Marked refunded in DB only"); },
     onError: (e: Error) => toast.error(e.message),
