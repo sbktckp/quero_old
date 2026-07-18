@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import { logAdminAction } from "@/lib/admin-log";
 import { Download, Upload, CheckCircle2, AlertTriangle, XCircle, Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin/counseling/cutoffs")({
@@ -136,7 +137,7 @@ function CutoffsImport() {
     }
     setCommitting(false);
     setResult({ ok, failed });
-    if (ok > 0) toast.success(`Imported ${ok} cutoffs`);
+    if (ok > 0) { await logAdminAction("cutoffs.import", "college_cutoffs", null, { inserted: ok, failed: failed.length }); toast.success(`Imported ${ok} cutoffs`); }
     if (failed.length) toast.error(`${failed.length} rows failed`);
   }
 
