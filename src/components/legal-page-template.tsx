@@ -205,7 +205,7 @@ function SectionCard({ item, index }: { item: LegalSection; index: number }) {
 }
 
 export function LegalPageTemplate(props: LegalPageData) {
-  const { title, subtitle, intro, illustration, items, trust, contact, updatedAt, supportEmail } = props;
+  const { title, subtitle, intro, illustration, heroSlot, items, trust, contact, updatedAt, supportEmail } = props;
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-30 bg-background/95 backdrop-blur border-b border-border">
