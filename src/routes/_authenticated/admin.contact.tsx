@@ -18,6 +18,10 @@ type Settings = {
   support_whatsapp: string | null;
   support_hours_days: string;
   support_hours_time: string;
+  instagram_url: string | null;
+  youtube_url: string | null;
+  telegram_url: string | null;
+  show_whatsapp_social: boolean;
 };
 
 function normalizePhone(s: string): string {
