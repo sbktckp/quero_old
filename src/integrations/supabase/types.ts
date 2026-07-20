@@ -473,6 +473,7 @@ export type Database = {
       legal_pages: {
         Row: {
           content: string
+          sections: Json | null
           slug: string
           title: string
           updated_at: string
@@ -480,6 +481,7 @@ export type Database = {
         }
         Insert: {
           content: string
+          sections?: Json | null
           slug: string
           title: string
           updated_at?: string
@@ -487,6 +489,7 @@ export type Database = {
         }
         Update: {
           content?: string
+          sections?: Json | null
           slug?: string
           title?: string
           updated_at?: string
