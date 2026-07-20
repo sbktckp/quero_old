@@ -7,6 +7,9 @@ import {
   Grid3x3, UserCheck, Copyright, Shield, Pencil, HelpCircle,
   Heart, Handshake, Check, RefreshCw,
 } from "lucide-react";
+import refundArt from "@/assets/refund-policy.png.asset.json";
+import termsArt from "@/assets/terms.png.asset.json";
+import privacyArt from "@/assets/privacy-policy.png.asset.json";
 
 const ICONS: Record<string, typeof User> = {
   user: User, database: Database, "shield-check": ShieldCheck, lock: Lock,
@@ -226,9 +229,6 @@ function ClipboardCheckArt() {
   );
 }
 
-import refundArt from "@/assets/refund-policy.png.asset.json";
-import termsArt from "@/assets/terms.png.asset.json";
-import privacyArt from "@/assets/privacy-policy.png.asset.json";
 
 function HeroArt({ kind }: { kind?: string }) {
   const src =
