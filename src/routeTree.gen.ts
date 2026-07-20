@@ -9,10 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as RefundPolicyRouteImport } from './routes/refund-policy'
+import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
+import { Route as DeleteAccountRouteImport } from './routes/delete-account'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
 import { Route as ApiRazorpayWebhookRouteImport } from './routes/api/razorpay-webhook'
 import { Route as AuthenticatedSearchRouteImport } from './routes/_authenticated/search'
 import { Route as AuthenticatedPyqRouteImport } from './routes/_authenticated/pyq'
@@ -38,6 +44,7 @@ import { Route as AuthenticatedCounselingChoiceFillingRouteImport } from './rout
 import { Route as AuthenticatedCounselingCalendarRouteImport } from './routes/_authenticated/counseling.calendar'
 import { Route as AuthenticatedComingSoonFeatureRouteImport } from './routes/_authenticated/coming-soon.$feature'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
+import { Route as AuthenticatedAdminLegalRouteImport } from './routes/_authenticated/admin.legal'
 import { Route as AuthenticatedAdminCounselingRouteImport } from './routes/_authenticated/admin.counseling'
 import { Route as AuthenticatedAdminBillingRouteImport } from './routes/_authenticated/admin.billing'
 import { Route as AuthenticatedAdminActivityRouteImport } from './routes/_authenticated/admin.activity'
@@ -53,9 +60,34 @@ import { Route as AuthenticatedAdminCounselingArticlesRouteImport } from './rout
 import { Route as AuthenticatedAdminContentImportRouteImport } from './routes/_authenticated/admin.content.import'
 import { Route as AuthenticatedAdminContentGenerateRouteImport } from './routes/_authenticated/admin.content.generate'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RefundPolicyRoute = RefundPolicyRouteImport.update({
+  id: '/refund-policy',
+  path: '/refund-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
+  id: '/privacy-policy',
+  path: '/privacy-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DeleteAccountRoute = DeleteAccountRouteImport.update({
+  id: '/delete-account',
+  path: '/delete-account',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -70,6 +102,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalSlugRoute = LegalSlugRouteImport.update({
+  id: '/legal/$slug',
+  path: '/legal/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiRazorpayWebhookRoute = ApiRazorpayWebhookRouteImport.update({
@@ -210,6 +247,11 @@ const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
   path: '/users',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminLegalRoute = AuthenticatedAdminLegalRouteImport.update({
+  id: '/legal',
+  path: '/legal',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedAdminCounselingRoute =
   AuthenticatedAdminCounselingRouteImport.update({
     id: '/counseling',
@@ -298,7 +340,12 @@ const AuthenticatedAdminContentGenerateRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/contact': typeof ContactRoute
+  '/delete-account': typeof DeleteAccountRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/refund-policy': typeof RefundPolicyRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/terms': typeof TermsRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/counseling': typeof AuthenticatedCounselingRouteWithChildren
   '/home': typeof AuthenticatedHomeRoute
@@ -309,9 +356,11 @@ export interface FileRoutesByFullPath {
   '/pyq': typeof AuthenticatedPyqRoute
   '/search': typeof AuthenticatedSearchRoute
   '/api/razorpay-webhook': typeof ApiRazorpayWebhookRoute
+  '/legal/$slug': typeof LegalSlugRoute
   '/admin/activity': typeof AuthenticatedAdminActivityRoute
   '/admin/billing': typeof AuthenticatedAdminBillingRoute
   '/admin/counseling': typeof AuthenticatedAdminCounselingRouteWithChildren
+  '/admin/legal': typeof AuthenticatedAdminLegalRoute
   '/admin/users': typeof AuthenticatedAdminUsersRouteWithChildren
   '/coming-soon/$feature': typeof AuthenticatedComingSoonFeatureRoute
   '/counseling/calendar': typeof AuthenticatedCounselingCalendarRoute
@@ -342,7 +391,12 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/contact': typeof ContactRoute
+  '/delete-account': typeof DeleteAccountRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/refund-policy': typeof RefundPolicyRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/terms': typeof TermsRoute
   '/home': typeof AuthenticatedHomeRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
@@ -351,8 +405,10 @@ export interface FileRoutesByTo {
   '/pyq': typeof AuthenticatedPyqRoute
   '/search': typeof AuthenticatedSearchRoute
   '/api/razorpay-webhook': typeof ApiRazorpayWebhookRoute
+  '/legal/$slug': typeof LegalSlugRoute
   '/admin/activity': typeof AuthenticatedAdminActivityRoute
   '/admin/billing': typeof AuthenticatedAdminBillingRoute
+  '/admin/legal': typeof AuthenticatedAdminLegalRoute
   '/admin/users': typeof AuthenticatedAdminUsersRouteWithChildren
   '/coming-soon/$feature': typeof AuthenticatedComingSoonFeatureRoute
   '/counseling/calendar': typeof AuthenticatedCounselingCalendarRoute
@@ -385,7 +441,12 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/contact': typeof ContactRoute
+  '/delete-account': typeof DeleteAccountRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/refund-policy': typeof RefundPolicyRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/terms': typeof TermsRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/counseling': typeof AuthenticatedCounselingRouteWithChildren
   '/_authenticated/home': typeof AuthenticatedHomeRoute
@@ -396,9 +457,11 @@ export interface FileRoutesById {
   '/_authenticated/pyq': typeof AuthenticatedPyqRoute
   '/_authenticated/search': typeof AuthenticatedSearchRoute
   '/api/razorpay-webhook': typeof ApiRazorpayWebhookRoute
+  '/legal/$slug': typeof LegalSlugRoute
   '/_authenticated/admin/activity': typeof AuthenticatedAdminActivityRoute
   '/_authenticated/admin/billing': typeof AuthenticatedAdminBillingRoute
   '/_authenticated/admin/counseling': typeof AuthenticatedAdminCounselingRouteWithChildren
+  '/_authenticated/admin/legal': typeof AuthenticatedAdminLegalRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRouteWithChildren
   '/_authenticated/coming-soon/$feature': typeof AuthenticatedComingSoonFeatureRoute
   '/_authenticated/counseling/calendar': typeof AuthenticatedCounselingCalendarRoute
@@ -431,7 +494,12 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/contact'
+    | '/delete-account'
+    | '/privacy-policy'
+    | '/refund-policy'
     | '/reset-password'
+    | '/terms'
     | '/admin'
     | '/counseling'
     | '/home'
@@ -442,9 +510,11 @@ export interface FileRouteTypes {
     | '/pyq'
     | '/search'
     | '/api/razorpay-webhook'
+    | '/legal/$slug'
     | '/admin/activity'
     | '/admin/billing'
     | '/admin/counseling'
+    | '/admin/legal'
     | '/admin/users'
     | '/coming-soon/$feature'
     | '/counseling/calendar'
@@ -475,7 +545,12 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/contact'
+    | '/delete-account'
+    | '/privacy-policy'
+    | '/refund-policy'
     | '/reset-password'
+    | '/terms'
     | '/home'
     | '/notifications'
     | '/onboarding'
@@ -484,8 +559,10 @@ export interface FileRouteTypes {
     | '/pyq'
     | '/search'
     | '/api/razorpay-webhook'
+    | '/legal/$slug'
     | '/admin/activity'
     | '/admin/billing'
+    | '/admin/legal'
     | '/admin/users'
     | '/coming-soon/$feature'
     | '/counseling/calendar'
@@ -517,7 +594,12 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/contact'
+    | '/delete-account'
+    | '/privacy-policy'
+    | '/refund-policy'
     | '/reset-password'
+    | '/terms'
     | '/_authenticated/admin'
     | '/_authenticated/counseling'
     | '/_authenticated/home'
@@ -528,9 +610,11 @@ export interface FileRouteTypes {
     | '/_authenticated/pyq'
     | '/_authenticated/search'
     | '/api/razorpay-webhook'
+    | '/legal/$slug'
     | '/_authenticated/admin/activity'
     | '/_authenticated/admin/billing'
     | '/_authenticated/admin/counseling'
+    | '/_authenticated/admin/legal'
     | '/_authenticated/admin/users'
     | '/_authenticated/coming-soon/$feature'
     | '/_authenticated/counseling/calendar'
@@ -563,17 +647,58 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  ContactRoute: typeof ContactRoute
+  DeleteAccountRoute: typeof DeleteAccountRoute
+  PrivacyPolicyRoute: typeof PrivacyPolicyRoute
+  RefundPolicyRoute: typeof RefundPolicyRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  TermsRoute: typeof TermsRoute
   ApiRazorpayWebhookRoute: typeof ApiRazorpayWebhookRoute
+  LegalSlugRoute: typeof LegalSlugRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reset-password': {
       id: '/reset-password'
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/refund-policy': {
+      id: '/refund-policy'
+      path: '/refund-policy'
+      fullPath: '/refund-policy'
+      preLoaderRoute: typeof RefundPolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy-policy': {
+      id: '/privacy-policy'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy'
+      preLoaderRoute: typeof PrivacyPolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/delete-account': {
+      id: '/delete-account'
+      path: '/delete-account'
+      fullPath: '/delete-account'
+      preLoaderRoute: typeof DeleteAccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -595,6 +720,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/$slug': {
+      id: '/legal/$slug'
+      path: '/legal/$slug'
+      fullPath: '/legal/$slug'
+      preLoaderRoute: typeof LegalSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/razorpay-webhook': {
@@ -772,6 +904,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/legal': {
+      id: '/_authenticated/admin/legal'
+      path: '/legal'
+      fullPath: '/admin/legal'
+      preLoaderRoute: typeof AuthenticatedAdminLegalRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/counseling': {
       id: '/_authenticated/admin/counseling'
       path: '/counseling'
@@ -918,6 +1057,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminActivityRoute: typeof AuthenticatedAdminActivityRoute
   AuthenticatedAdminBillingRoute: typeof AuthenticatedAdminBillingRoute
   AuthenticatedAdminCounselingRoute: typeof AuthenticatedAdminCounselingRouteWithChildren
+  AuthenticatedAdminLegalRoute: typeof AuthenticatedAdminLegalRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRouteWithChildren
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedAdminContentGenerateRoute: typeof AuthenticatedAdminContentGenerateRoute
@@ -930,6 +1070,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminBillingRoute: AuthenticatedAdminBillingRoute,
   AuthenticatedAdminCounselingRoute:
     AuthenticatedAdminCounselingRouteWithChildren,
+  AuthenticatedAdminLegalRoute: AuthenticatedAdminLegalRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRouteWithChildren,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   AuthenticatedAdminContentGenerateRoute:
@@ -1031,8 +1172,14 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  ContactRoute: ContactRoute,
+  DeleteAccountRoute: DeleteAccountRoute,
+  PrivacyPolicyRoute: PrivacyPolicyRoute,
+  RefundPolicyRoute: RefundPolicyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  TermsRoute: TermsRoute,
   ApiRazorpayWebhookRoute: ApiRazorpayWebhookRoute,
+  LegalSlugRoute: LegalSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

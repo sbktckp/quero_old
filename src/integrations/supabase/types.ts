@@ -425,6 +425,30 @@ export type Database = {
           },
         ]
       }
+      legal_pages: {
+        Row: {
+          content: string
+          slug: string
+          title: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          content: string
+          slug: string
+          title: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          content?: string
+          slug?: string
+          title?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       options: {
         Row: {
           created_at: string
