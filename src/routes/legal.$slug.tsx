@@ -1,20 +1,32 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowLeft } from "lucide-react";
+import { LegalPageTemplate, type LegalSection } from "@/components/legal-page-template";
 
 const SLUGS = ["privacy-policy", "terms", "refund-policy", "contact"] as const;
+
+type SectionsJson = {
+  subtitle?: string;
+  intro?: string;
+  illustration?: string;
+  items?: LegalSection[];
+  trust?: { heading: string; body: string };
+  contact?: { heading: string; body: string };
+};
 
 export const Route = createFileRoute("/legal/$slug")({
   loader: async ({ params }) => {
     if (!SLUGS.includes(params.slug as (typeof SLUGS)[number])) throw notFound();
-    const { data, error } = await supabase
-      .from("legal_pages")
-      .select("slug,title,content,updated_at")
-      .eq("slug", params.slug)
-      .maybeSingle();
-    if (error) throw error;
-    if (!data) throw notFound();
-    return data;
+    const [pageRes, settingsRes] = await Promise.all([
+      supabase.from("legal_pages").select("slug,title,content,sections,updated_at").eq("slug", params.slug).maybeSingle(),
+      supabase.from("contact_settings").select("support_email").eq("id", true).maybeSingle(),
+    ]);
+    if (pageRes.error) throw pageRes.error;
+    if (!pageRes.data) throw notFound();
+    return {
+      ...pageRes.data,
+      support_email: settingsRes.data?.support_email ?? "support@quero.in",
+    };
   },
   head: ({ loaderData }) => ({
     meta: loaderData
@@ -41,6 +53,25 @@ export const Route = createFileRoute("/legal/$slug")({
 
 function LegalPage() {
   const data = Route.useLoaderData();
+  const s = (data.sections ?? null) as SectionsJson | null;
+
+  if (s && Array.isArray(s.items) && s.items.length > 0) {
+    return (
+      <LegalPageTemplate
+        title={data.title}
+        subtitle={s.subtitle}
+        intro={s.intro}
+        illustration={s.illustration}
+        items={s.items}
+        trust={s.trust}
+        contact={s.contact}
+        updatedAt={data.updated_at}
+        supportEmail={data.support_email}
+      />
+    );
+  }
+
+  // Fallback: plain content
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-30 bg-background/95 backdrop-blur border-b border-border">
