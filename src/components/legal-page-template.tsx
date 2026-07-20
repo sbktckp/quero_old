@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import {
   ArrowLeft, ChevronDown, Mail, ArrowRight, Sparkles,
   User, Database, ShieldCheck, Lock, Globe, FileText,
   IndianRupee, ShoppingCart, Clock, CreditCard, UserX, Info,
   Grid3x3, UserCheck, Copyright, Shield, Pencil, HelpCircle,
-  Heart, Handshake,
+  Heart, Handshake, Check, RefreshCw,
 } from "lucide-react";
 
 const ICONS: Record<string, typeof User> = {
