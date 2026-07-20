@@ -22,6 +22,7 @@ export type LegalPageData = {
   subtitle?: string;
   intro?: string;
   illustration?: string;
+  heroSlot?: ReactNode;
   items: LegalSection[];
   trust?: { heading: string; body: string };
   contact?: { heading: string; body: string };
