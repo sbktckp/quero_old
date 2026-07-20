@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import {
   ArrowLeft, ChevronDown, Mail, ArrowRight, Sparkles,
   User, Database, ShieldCheck, Lock, Globe, FileText,
   IndianRupee, ShoppingCart, Clock, CreditCard, UserX, Info,
   Grid3x3, UserCheck, Copyright, Shield, Pencil, HelpCircle,
-  Heart, Handshake,
+  Heart, Handshake, Check, RefreshCw,
 } from "lucide-react";
 
 const ICONS: Record<string, typeof User> = {
@@ -22,6 +22,7 @@ export type LegalPageData = {
   subtitle?: string;
   intro?: string;
   illustration?: string;
+  heroSlot?: ReactNode;
   items: LegalSection[];
   trust?: { heading: string; body: string };
   contact?: { heading: string; body: string };
@@ -45,23 +46,136 @@ function renderBody(body: string) {
   );
 }
 
-function HeroArt({ kind }: { kind?: string }) {
+function Plant({ className = "" }: { className?: string }) {
   return (
-    <div className="relative w-40 h-40 shrink-0 flex items-center justify-center">
-      <div className="absolute inset-0 rounded-[2rem] bg-primary/10" />
+    <div className={`relative ${className}`} aria-hidden>
+      {/* leaves */}
+      <div className="absolute left-1/2 -translate-x-1/2 bottom-[10px] w-6 h-8 rounded-full bg-emerald-400/80 rotate-[-18deg] origin-bottom shadow-sm" />
+      <div className="absolute left-1/2 -translate-x-1/2 bottom-[10px] w-6 h-8 rounded-full bg-emerald-500/80 rotate-[18deg] origin-bottom shadow-sm" />
+      <div className="absolute left-1/2 -translate-x-1/2 bottom-[12px] w-5 h-9 rounded-full bg-emerald-400/90 origin-bottom" />
+      {/* pot */}
+      <div className="absolute left-1/2 -translate-x-1/2 bottom-0 w-8 h-4 rounded-b-lg bg-gradient-to-b from-amber-500 to-amber-700" />
+      <div className="absolute left-1/2 -translate-x-1/2 bottom-[14px] w-9 h-1.5 rounded-sm bg-amber-800/70" />
+    </div>
+  );
+}
+
+function CornerAccents() {
+  return (
+    <>
       <div className="absolute -top-2 -right-2 h-3 w-3 rounded-full bg-primary/40" />
       <div className="absolute bottom-4 -left-2 h-2 w-2 rounded-full bg-primary/60" />
       <div className="absolute top-6 -left-3 h-2 w-2 rounded-full bg-primary/30" />
-      <div className="relative h-24 w-24 rounded-3xl gradient-primary shadow-elevated flex items-center justify-center text-primary-foreground">
-        {kind === "clipboard-rupee" ? <IndianRupee size={40} strokeWidth={2.5} />
-          : kind === "clipboard-check" ? <FileText size={40} strokeWidth={2.5} />
-          : <ShieldCheck size={40} strokeWidth={2.5} />}
-      </div>
       <div className="absolute -bottom-1 right-2 text-primary/70">
         <Sparkles size={16} />
       </div>
+      <div className="absolute top-2 right-6 text-primary/50">
+        <Sparkles size={10} />
+      </div>
+    </>
+  );
+}
+
+function ShieldArt() {
+  return (
+    <div className="relative w-44 h-44 shrink-0">
+      <CornerAccents />
+      {/* Shield */}
+      <div className="absolute left-2 top-2 w-28 h-32">
+        <svg viewBox="0 0 100 116" className="w-full h-full drop-shadow-[0_10px_20px_rgba(108,79,240,0.35)]">
+          <defs>
+            <linearGradient id="shieldGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="1" />
+              <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0.75" />
+            </linearGradient>
+            <linearGradient id="shieldHi" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.5" />
+              <stop offset="60%" stopColor="#ffffff" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          <path d="M50 2 L95 18 V56 C95 84 76 104 50 114 C24 104 5 84 5 56 V18 Z" fill="url(#shieldGrad)" />
+          <path d="M50 2 L95 18 V56 C95 84 76 104 50 114 C24 104 5 84 5 56 V18 Z" fill="url(#shieldHi)" />
+          <path d="M50 6 L91 20 V56 C91 82 73 100 50 110 C27 100 9 82 9 56 V20 Z" fill="none" stroke="#ffffff" strokeOpacity="0.25" strokeWidth="1" />
+        </svg>
+        <div className="absolute inset-0 flex items-center justify-center text-primary-foreground">
+          <Lock size={40} strokeWidth={2.5} />
+        </div>
+      </div>
+      {/* Plant */}
+      <Plant className="absolute right-0 bottom-1 w-12 h-16" />
     </div>
   );
+}
+
+function ClipboardBase({ heading, showSignature = false }: { heading: string; showSignature?: boolean }) {
+  return (
+    <div className="relative w-28 h-36 rounded-2xl bg-card border-2 border-primary shadow-[0_8px_20px_rgba(108,79,240,0.18)]">
+      {/* clip */}
+      <div className="absolute left-1/2 -translate-x-1/2 -top-2 w-10 h-4 rounded-md bg-primary/90 border-2 border-primary" />
+      <div className="absolute left-1/2 -translate-x-1/2 -top-3 w-6 h-2 rounded-sm bg-primary" />
+      {/* content */}
+      <div className="px-3 pt-4 pb-3 flex flex-col gap-1.5">
+        <div className="text-[9px] font-extrabold text-primary tracking-wider text-center">
+          {heading}
+        </div>
+        <div className="mt-1 space-y-1.5">
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="flex items-center gap-1.5">
+              <span className="h-3 w-3 rounded-full bg-primary/15 text-primary flex items-center justify-center">
+                <Check size={8} strokeWidth={3} />
+              </span>
+              <span className="flex-1 h-1.5 rounded-full bg-primary/15" />
+            </div>
+          ))}
+        </div>
+        {showSignature && (
+          <svg viewBox="0 0 60 12" className="mt-1 w-16 h-3 text-primary/70">
+            <path d="M2 8 Q 8 2, 14 8 T 26 8 T 38 8 T 50 6 L 58 6" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          </svg>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ClipboardRupeeArt() {
+  return (
+    <div className="relative w-44 h-44 shrink-0">
+      <CornerAccents />
+      <div className="absolute left-3 top-3">
+        <ClipboardBase heading="REFUND POLICY" />
+        {/* Badges */}
+        <div className="absolute -bottom-3 -left-2 h-9 w-9 rounded-full gradient-primary text-primary-foreground flex items-center justify-center shadow-elevated border-2 border-background">
+          <IndianRupee size={16} strokeWidth={3} />
+        </div>
+        <div className="absolute -bottom-3 right-1 h-9 w-9 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-elevated border-2 border-background">
+          <RefreshCw size={15} strokeWidth={3} />
+        </div>
+      </div>
+      <Plant className="absolute right-0 bottom-1 w-12 h-16" />
+    </div>
+  );
+}
+
+function ClipboardCheckArt() {
+  return (
+    <div className="relative w-44 h-44 shrink-0">
+      <CornerAccents />
+      <div className="absolute left-3 top-3">
+        <ClipboardBase heading="T&C" showSignature />
+        <div className="absolute -bottom-3 -left-2 h-9 w-9 rounded-full gradient-primary text-primary-foreground flex items-center justify-center shadow-elevated border-2 border-background">
+          <ShieldCheck size={17} strokeWidth={2.5} />
+        </div>
+      </div>
+      <Plant className="absolute right-0 bottom-1 w-12 h-16" />
+    </div>
+  );
+}
+
+function HeroArt({ kind }: { kind?: string }) {
+  if (kind === "clipboard-rupee") return <ClipboardRupeeArt />;
+  if (kind === "clipboard-check") return <ClipboardCheckArt />;
+  return <ShieldArt />;
 }
 
 function SectionCard({ item, index }: { item: LegalSection; index: number }) {
@@ -91,7 +205,7 @@ function SectionCard({ item, index }: { item: LegalSection; index: number }) {
 }
 
 export function LegalPageTemplate(props: LegalPageData) {
-  const { title, subtitle, intro, illustration, items, trust, contact, updatedAt, supportEmail } = props;
+  const { title, subtitle, intro, illustration, heroSlot, items, trust, contact, updatedAt, supportEmail } = props;
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-30 bg-background/95 backdrop-blur border-b border-border">
@@ -115,7 +229,7 @@ export function LegalPageTemplate(props: LegalPageData) {
               {subtitle && <p className="mt-1 text-primary font-semibold">{subtitle}</p>}
               {intro && <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{intro}</p>}
             </div>
-            <HeroArt kind={illustration} />
+            {heroSlot ?? <HeroArt kind={illustration} />}
           </div>
         </section>
 
