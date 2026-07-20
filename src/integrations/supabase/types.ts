@@ -300,33 +300,45 @@ export type Database = {
       contact_settings: {
         Row: {
           id: boolean
+          instagram_url: string | null
+          show_whatsapp_social: boolean
           support_email: string
           support_hours_days: string
           support_hours_time: string
           support_phone: string | null
           support_whatsapp: string | null
+          telegram_url: string | null
           updated_at: string
           updated_by: string | null
+          youtube_url: string | null
         }
         Insert: {
           id?: boolean
+          instagram_url?: string | null
+          show_whatsapp_social?: boolean
           support_email?: string
           support_hours_days?: string
           support_hours_time?: string
           support_phone?: string | null
           support_whatsapp?: string | null
+          telegram_url?: string | null
           updated_at?: string
           updated_by?: string | null
+          youtube_url?: string | null
         }
         Update: {
           id?: boolean
+          instagram_url?: string | null
+          show_whatsapp_social?: boolean
           support_email?: string
           support_hours_days?: string
           support_hours_time?: string
           support_phone?: string | null
           support_whatsapp?: string | null
+          telegram_url?: string | null
           updated_at?: string
           updated_by?: string | null
+          youtube_url?: string | null
         }
         Relationships: []
       }
