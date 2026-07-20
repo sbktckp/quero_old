@@ -7,9 +7,6 @@ import {
   Grid3x3, UserCheck, Copyright, Shield, Pencil, HelpCircle,
   Heart, Handshake, Check, RefreshCw,
 } from "lucide-react";
-import refundArt from "@/assets/refund-policy.png.asset.json";
-import termsArt from "@/assets/terms.png.asset.json";
-import privacyArt from "@/assets/privacy-policy.png.asset.json";
 
 const ICONS: Record<string, typeof User> = {
   user: User, database: Database, "shield-check": ShieldCheck, lock: Lock,
@@ -231,19 +228,9 @@ function ClipboardCheckArt() {
 
 
 function HeroArt({ kind }: { kind?: string }) {
-  const src =
-    kind === "clipboard-rupee" ? refundArt.url :
-    kind === "clipboard-check" ? termsArt.url :
-    privacyArt.url;
-  const alt =
-    kind === "clipboard-rupee" ? "Refund Policy illustration" :
-    kind === "clipboard-check" ? "Terms and Conditions illustration" :
-    "Privacy Policy illustration";
-  return (
-    <div className="relative w-[180px] h-[180px] sm:w-[200px] sm:h-[200px] shrink-0">
-      <img src={src} alt={alt} className="w-full h-full object-contain" loading="lazy" />
-    </div>
-  );
+  if (kind === "clipboard-rupee") return <ClipboardRupeeArt />;
+  if (kind === "clipboard-check") return <ClipboardCheckArt />;
+  return <ShieldArt />;
 }
 
 
