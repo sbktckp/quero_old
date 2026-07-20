@@ -297,6 +297,39 @@ export type Database = {
         }
         Relationships: []
       }
+      contact_settings: {
+        Row: {
+          id: boolean
+          support_email: string
+          support_hours_days: string
+          support_hours_time: string
+          support_phone: string | null
+          support_whatsapp: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          id?: boolean
+          support_email?: string
+          support_hours_days?: string
+          support_hours_time?: string
+          support_phone?: string | null
+          support_whatsapp?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          id?: boolean
+          support_email?: string
+          support_hours_days?: string
+          support_hours_time?: string
+          support_phone?: string | null
+          support_whatsapp?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       counseling_articles: {
         Row: {
           category: string | null
