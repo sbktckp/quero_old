@@ -229,7 +229,7 @@ export function LegalPageTemplate(props: LegalPageData) {
               {subtitle && <p className="mt-1 text-primary font-semibold">{subtitle}</p>}
               {intro && <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{intro}</p>}
             </div>
-            <HeroArt kind={illustration} />
+            {heroSlot ?? <HeroArt kind={illustration} />}
           </div>
         </section>
 
