@@ -1,5 +1,4 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Footer } from "@/components/footer";
 import { ArrowLeft, AlertTriangle } from "lucide-react";
 
 export const Route = createFileRoute("/delete-account")({
@@ -46,7 +45,6 @@ function DeleteAccountPage() {
           </p>
         </article>
       </main>
-      <Footer />
     </div>
   );
 }

@@ -1,6 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
-import { Footer } from "@/components/footer";
 import { ArrowLeft, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -55,7 +54,6 @@ function ContactPage() {
           </a>
         </article>
       </main>
-      <Footer />
     </div>
   );
 }

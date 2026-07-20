@@ -1,6 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
-import { Footer } from "@/components/footer";
 import { ArrowLeft } from "lucide-react";
 
 const SLUGS = ["privacy-policy", "terms", "refund-policy", "contact"] as const;
@@ -61,7 +60,6 @@ function LegalPage() {
           </div>
         </article>
       </main>
-      <Footer />
     </div>
   );
 }
