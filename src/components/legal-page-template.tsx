@@ -226,9 +226,6 @@ function ClipboardCheckArt() {
   );
 }
 
-import refundArt from "@/assets/refund-policy.png.asset.json";
-import termsArt from "@/assets/terms.png.asset.json";
-import privacyArt from "@/assets/privacy-policy.png.asset.json";
 
 function HeroArt({ kind }: { kind?: string }) {
   const src =
