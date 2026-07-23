@@ -832,6 +832,48 @@ export type Database = {
           },
         ]
       }
+      team_members: {
+        Row: {
+          created_at: string
+          founder_message: string | null
+          id: string
+          is_active: boolean
+          is_founder: boolean
+          name: string
+          photo_url: string | null
+          role: string
+          short_bio: string | null
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          founder_message?: string | null
+          id?: string
+          is_active?: boolean
+          is_founder?: boolean
+          name: string
+          photo_url?: string | null
+          role: string
+          short_bio?: string | null
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          founder_message?: string | null
+          id?: string
+          is_active?: boolean
+          is_founder?: boolean
+          name?: string
+          photo_url?: string | null
+          role?: string
+          short_bio?: string | null
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       test_attempts: {
         Row: {
           correct_count: number
