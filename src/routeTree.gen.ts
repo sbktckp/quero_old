@@ -45,6 +45,7 @@ import { Route as AuthenticatedCounselingChoiceFillingRouteImport } from './rout
 import { Route as AuthenticatedCounselingCalendarRouteImport } from './routes/_authenticated/counseling.calendar'
 import { Route as AuthenticatedComingSoonFeatureRouteImport } from './routes/_authenticated/coming-soon.$feature'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
+import { Route as AuthenticatedAdminTeamRouteImport } from './routes/_authenticated/admin.team'
 import { Route as AuthenticatedAdminLegalRouteImport } from './routes/_authenticated/admin.legal'
 import { Route as AuthenticatedAdminCounselingRouteImport } from './routes/_authenticated/admin.counseling'
 import { Route as AuthenticatedAdminContactRouteImport } from './routes/_authenticated/admin.contact'
@@ -254,6 +255,11 @@ const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
   path: '/users',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminTeamRoute = AuthenticatedAdminTeamRouteImport.update({
+  id: '/team',
+  path: '/team',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedAdminLegalRoute = AuthenticatedAdminLegalRouteImport.update({
   id: '/legal',
   path: '/legal',
@@ -376,6 +382,7 @@ export interface FileRoutesByFullPath {
   '/admin/contact': typeof AuthenticatedAdminContactRoute
   '/admin/counseling': typeof AuthenticatedAdminCounselingRouteWithChildren
   '/admin/legal': typeof AuthenticatedAdminLegalRoute
+  '/admin/team': typeof AuthenticatedAdminTeamRoute
   '/admin/users': typeof AuthenticatedAdminUsersRouteWithChildren
   '/coming-soon/$feature': typeof AuthenticatedComingSoonFeatureRoute
   '/counseling/calendar': typeof AuthenticatedCounselingCalendarRoute
@@ -426,6 +433,7 @@ export interface FileRoutesByTo {
   '/admin/billing': typeof AuthenticatedAdminBillingRoute
   '/admin/contact': typeof AuthenticatedAdminContactRoute
   '/admin/legal': typeof AuthenticatedAdminLegalRoute
+  '/admin/team': typeof AuthenticatedAdminTeamRoute
   '/admin/users': typeof AuthenticatedAdminUsersRouteWithChildren
   '/coming-soon/$feature': typeof AuthenticatedComingSoonFeatureRoute
   '/counseling/calendar': typeof AuthenticatedCounselingCalendarRoute
@@ -481,6 +489,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/contact': typeof AuthenticatedAdminContactRoute
   '/_authenticated/admin/counseling': typeof AuthenticatedAdminCounselingRouteWithChildren
   '/_authenticated/admin/legal': typeof AuthenticatedAdminLegalRoute
+  '/_authenticated/admin/team': typeof AuthenticatedAdminTeamRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRouteWithChildren
   '/_authenticated/coming-soon/$feature': typeof AuthenticatedComingSoonFeatureRoute
   '/_authenticated/counseling/calendar': typeof AuthenticatedCounselingCalendarRoute
@@ -536,6 +545,7 @@ export interface FileRouteTypes {
     | '/admin/contact'
     | '/admin/counseling'
     | '/admin/legal'
+    | '/admin/team'
     | '/admin/users'
     | '/coming-soon/$feature'
     | '/counseling/calendar'
@@ -586,6 +596,7 @@ export interface FileRouteTypes {
     | '/admin/billing'
     | '/admin/contact'
     | '/admin/legal'
+    | '/admin/team'
     | '/admin/users'
     | '/coming-soon/$feature'
     | '/counseling/calendar'
@@ -640,6 +651,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/contact'
     | '/_authenticated/admin/counseling'
     | '/_authenticated/admin/legal'
+    | '/_authenticated/admin/team'
     | '/_authenticated/admin/users'
     | '/_authenticated/coming-soon/$feature'
     | '/_authenticated/counseling/calendar'
@@ -937,6 +949,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/team': {
+      id: '/_authenticated/admin/team'
+      path: '/team'
+      fullPath: '/admin/team'
+      preLoaderRoute: typeof AuthenticatedAdminTeamRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/legal': {
       id: '/_authenticated/admin/legal'
       path: '/legal'
@@ -1099,6 +1118,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminContactRoute: typeof AuthenticatedAdminContactRoute
   AuthenticatedAdminCounselingRoute: typeof AuthenticatedAdminCounselingRouteWithChildren
   AuthenticatedAdminLegalRoute: typeof AuthenticatedAdminLegalRoute
+  AuthenticatedAdminTeamRoute: typeof AuthenticatedAdminTeamRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRouteWithChildren
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedAdminContentGenerateRoute: typeof AuthenticatedAdminContentGenerateRoute
@@ -1113,6 +1133,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminCounselingRoute:
     AuthenticatedAdminCounselingRouteWithChildren,
   AuthenticatedAdminLegalRoute: AuthenticatedAdminLegalRoute,
+  AuthenticatedAdminTeamRoute: AuthenticatedAdminTeamRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRouteWithChildren,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   AuthenticatedAdminContentGenerateRoute:
