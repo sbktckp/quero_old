@@ -43,7 +43,9 @@ function AdminLayout() {
     { to: "/admin/activity", label: "Activity", icon: ScrollText, exact: false },
     { to: "/admin/legal", label: "Legal Pages", icon: FileText, exact: false },
     { to: "/admin/contact", label: "Contact", icon: MessageCircle, exact: false },
+    { to: "/admin/team", label: "Team", icon: Heart, exact: false },
   ] as const;
+
 
   return (
     <div className="min-h-screen bg-background">
