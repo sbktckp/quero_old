@@ -130,7 +130,7 @@ function AboutPage() {
               </span>
               <h3 className="font-bold text-foreground">Founder's note</h3>
             </div>
-            {founders.map((f) => (
+            {founders.map((f: TeamMember) => (
               <article key={f.id} className="rounded-3xl border border-border bg-card p-5 shadow-card">
                 <div className="flex items-start gap-4 flex-col sm:flex-row">
                   <Avatar name={f.name} url={f.photo_url} size={96} />
@@ -161,7 +161,7 @@ function AboutPage() {
               <h3 className="font-bold text-foreground">Meet the team</h3>
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
-              {team.map((m) => (
+              {team.map((m: TeamMember) => (
                 <div key={m.id} className="rounded-2xl border border-border bg-card p-4 shadow-card">
                   <div className="flex items-start gap-3">
                     <Avatar name={m.name} url={m.photo_url} size={64} />
