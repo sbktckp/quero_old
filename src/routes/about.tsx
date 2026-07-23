@@ -84,9 +84,10 @@ function Avatar({ name, url, size = 72 }: { name: string; url: string | null; si
 
 function AboutPage() {
   const { page, team, supportEmail } = Route.useLoaderData();
-  const founders = team.filter((m) => m.is_founder);
+  const founders = team.filter((m: TeamMember) => m.is_founder);
   const title = page?.title ?? "About Quero";
   const subtitle = page?.sections?.subtitle ?? "Our mission";
+
   const intro = page?.sections?.intro ?? page?.content ?? "";
 
   return (
