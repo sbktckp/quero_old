@@ -4,12 +4,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { Instagram, Youtube, Send, MessageCircle } from "lucide-react";
 
 const links = [
+  { to: "/about", label: "About Us" },
   { to: "/privacy-policy", label: "Privacy Policy" },
   { to: "/terms", label: "Terms & Conditions" },
   { to: "/refund-policy", label: "Refund Policy" },
   { to: "/contact", label: "Contact" },
   { to: "/delete-account", label: "Delete Account" },
 ] as const;
+
 
 type FooterSettings = {
   support_whatsapp: string | null;

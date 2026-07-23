@@ -2,7 +2,7 @@ import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-r
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
-import { Loader2, LayoutDashboard, Users, BookOpen, ArrowLeft, CreditCard, GraduationCap, ScrollText, FileText, MessageCircle } from "lucide-react";
+import { Loader2, LayoutDashboard, Users, BookOpen, ArrowLeft, CreditCard, GraduationCap, ScrollText, FileText, MessageCircle, Heart } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminLayout,
@@ -43,7 +43,9 @@ function AdminLayout() {
     { to: "/admin/activity", label: "Activity", icon: ScrollText, exact: false },
     { to: "/admin/legal", label: "Legal Pages", icon: FileText, exact: false },
     { to: "/admin/contact", label: "Contact", icon: MessageCircle, exact: false },
+    { to: "/admin/team", label: "Team", icon: Heart, exact: false },
   ] as const;
+
 
   return (
     <div className="min-h-screen bg-background">

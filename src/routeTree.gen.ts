@@ -16,6 +16,7 @@ import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as DeleteAccountRouteImport } from './routes/delete-account'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
@@ -44,6 +45,7 @@ import { Route as AuthenticatedCounselingChoiceFillingRouteImport } from './rout
 import { Route as AuthenticatedCounselingCalendarRouteImport } from './routes/_authenticated/counseling.calendar'
 import { Route as AuthenticatedComingSoonFeatureRouteImport } from './routes/_authenticated/coming-soon.$feature'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
+import { Route as AuthenticatedAdminTeamRouteImport } from './routes/_authenticated/admin.team'
 import { Route as AuthenticatedAdminLegalRouteImport } from './routes/_authenticated/admin.legal'
 import { Route as AuthenticatedAdminCounselingRouteImport } from './routes/_authenticated/admin.counseling'
 import { Route as AuthenticatedAdminContactRouteImport } from './routes/_authenticated/admin.contact'
@@ -94,6 +96,11 @@ const ContactRoute = ContactRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -248,6 +255,11 @@ const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
   path: '/users',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminTeamRoute = AuthenticatedAdminTeamRouteImport.update({
+  id: '/team',
+  path: '/team',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedAdminLegalRoute = AuthenticatedAdminLegalRouteImport.update({
   id: '/legal',
   path: '/legal',
@@ -346,6 +358,7 @@ const AuthenticatedAdminContentGenerateRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/delete-account': typeof DeleteAccountRoute
@@ -369,6 +382,7 @@ export interface FileRoutesByFullPath {
   '/admin/contact': typeof AuthenticatedAdminContactRoute
   '/admin/counseling': typeof AuthenticatedAdminCounselingRouteWithChildren
   '/admin/legal': typeof AuthenticatedAdminLegalRoute
+  '/admin/team': typeof AuthenticatedAdminTeamRoute
   '/admin/users': typeof AuthenticatedAdminUsersRouteWithChildren
   '/coming-soon/$feature': typeof AuthenticatedComingSoonFeatureRoute
   '/counseling/calendar': typeof AuthenticatedCounselingCalendarRoute
@@ -398,6 +412,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/delete-account': typeof DeleteAccountRoute
@@ -418,6 +433,7 @@ export interface FileRoutesByTo {
   '/admin/billing': typeof AuthenticatedAdminBillingRoute
   '/admin/contact': typeof AuthenticatedAdminContactRoute
   '/admin/legal': typeof AuthenticatedAdminLegalRoute
+  '/admin/team': typeof AuthenticatedAdminTeamRoute
   '/admin/users': typeof AuthenticatedAdminUsersRouteWithChildren
   '/coming-soon/$feature': typeof AuthenticatedComingSoonFeatureRoute
   '/counseling/calendar': typeof AuthenticatedCounselingCalendarRoute
@@ -449,6 +465,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/delete-account': typeof DeleteAccountRoute
@@ -472,6 +489,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/contact': typeof AuthenticatedAdminContactRoute
   '/_authenticated/admin/counseling': typeof AuthenticatedAdminCounselingRouteWithChildren
   '/_authenticated/admin/legal': typeof AuthenticatedAdminLegalRoute
+  '/_authenticated/admin/team': typeof AuthenticatedAdminTeamRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRouteWithChildren
   '/_authenticated/coming-soon/$feature': typeof AuthenticatedComingSoonFeatureRoute
   '/_authenticated/counseling/calendar': typeof AuthenticatedCounselingCalendarRoute
@@ -503,6 +521,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
     | '/auth'
     | '/contact'
     | '/delete-account'
@@ -526,6 +545,7 @@ export interface FileRouteTypes {
     | '/admin/contact'
     | '/admin/counseling'
     | '/admin/legal'
+    | '/admin/team'
     | '/admin/users'
     | '/coming-soon/$feature'
     | '/counseling/calendar'
@@ -555,6 +575,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
     | '/auth'
     | '/contact'
     | '/delete-account'
@@ -575,6 +596,7 @@ export interface FileRouteTypes {
     | '/admin/billing'
     | '/admin/contact'
     | '/admin/legal'
+    | '/admin/team'
     | '/admin/users'
     | '/coming-soon/$feature'
     | '/counseling/calendar'
@@ -605,6 +627,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/about'
     | '/auth'
     | '/contact'
     | '/delete-account'
@@ -628,6 +651,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/contact'
     | '/_authenticated/admin/counseling'
     | '/_authenticated/admin/legal'
+    | '/_authenticated/admin/team'
     | '/_authenticated/admin/users'
     | '/_authenticated/coming-soon/$feature'
     | '/_authenticated/counseling/calendar'
@@ -659,6 +683,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AboutRoute: typeof AboutRoute
   AuthRoute: typeof AuthRoute
   ContactRoute: typeof ContactRoute
   DeleteAccountRoute: typeof DeleteAccountRoute
@@ -719,6 +744,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -917,6 +949,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/team': {
+      id: '/_authenticated/admin/team'
+      path: '/team'
+      fullPath: '/admin/team'
+      preLoaderRoute: typeof AuthenticatedAdminTeamRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/legal': {
       id: '/_authenticated/admin/legal'
       path: '/legal'
@@ -1079,6 +1118,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminContactRoute: typeof AuthenticatedAdminContactRoute
   AuthenticatedAdminCounselingRoute: typeof AuthenticatedAdminCounselingRouteWithChildren
   AuthenticatedAdminLegalRoute: typeof AuthenticatedAdminLegalRoute
+  AuthenticatedAdminTeamRoute: typeof AuthenticatedAdminTeamRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRouteWithChildren
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedAdminContentGenerateRoute: typeof AuthenticatedAdminContentGenerateRoute
@@ -1093,6 +1133,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminCounselingRoute:
     AuthenticatedAdminCounselingRouteWithChildren,
   AuthenticatedAdminLegalRoute: AuthenticatedAdminLegalRoute,
+  AuthenticatedAdminTeamRoute: AuthenticatedAdminTeamRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRouteWithChildren,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   AuthenticatedAdminContentGenerateRoute:
@@ -1193,6 +1234,7 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AboutRoute: AboutRoute,
   AuthRoute: AuthRoute,
   ContactRoute: ContactRoute,
   DeleteAccountRoute: DeleteAccountRoute,
