@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Calculator, GitCompare, Search, Calendar, ListChecks, ClipboardList, BookOpen, ChevronRight } from "lucide-react";
+import { Calculator, GitCompare, Search, Calendar, ListChecks, ClipboardList, BookOpen, ChevronRight, MessagesSquare } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/counseling/")({
   component: CounselingHub,
@@ -12,6 +12,7 @@ const items = [
   { to: "/counseling/calendar", label: "Counseling Calendar", desc: "Important dates & rounds", Icon: Calendar },
   { to: "/counseling/roadmap", label: "Counseling Roadmap", desc: "9-step admission journey", Icon: ListChecks },
   { to: "/counseling/choice-filling", label: "Choice Filling Guidance", desc: "How to prioritize preferences", Icon: ClipboardList },
+  { to: "/mentors", label: "Talk to a Medical Student", desc: "1:1 guidance from verified MBBS students", Icon: MessagesSquare },
   { to: "/counseling/resources", label: "Learning Resources", desc: "Articles, FAQ, policies", Icon: BookOpen },
 ] as const;
 

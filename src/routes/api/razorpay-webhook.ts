@@ -69,15 +69,40 @@ export const Route = createFileRoute("/api/razorpay-webhook")({
               gateway_payment_id: paymentId,
               updated_at: new Date().toISOString(),
             }).eq("id", pending.id);
+            await supabaseAdmin.from("mentor_sessions").update({
+              payment_status: "failed",
+              updated_at: new Date().toISOString(),
+            }).eq("gateway_order_id", orderId).eq("payment_status", "pending");
           }
+          return new Response("ok");
+        }
+
+
+        const notes = (payment?.notes
+          ?? (event.payload?.order?.entity as unknown as { notes?: Record<string, string> } | undefined)?.notes)
+          ?? {};
+
+        // Mentor session bookings reuse this same order/verify/webhook pipeline.
+        if (notes.kind === "mentor_session" && notes.session_id) {
+          const nowIso = new Date().toISOString();
+          await supabaseAdmin
+            .from("mentor_sessions")
+            .update({ payment_status: "paid", status: "confirmed", gateway_payment_id: paymentId, updated_at: nowIso })
+            .eq("id", notes.session_id)
+            .eq("payment_status", "pending");
+          await supabaseAdmin.from("payments").update({
+            status: "success",
+            gateway_payment_id: paymentId,
+            updated_at: nowIso,
+          }).eq("id", pending.id);
           return new Response("ok");
         }
 
         // Success path — activate subscription.
         // Order notes carry plan_id from createOrderForPlan.
-        const planId = (payment?.notes?.plan_id as string | undefined)
-          ?? (event.payload?.order?.entity as unknown as { notes?: { plan_id?: string } } | undefined)?.notes?.plan_id;
+        const planId = notes.plan_id;
         if (!planId) return new Response("ok");
+
 
         const { data: plan } = await supabaseAdmin
           .from("plans").select("id, billing_period").eq("id", planId).maybeSingle();
