@@ -169,6 +169,8 @@ function BecomeMentor() {
                   toast.success("Photo uploaded");
                 }
                 catch (err) { toast.error((err as Error).message); } finally { setUploading(null); if (photoRef.current) photoRef.current.value = ""; }
+              }} />
+
 
               <Button type="button" variant="outline" size="sm" disabled={uploading === "photo"} onClick={() => photoRef.current?.click()}>
                 <Upload size={14} /> {uploading === "photo" ? "Uploading…" : "Upload photo"}
