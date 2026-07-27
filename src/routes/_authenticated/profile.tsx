@@ -1,9 +1,10 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { BottomNav } from "@/components/bottom-nav";
-import { LogOut, Moon, Sun, ChevronRight } from "lucide-react";
+import { StudyPreferences } from "@/components/study-preferences";
+import { LogOut, Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -14,9 +15,8 @@ export const Route = createFileRoute("/_authenticated/profile")({
 function ProfilePage() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const qc = useQueryClient();
   const [dark, setDark] = useState(false);
-  const [savingGoal, setSavingGoal] = useState(false);
+
 
   useEffect(() => {
     const stored = typeof window !== "undefined" ? localStorage.getItem("theme") : null;
