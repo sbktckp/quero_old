@@ -30,6 +30,7 @@ import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authen
 import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated/home'
 import { Route as AuthenticatedCounselingRouteImport } from './routes/_authenticated/counseling'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedMentorsIndexRouteImport } from './routes/_authenticated/mentors.index'
 import { Route as AuthenticatedCounselingIndexRouteImport } from './routes/_authenticated/counseling.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedTestsNewRouteImport } from './routes/_authenticated/tests.new'
@@ -168,6 +169,12 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedMentorsIndexRoute =
+  AuthenticatedMentorsIndexRouteImport.update({
+    id: '/mentors/',
+    path: '/mentors/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedCounselingIndexRoute =
   AuthenticatedCounselingIndexRouteImport.update({
     id: '/',
@@ -398,6 +405,7 @@ export interface FileRoutesByFullPath {
   '/tests/new': typeof AuthenticatedTestsNewRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/counseling/': typeof AuthenticatedCounselingIndexRoute
+  '/mentors/': typeof AuthenticatedMentorsIndexRoute
   '/admin/content/generate': typeof AuthenticatedAdminContentGenerateRoute
   '/admin/content/import': typeof AuthenticatedAdminContentImportRoute
   '/admin/counseling/articles': typeof AuthenticatedAdminCounselingArticlesRoute
@@ -449,6 +457,7 @@ export interface FileRoutesByTo {
   '/tests/new': typeof AuthenticatedTestsNewRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/counseling': typeof AuthenticatedCounselingIndexRoute
+  '/mentors': typeof AuthenticatedMentorsIndexRoute
   '/admin/content/generate': typeof AuthenticatedAdminContentGenerateRoute
   '/admin/content/import': typeof AuthenticatedAdminContentImportRoute
   '/admin/counseling/articles': typeof AuthenticatedAdminCounselingArticlesRoute
@@ -505,6 +514,7 @@ export interface FileRoutesById {
   '/_authenticated/tests/new': typeof AuthenticatedTestsNewRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/counseling/': typeof AuthenticatedCounselingIndexRoute
+  '/_authenticated/mentors/': typeof AuthenticatedMentorsIndexRoute
   '/_authenticated/admin/content/generate': typeof AuthenticatedAdminContentGenerateRoute
   '/_authenticated/admin/content/import': typeof AuthenticatedAdminContentImportRoute
   '/_authenticated/admin/counseling/articles': typeof AuthenticatedAdminCounselingArticlesRoute
@@ -561,6 +571,7 @@ export interface FileRouteTypes {
     | '/tests/new'
     | '/admin/'
     | '/counseling/'
+    | '/mentors/'
     | '/admin/content/generate'
     | '/admin/content/import'
     | '/admin/counseling/articles'
@@ -612,6 +623,7 @@ export interface FileRouteTypes {
     | '/tests/new'
     | '/admin'
     | '/counseling'
+    | '/mentors'
     | '/admin/content/generate'
     | '/admin/content/import'
     | '/admin/counseling/articles'
@@ -667,6 +679,7 @@ export interface FileRouteTypes {
     | '/_authenticated/tests/new'
     | '/_authenticated/admin/'
     | '/_authenticated/counseling/'
+    | '/_authenticated/mentors/'
     | '/_authenticated/admin/content/generate'
     | '/_authenticated/admin/content/import'
     | '/_authenticated/admin/counseling/articles'
@@ -842,6 +855,13 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/mentors/': {
+      id: '/_authenticated/mentors/'
+      path: '/mentors'
+      fullPath: '/mentors/'
+      preLoaderRoute: typeof AuthenticatedMentorsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/counseling/': {
@@ -1209,6 +1229,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSubjectSlugRoute: typeof AuthenticatedSubjectSlugRoute
   AuthenticatedTestAttemptIdRoute: typeof AuthenticatedTestAttemptIdRoute
   AuthenticatedTestsNewRoute: typeof AuthenticatedTestsNewRoute
+  AuthenticatedMentorsIndexRoute: typeof AuthenticatedMentorsIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -1226,6 +1247,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSubjectSlugRoute: AuthenticatedSubjectSlugRoute,
   AuthenticatedTestAttemptIdRoute: AuthenticatedTestAttemptIdRoute,
   AuthenticatedTestsNewRoute: AuthenticatedTestsNewRoute,
+  AuthenticatedMentorsIndexRoute: AuthenticatedMentorsIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
