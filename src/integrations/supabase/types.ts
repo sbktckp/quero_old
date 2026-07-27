@@ -1077,6 +1077,7 @@ export type Database = {
       }
       user_preferences: {
         Row: {
+          academic_stage: string | null
           created_at: string
           exam_year: number | null
           goal: Database["public"]["Enums"]["study_goal"] | null
@@ -1087,6 +1088,7 @@ export type Database = {
           weak_subjects: string[] | null
         }
         Insert: {
+          academic_stage?: string | null
           created_at?: string
           exam_year?: number | null
           goal?: Database["public"]["Enums"]["study_goal"] | null
@@ -1097,6 +1099,7 @@ export type Database = {
           weak_subjects?: string[] | null
         }
         Update: {
+          academic_stage?: string | null
           created_at?: string
           exam_year?: number | null
           goal?: Database["public"]["Enums"]["study_goal"] | null

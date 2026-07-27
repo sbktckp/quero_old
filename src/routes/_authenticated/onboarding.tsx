@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 import { Check } from "lucide-react";
+import { stageOptions, stageQuestion, stageLabel, goalLabel } from "@/lib/academic-stage";
 
 export const Route = createFileRoute("/_authenticated/onboarding")({
   component: Onboarding,
@@ -16,27 +17,39 @@ const LANGS = [
   { value: "hindi", label: "Hindi" },
 ];
 
+const TOTAL_STEPS = 5; // 0..4
+const WELCOME_STEP = 9;
+
 function Onboarding() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [goal, setGoal] = useState<"neet_ug" | "neet_pg" | null>(null);
+  const [stage, setStage] = useState<string | null>(null);
   const [examYear, setExamYear] = useState<number | null>(null);
   const [language, setLanguage] = useState("english");
   const [weak, setWeak] = useState<string[]>([]);
   const [subjects, setSubjects] = useState<{ id: string; name: string; slug: string }[]>([]);
   const [busy, setBusy] = useState(false);
+  const [displayName, setDisplayName] = useState<string>("");
 
   useEffect(() => {
-    if (!goal) { setSubjects([]); setWeak([]); return; }
+    if (!user) return;
+    supabase.from("profiles").select("display_name").eq("id", user.id).maybeSingle()
+      .then(({ data }) => setDisplayName(data?.display_name || user.email?.split("@")[0] || "Student"));
+  }, [user]);
+
+  useEffect(() => {
+    if (!goal) { setSubjects([]); setWeak([]); setStage(null); return; }
     const examType = goal === "neet_pg" ? "NEET_PG" : "NEET_UG";
     supabase.from("subjects").select("id,name,slug")
       .filter("exam_type", "eq", examType)
       .filter("is_active", "eq", true)
       .order("sort_order")
       .then(({ data }) => { if (data) setSubjects(data); });
-    // Clear weak selections when goal changes so we never carry cross-exam slugs
+    // Clear cross-exam selections when goal changes
     setWeak([]);
+    setStage(null);
   }, [goal]);
 
   const toggleWeak = (slug: string) => setWeak((w) => w.includes(slug) ? w.filter(s => s !== slug) : [...w, slug]);
@@ -47,21 +60,26 @@ function Onboarding() {
     const { error } = await supabase.from("user_preferences").upsert({
       user_id: user.id,
       goal,
+      academic_stage: stage,
       exam_year: examYear,
       language,
       weak_subjects: weak,
       onboarding_completed: true,
     });
-    if (error) { toast.error(error.message); setBusy(false); return; }
-    setStep(5); // animation
-    setTimeout(() => navigate({ to: "/home" }), 1800);
+    setBusy(false);
+    if (error) { toast.error(error.message); return; }
+    setStep(WELCOME_STEP);
   };
+
+  const weakNames = weak
+    .map((slug) => subjects.find((s) => s.slug === slug)?.name ?? slug)
+    .filter(Boolean);
 
   return (
     <div className="min-h-screen gradient-soft px-5 py-8 flex flex-col">
-      {step < 5 && (
+      {step < TOTAL_STEPS && (
         <div className="mb-8 flex gap-2">
-          {[0, 1, 2, 3].map((i) => (
+          {[0, 1, 2, 3, 4].map((i) => (
             <div key={i} className={`h-1.5 flex-1 rounded-full transition ${i <= step ? "bg-primary" : "bg-border"}`} />
           ))}
         </div>
@@ -88,16 +106,31 @@ function Onboarding() {
             </StepShell>
           )}
           {step === 1 && (
+            <StepShell
+              title={stageQuestion(goal)}
+              subtitle="This helps us tailor your study plan"
+            >
+              <div className="space-y-3">
+                {stageOptions(goal).map((o) => (
+                  <Option key={o.value} selected={stage === o.value} onClick={() => setStage(o.value)}>
+                    {o.label}
+                  </Option>
+                ))}
+              </div>
+              <CTA disabled={!stage} onClick={() => setStep(2)}>Next</CTA>
+            </StepShell>
+          )}
+          {step === 2 && (
             <StepShell title="Select Exam Year" subtitle="When are you appearing?">
               <div className="space-y-3">
                 {YEARS.map((y) => (
                   <Option key={y} selected={examYear === y} onClick={() => setExamYear(y)}>{y}</Option>
                 ))}
               </div>
-              <CTA disabled={!examYear} onClick={() => setStep(2)}>Next</CTA>
+              <CTA disabled={!examYear} onClick={() => setStep(3)}>Next</CTA>
             </StepShell>
           )}
-          {step === 2 && (
+          {step === 3 && (
             <StepShell title="Select Language" subtitle="Choose your preferred language">
               <div className="space-y-3">
                 {LANGS.map((l) => (
@@ -106,10 +139,10 @@ function Onboarding() {
                   </Option>
                 ))}
               </div>
-              <CTA onClick={() => setStep(3)}>Next</CTA>
+              <CTA onClick={() => setStep(4)}>Next</CTA>
             </StepShell>
           )}
-          {step === 3 && (
+          {step === 4 && (
             <StepShell title="Choose Weak Subjects" subtitle="Select the ones you want extra help with">
               <div className="grid grid-cols-2 gap-3">
                 {subjects.map((s) => (
@@ -126,7 +159,7 @@ function Onboarding() {
               <CTA disabled={busy} onClick={finish}>{busy ? "Saving..." : "Finish"}</CTA>
             </StepShell>
           )}
-          {step === 5 && (
+          {step === WELCOME_STEP && (
             <div className="flex-1 flex flex-col items-center justify-center gap-6">
               <motion.div
                 initial={{ scale: 0.5 }}
@@ -137,13 +170,51 @@ function Onboarding() {
                 <Check className="text-primary-foreground" size={40} />
               </motion.div>
               <div className="text-center">
-                <h1 className="text-2xl font-bold">Creating your dashboard</h1>
-                <p className="text-muted-foreground text-sm mt-1">Personalizing everything for you...</p>
+                <h1 className="text-2xl font-bold">Welcome, {displayName}!</h1>
+                <p className="text-muted-foreground text-sm mt-1">
+                  Your {goalLabel(goal)} plan is ready.
+                </p>
               </div>
+
+              <div className="w-full max-w-sm rounded-3xl border border-border bg-card p-5 shadow-card space-y-4">
+                <SummaryRow label="Goal" value={goalLabel(goal)} />
+                <SummaryRow label="Academic stage" value={stageLabel(stage)} />
+                <SummaryRow label="Exam year" value={examYear ? String(examYear) : "—"} />
+                <div>
+                  <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Weak subjects</div>
+                  {weakNames.length ? (
+                    <div className="flex flex-wrap gap-2">
+                      {weakNames.map((n) => (
+                        <span key={n} className="rounded-full bg-primary-soft text-primary text-xs font-semibold px-3 py-1.5">
+                          {n}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-sm text-muted-foreground">None selected</div>
+                  )}
+                </div>
+              </div>
+
+              <button
+                onClick={() => navigate({ to: "/home" })}
+                className="w-full max-w-sm rounded-2xl gradient-primary px-4 py-3.5 text-sm font-semibold text-primary-foreground shadow-card"
+              >
+                Go to Dashboard
+              </button>
             </div>
           )}
         </motion.div>
       </AnimatePresence>
+    </div>
+  );
+}
+
+function SummaryRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-center justify-between">
+      <span className="text-sm text-muted-foreground">{label}</span>
+      <span className="text-sm font-semibold">{value}</span>
     </div>
   );
 }
