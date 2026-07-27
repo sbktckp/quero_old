@@ -26,8 +26,21 @@ function Predictor() {
   const [stateName, setStateName] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
+  // Colleges that currently have at least one verified, active mentor.
+  const { data: mentorColleges = [] } = useQuery({
+    queryKey: ["mentor-college-ids"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("mentors").select("college_id").eq("verification_status", "verified").eq("is_active", true);
+      if (error) throw error;
+      return (data ?? []).map((m) => m.college_id);
+    },
+  });
+  const mentorCollegeIds = useMemo(() => new Set(mentorColleges), [mentorColleges]);
+
   const { data: colleges = [] } = useQuery({
     queryKey: ["colleges-all"],
+
     queryFn: async () => {
       const { data, error } = await supabase.from("colleges").select("id, name, state, city, institution_type").eq("is_active", true);
       if (error) throw error; return data ?? [];
