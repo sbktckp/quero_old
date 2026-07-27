@@ -497,6 +497,315 @@ export type Database = {
         }
         Relationships: []
       }
+      mentor_chat_messages: {
+        Row: {
+          created_at: string
+          id: string
+          mentor_id: string
+          message: string
+          sender_id: string
+          session_id: string | null
+          student_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          mentor_id: string
+          message: string
+          sender_id: string
+          session_id?: string | null
+          student_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          mentor_id?: string
+          message?: string
+          sender_id?: string
+          session_id?: string | null
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mentor_chat_messages_mentor_id_fkey"
+            columns: ["mentor_id"]
+            isOneToOne: false
+            referencedRelation: "mentors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mentor_chat_messages_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "mentor_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mentor_reviews: {
+        Row: {
+          created_at: string
+          id: string
+          is_hidden: boolean
+          is_reported: boolean
+          mentor_id: string
+          rating: number
+          review: string | null
+          session_id: string | null
+          student_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_hidden?: boolean
+          is_reported?: boolean
+          mentor_id: string
+          rating: number
+          review?: string | null
+          session_id?: string | null
+          student_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_hidden?: boolean
+          is_reported?: boolean
+          mentor_id?: string
+          rating?: number
+          review?: string | null
+          session_id?: string | null
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mentor_reviews_mentor_id_fkey"
+            columns: ["mentor_id"]
+            isOneToOne: false
+            referencedRelation: "mentors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mentor_reviews_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "mentor_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mentor_session_pricing: {
+        Row: {
+          commission_percent: number
+          duration_minutes: number
+          is_active: boolean
+          label: string
+          price_inr: number
+          session_type: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          commission_percent?: number
+          duration_minutes: number
+          is_active?: boolean
+          label: string
+          price_inr: number
+          session_type: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          commission_percent?: number
+          duration_minutes?: number
+          is_active?: boolean
+          label?: string
+          price_inr?: number
+          session_type?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      mentor_sessions: {
+        Row: {
+          amount: number
+          commission: number | null
+          created_at: string
+          duration_minutes: number
+          gateway_order_id: string | null
+          gateway_payment_id: string | null
+          id: string
+          meeting_link: string | null
+          mentor_amount: number | null
+          mentor_id: string
+          notes: string | null
+          payment_status: string
+          scheduled_at: string
+          session_type: string
+          status: string
+          student_id: string
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          commission?: number | null
+          created_at?: string
+          duration_minutes: number
+          gateway_order_id?: string | null
+          gateway_payment_id?: string | null
+          id?: string
+          meeting_link?: string | null
+          mentor_amount?: number | null
+          mentor_id: string
+          notes?: string | null
+          payment_status?: string
+          scheduled_at: string
+          session_type: string
+          status?: string
+          student_id: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          commission?: number | null
+          created_at?: string
+          duration_minutes?: number
+          gateway_order_id?: string | null
+          gateway_payment_id?: string | null
+          id?: string
+          meeting_link?: string | null
+          mentor_amount?: number | null
+          mentor_id?: string
+          notes?: string | null
+          payment_status?: string
+          scheduled_at?: string
+          session_type?: string
+          status?: string
+          student_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mentor_sessions_mentor_id_fkey"
+            columns: ["mentor_id"]
+            isOneToOne: false
+            referencedRelation: "mentors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mentor_verification_documents: {
+        Row: {
+          college_id_card_url: string | null
+          fee_receipt_url: string | null
+          id: string
+          mentor_id: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          selfie_url: string | null
+          student_id_url: string | null
+          submitted_at: string
+        }
+        Insert: {
+          college_id_card_url?: string | null
+          fee_receipt_url?: string | null
+          id?: string
+          mentor_id: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          selfie_url?: string | null
+          student_id_url?: string | null
+          submitted_at?: string
+        }
+        Update: {
+          college_id_card_url?: string | null
+          fee_receipt_url?: string | null
+          id?: string
+          mentor_id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          selfie_url?: string | null
+          student_id_url?: string | null
+          submitted_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mentor_verification_documents_mentor_id_fkey"
+            columns: ["mentor_id"]
+            isOneToOne: false
+            referencedRelation: "mentors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mentors: {
+        Row: {
+          availability: Json | null
+          bio: string | null
+          college_id: string
+          created_at: string
+          current_year: string
+          full_name: string
+          gender: string | null
+          id: string
+          is_active: boolean
+          languages: string[]
+          photo_url: string | null
+          rating: number
+          total_reviews: number
+          total_sessions: number
+          updated_at: string
+          user_id: string
+          verification_status: string
+        }
+        Insert: {
+          availability?: Json | null
+          bio?: string | null
+          college_id: string
+          created_at?: string
+          current_year: string
+          full_name: string
+          gender?: string | null
+          id?: string
+          is_active?: boolean
+          languages?: string[]
+          photo_url?: string | null
+          rating?: number
+          total_reviews?: number
+          total_sessions?: number
+          updated_at?: string
+          user_id: string
+          verification_status?: string
+        }
+        Update: {
+          availability?: Json | null
+          bio?: string | null
+          college_id?: string
+          created_at?: string
+          current_year?: string
+          full_name?: string
+          gender?: string | null
+          id?: string
+          is_active?: boolean
+          languages?: string[]
+          photo_url?: string | null
+          rating?: number
+          total_reviews?: number
+          total_sessions?: number
+          updated_at?: string
+          user_id?: string
+          verification_status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mentors_college_id_fkey"
+            columns: ["college_id"]
+            isOneToOne: false
+            referencedRelation: "colleges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       options: {
         Row: {
           created_at: string
@@ -1170,6 +1479,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_mentor_owner: { Args: { _mentor_id: string }; Returns: boolean }
       submit_answer: {
         Args: { _attempt_id: string; _option_id: string; _question_id: string }
         Returns: {
