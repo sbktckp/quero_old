@@ -37,6 +37,7 @@ import { Route as AuthenticatedTestsNewRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedTestAttemptIdRouteImport } from './routes/_authenticated/test.$attemptId'
 import { Route as AuthenticatedSubjectSlugRouteImport } from './routes/_authenticated/subject.$slug'
 import { Route as AuthenticatedReviewAttemptIdRouteImport } from './routes/_authenticated/review.$attemptId'
+import { Route as AuthenticatedMentorsApplyRouteImport } from './routes/_authenticated/mentors.apply'
 import { Route as AuthenticatedMentorsIdRouteImport } from './routes/_authenticated/mentors.$id'
 import { Route as AuthenticatedCounselingRoadmapRouteImport } from './routes/_authenticated/counseling.roadmap'
 import { Route as AuthenticatedCounselingResourcesRouteImport } from './routes/_authenticated/counseling.resources'
@@ -208,6 +209,12 @@ const AuthenticatedReviewAttemptIdRoute =
   AuthenticatedReviewAttemptIdRouteImport.update({
     id: '/review/$attemptId',
     path: '/review/$attemptId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedMentorsApplyRoute =
+  AuthenticatedMentorsApplyRouteImport.update({
+    id: '/mentors/apply',
+    path: '/mentors/apply',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedMentorsIdRoute = AuthenticatedMentorsIdRouteImport.update({
@@ -406,6 +413,7 @@ export interface FileRoutesByFullPath {
   '/counseling/resources': typeof AuthenticatedCounselingResourcesRouteWithChildren
   '/counseling/roadmap': typeof AuthenticatedCounselingRoadmapRoute
   '/mentors/$id': typeof AuthenticatedMentorsIdRoute
+  '/mentors/apply': typeof AuthenticatedMentorsApplyRoute
   '/review/$attemptId': typeof AuthenticatedReviewAttemptIdRoute
   '/subject/$slug': typeof AuthenticatedSubjectSlugRoute
   '/test/$attemptId': typeof AuthenticatedTestAttemptIdRoute
@@ -459,6 +467,7 @@ export interface FileRoutesByTo {
   '/counseling/resources': typeof AuthenticatedCounselingResourcesRouteWithChildren
   '/counseling/roadmap': typeof AuthenticatedCounselingRoadmapRoute
   '/mentors/$id': typeof AuthenticatedMentorsIdRoute
+  '/mentors/apply': typeof AuthenticatedMentorsApplyRoute
   '/review/$attemptId': typeof AuthenticatedReviewAttemptIdRoute
   '/subject/$slug': typeof AuthenticatedSubjectSlugRoute
   '/test/$attemptId': typeof AuthenticatedTestAttemptIdRoute
@@ -517,6 +526,7 @@ export interface FileRoutesById {
   '/_authenticated/counseling/resources': typeof AuthenticatedCounselingResourcesRouteWithChildren
   '/_authenticated/counseling/roadmap': typeof AuthenticatedCounselingRoadmapRoute
   '/_authenticated/mentors/$id': typeof AuthenticatedMentorsIdRoute
+  '/_authenticated/mentors/apply': typeof AuthenticatedMentorsApplyRoute
   '/_authenticated/review/$attemptId': typeof AuthenticatedReviewAttemptIdRoute
   '/_authenticated/subject/$slug': typeof AuthenticatedSubjectSlugRoute
   '/_authenticated/test/$attemptId': typeof AuthenticatedTestAttemptIdRoute
@@ -575,6 +585,7 @@ export interface FileRouteTypes {
     | '/counseling/resources'
     | '/counseling/roadmap'
     | '/mentors/$id'
+    | '/mentors/apply'
     | '/review/$attemptId'
     | '/subject/$slug'
     | '/test/$attemptId'
@@ -628,6 +639,7 @@ export interface FileRouteTypes {
     | '/counseling/resources'
     | '/counseling/roadmap'
     | '/mentors/$id'
+    | '/mentors/apply'
     | '/review/$attemptId'
     | '/subject/$slug'
     | '/test/$attemptId'
@@ -685,6 +697,7 @@ export interface FileRouteTypes {
     | '/_authenticated/counseling/resources'
     | '/_authenticated/counseling/roadmap'
     | '/_authenticated/mentors/$id'
+    | '/_authenticated/mentors/apply'
     | '/_authenticated/review/$attemptId'
     | '/_authenticated/subject/$slug'
     | '/_authenticated/test/$attemptId'
@@ -916,6 +929,13 @@ declare module '@tanstack/react-router' {
       path: '/review/$attemptId'
       fullPath: '/review/$attemptId'
       preLoaderRoute: typeof AuthenticatedReviewAttemptIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/mentors/apply': {
+      id: '/_authenticated/mentors/apply'
+      path: '/mentors/apply'
+      fullPath: '/mentors/apply'
+      preLoaderRoute: typeof AuthenticatedMentorsApplyRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/mentors/$id': {
@@ -1245,6 +1265,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSearchRoute: typeof AuthenticatedSearchRoute
   AuthenticatedComingSoonFeatureRoute: typeof AuthenticatedComingSoonFeatureRoute
   AuthenticatedMentorsIdRoute: typeof AuthenticatedMentorsIdRoute
+  AuthenticatedMentorsApplyRoute: typeof AuthenticatedMentorsApplyRoute
   AuthenticatedReviewAttemptIdRoute: typeof AuthenticatedReviewAttemptIdRoute
   AuthenticatedSubjectSlugRoute: typeof AuthenticatedSubjectSlugRoute
   AuthenticatedTestAttemptIdRoute: typeof AuthenticatedTestAttemptIdRoute
@@ -1264,6 +1285,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSearchRoute: AuthenticatedSearchRoute,
   AuthenticatedComingSoonFeatureRoute: AuthenticatedComingSoonFeatureRoute,
   AuthenticatedMentorsIdRoute: AuthenticatedMentorsIdRoute,
+  AuthenticatedMentorsApplyRoute: AuthenticatedMentorsApplyRoute,
   AuthenticatedReviewAttemptIdRoute: AuthenticatedReviewAttemptIdRoute,
   AuthenticatedSubjectSlugRoute: AuthenticatedSubjectSlugRoute,
   AuthenticatedTestAttemptIdRoute: AuthenticatedTestAttemptIdRoute,
