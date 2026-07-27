@@ -104,12 +104,16 @@ function BecomeMentor() {
     setUploading(field);
     try {
       const url = await uploadMentorFile(user!.id, "docs", file);
-      const { error } = await supabase
-        .from("mentor_verification_documents")
-        .upsert({ mentor_id: mentor.id, [field]: url }, { onConflict: "mentor_id" });
+      const patch: Partial<Docs> = { [field]: url };
+      const { data: existing } = await supabase
+        .from("mentor_verification_documents").select("id").eq("mentor_id", mentor.id).maybeSingle();
+      const { error } = existing
+        ? await supabase.from("mentor_verification_documents").update(patch).eq("id", existing.id)
+        : await supabase.from("mentor_verification_documents").insert({ mentor_id: mentor.id, ...patch });
       if (error) throw error;
       toast.success("Uploaded");
       qc.invalidateQueries({ queryKey: ["my-mentor-docs"] });
+
     } catch (e) {
       toast.error((e as Error).message);
     } finally {
