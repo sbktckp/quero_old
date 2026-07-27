@@ -56,6 +56,7 @@ import { Route as AuthenticatedAdminBillingRouteImport } from './routes/_authent
 import { Route as AuthenticatedAdminActivityRouteImport } from './routes/_authenticated/admin.activity'
 import { Route as AuthenticatedAdminCounselingIndexRouteImport } from './routes/_authenticated/admin.counseling.index'
 import { Route as AuthenticatedAdminContentIndexRouteImport } from './routes/_authenticated/admin.content.index'
+import { Route as AuthenticatedMentorsChatMentorIdRouteImport } from './routes/_authenticated/mentors.chat.$mentorId'
 import { Route as AuthenticatedCounselingResourcesSlugRouteImport } from './routes/_authenticated/counseling.resources.$slug'
 import { Route as AuthenticatedCounselingCollegeIdRouteImport } from './routes/_authenticated/counseling.college.$id'
 import { Route as AuthenticatedAdminUsersIdRouteImport } from './routes/_authenticated/admin.users.$id'
@@ -321,6 +322,12 @@ const AuthenticatedAdminContentIndexRoute =
     path: '/content/',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedMentorsChatMentorIdRoute =
+  AuthenticatedMentorsChatMentorIdRouteImport.update({
+    id: '/mentors/chat/$mentorId',
+    path: '/mentors/chat/$mentorId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedCounselingResourcesSlugRoute =
   AuthenticatedCounselingResourcesSlugRouteImport.update({
     id: '/$slug',
@@ -430,6 +437,7 @@ export interface FileRoutesByFullPath {
   '/admin/users/$id': typeof AuthenticatedAdminUsersIdRoute
   '/counseling/college/$id': typeof AuthenticatedCounselingCollegeIdRoute
   '/counseling/resources/$slug': typeof AuthenticatedCounselingResourcesSlugRoute
+  '/mentors/chat/$mentorId': typeof AuthenticatedMentorsChatMentorIdRoute
   '/admin/content/': typeof AuthenticatedAdminContentIndexRoute
   '/admin/counseling/': typeof AuthenticatedAdminCounselingIndexRoute
 }
@@ -484,6 +492,7 @@ export interface FileRoutesByTo {
   '/admin/users/$id': typeof AuthenticatedAdminUsersIdRoute
   '/counseling/college/$id': typeof AuthenticatedCounselingCollegeIdRoute
   '/counseling/resources/$slug': typeof AuthenticatedCounselingResourcesSlugRoute
+  '/mentors/chat/$mentorId': typeof AuthenticatedMentorsChatMentorIdRoute
   '/admin/content': typeof AuthenticatedAdminContentIndexRoute
   '/admin/counseling': typeof AuthenticatedAdminCounselingIndexRoute
 }
@@ -543,6 +552,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/users/$id': typeof AuthenticatedAdminUsersIdRoute
   '/_authenticated/counseling/college/$id': typeof AuthenticatedCounselingCollegeIdRoute
   '/_authenticated/counseling/resources/$slug': typeof AuthenticatedCounselingResourcesSlugRoute
+  '/_authenticated/mentors/chat/$mentorId': typeof AuthenticatedMentorsChatMentorIdRoute
   '/_authenticated/admin/content/': typeof AuthenticatedAdminContentIndexRoute
   '/_authenticated/admin/counseling/': typeof AuthenticatedAdminCounselingIndexRoute
 }
@@ -602,6 +612,7 @@ export interface FileRouteTypes {
     | '/admin/users/$id'
     | '/counseling/college/$id'
     | '/counseling/resources/$slug'
+    | '/mentors/chat/$mentorId'
     | '/admin/content/'
     | '/admin/counseling/'
   fileRoutesByTo: FileRoutesByTo
@@ -656,6 +667,7 @@ export interface FileRouteTypes {
     | '/admin/users/$id'
     | '/counseling/college/$id'
     | '/counseling/resources/$slug'
+    | '/mentors/chat/$mentorId'
     | '/admin/content'
     | '/admin/counseling'
   id:
@@ -714,6 +726,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/users/$id'
     | '/_authenticated/counseling/college/$id'
     | '/_authenticated/counseling/resources/$slug'
+    | '/_authenticated/mentors/chat/$mentorId'
     | '/_authenticated/admin/content/'
     | '/_authenticated/admin/counseling/'
   fileRoutesById: FileRoutesById
@@ -1064,6 +1077,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminContentIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/mentors/chat/$mentorId': {
+      id: '/_authenticated/mentors/chat/$mentorId'
+      path: '/mentors/chat/$mentorId'
+      fullPath: '/mentors/chat/$mentorId'
+      preLoaderRoute: typeof AuthenticatedMentorsChatMentorIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/counseling/resources/$slug': {
       id: '/_authenticated/counseling/resources/$slug'
       path: '/$slug'
@@ -1271,6 +1291,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedTestAttemptIdRoute: typeof AuthenticatedTestAttemptIdRoute
   AuthenticatedTestsNewRoute: typeof AuthenticatedTestsNewRoute
   AuthenticatedMentorsIndexRoute: typeof AuthenticatedMentorsIndexRoute
+  AuthenticatedMentorsChatMentorIdRoute: typeof AuthenticatedMentorsChatMentorIdRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -1291,6 +1312,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedTestAttemptIdRoute: AuthenticatedTestAttemptIdRoute,
   AuthenticatedTestsNewRoute: AuthenticatedTestsNewRoute,
   AuthenticatedMentorsIndexRoute: AuthenticatedMentorsIndexRoute,
+  AuthenticatedMentorsChatMentorIdRoute: AuthenticatedMentorsChatMentorIdRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
