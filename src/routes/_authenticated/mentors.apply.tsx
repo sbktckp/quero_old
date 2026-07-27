@@ -163,9 +163,13 @@ function BecomeMentor() {
               <input ref={photoRef} type="file" accept="image/*" className="hidden" onChange={async (e) => {
                 const f = e.target.files?.[0]; if (!f) return;
                 setUploading("photo");
-                try { setForm((s) => ({ ...s, photo_url: await uploadMentorFile(user!.id, "photos", f) })); toast.success("Photo uploaded"); }
+                try {
+                  const url = await uploadMentorFile(user!.id, "photos", f);
+                  setForm((s) => ({ ...s, photo_url: url }));
+                  toast.success("Photo uploaded");
+                }
                 catch (err) { toast.error((err as Error).message); } finally { setUploading(null); if (photoRef.current) photoRef.current.value = ""; }
-              }} />
+
               <Button type="button" variant="outline" size="sm" disabled={uploading === "photo"} onClick={() => photoRef.current?.click()}>
                 <Upload size={14} /> {uploading === "photo" ? "Uploading…" : "Upload photo"}
               </Button>
