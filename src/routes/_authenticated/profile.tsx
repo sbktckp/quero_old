@@ -81,8 +81,8 @@ function ProfilePage() {
 
         <div className="rounded-2xl bg-card border border-border shadow-card divide-y divide-border">
           <Row label="Language" value={prefs?.language ? prefs.language[0].toUpperCase() + prefs.language.slice(1) : "—"} />
-          <Row label="Academic stage" value={stageLabel(prefs?.academic_stage)} />
         </div>
+
 
 
         <button onClick={toggleDark} className="w-full flex items-center justify-between rounded-2xl bg-card border border-border shadow-card px-5 py-4">
