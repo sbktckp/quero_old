@@ -69,9 +69,14 @@ export const Route = createFileRoute("/api/razorpay-webhook")({
               gateway_payment_id: paymentId,
               updated_at: new Date().toISOString(),
             }).eq("id", pending.id);
+            await supabaseAdmin.from("mentor_sessions").update({
+              payment_status: "failed",
+              updated_at: new Date().toISOString(),
+            }).eq("gateway_order_id", orderId).eq("payment_status", "pending");
           }
           return new Response("ok");
         }
+
 
         const notes = (payment?.notes
           ?? (event.payload?.order?.entity as unknown as { notes?: Record<string, string> } | undefined)?.notes)
