@@ -1564,6 +1564,14 @@ export type Database = {
         }[]
       }
       get_attempt_review: { Args: { _attempt_id: string }; Returns: Json }
+      has_institute_role: {
+        Args: {
+          _institute_id: string
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
