@@ -97,6 +97,7 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          institute_id: string | null
           name: string
           slug: string
           sort_order: number | null
@@ -106,6 +107,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          institute_id?: string | null
           name: string
           slug: string
           sort_order?: number | null
@@ -115,6 +117,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          institute_id?: string | null
           name?: string
           slug?: string
           sort_order?: number | null
@@ -122,6 +125,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "chapters_institute_id_fkey"
+            columns: ["institute_id"]
+            isOneToOne: false
+            referencedRelation: "institutes"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "chapters_subject_id_fkey"
             columns: ["subject_id"]
@@ -469,6 +479,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      institutes: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          is_active: boolean
+          name: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       legal_pages: {
         Row: {
@@ -971,6 +1011,7 @@ export type Database = {
           difficulty: string | null
           explanation: string | null
           id: string
+          institute_id: string | null
           is_pyq: boolean
           pyq_exam: string | null
           pyq_year: number | null
@@ -986,6 +1027,7 @@ export type Database = {
           difficulty?: string | null
           explanation?: string | null
           id?: string
+          institute_id?: string | null
           is_pyq?: boolean
           pyq_exam?: string | null
           pyq_year?: number | null
@@ -1001,6 +1043,7 @@ export type Database = {
           difficulty?: string | null
           explanation?: string | null
           id?: string
+          institute_id?: string | null
           is_pyq?: boolean
           pyq_exam?: string | null
           pyq_year?: number | null
@@ -1016,6 +1059,13 @@ export type Database = {
             columns: ["chapter_id"]
             isOneToOne: false
             referencedRelation: "chapters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "questions_institute_id_fkey"
+            columns: ["institute_id"]
+            isOneToOne: false
+            referencedRelation: "institutes"
             referencedColumns: ["id"]
           },
           {
@@ -1062,6 +1112,7 @@ export type Database = {
           exam_type: string
           icon: string | null
           id: string
+          institute_id: string | null
           is_active: boolean
           name: string
           slug: string
@@ -1074,6 +1125,7 @@ export type Database = {
           exam_type?: string
           icon?: string | null
           id?: string
+          institute_id?: string | null
           is_active?: boolean
           name: string
           slug: string
@@ -1086,13 +1138,22 @@ export type Database = {
           exam_type?: string
           icon?: string | null
           id?: string
+          institute_id?: string | null
           is_active?: boolean
           name?: string
           slug?: string
           sort_order?: number | null
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "subjects_institute_id_fkey"
+            columns: ["institute_id"]
+            isOneToOne: false
+            referencedRelation: "institutes"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       subscriptions: {
         Row: {
@@ -1292,6 +1353,7 @@ export type Database = {
           created_by: string | null
           duration_seconds: number
           id: string
+          institute_id: string | null
           mode: Database["public"]["Enums"]["test_mode"]
           question_count: number
           subject_id: string | null
@@ -1306,6 +1368,7 @@ export type Database = {
           created_by?: string | null
           duration_seconds?: number
           id?: string
+          institute_id?: string | null
           mode?: Database["public"]["Enums"]["test_mode"]
           question_count?: number
           subject_id?: string | null
@@ -1320,6 +1383,7 @@ export type Database = {
           created_by?: string | null
           duration_seconds?: number
           id?: string
+          institute_id?: string | null
           mode?: Database["public"]["Enums"]["test_mode"]
           question_count?: number
           subject_id?: string | null
@@ -1334,6 +1398,13 @@ export type Database = {
             columns: ["chapter_id"]
             isOneToOne: false
             referencedRelation: "chapters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tests_institute_id_fkey"
+            columns: ["institute_id"]
+            isOneToOne: false
+            referencedRelation: "institutes"
             referencedColumns: ["id"]
           },
           {
@@ -1357,6 +1428,7 @@ export type Database = {
           chapter_id: string
           created_at: string
           id: string
+          institute_id: string | null
           name: string
           sort_order: number | null
         }
@@ -1364,6 +1436,7 @@ export type Database = {
           chapter_id: string
           created_at?: string
           id?: string
+          institute_id?: string | null
           name: string
           sort_order?: number | null
         }
@@ -1371,6 +1444,7 @@ export type Database = {
           chapter_id?: string
           created_at?: string
           id?: string
+          institute_id?: string | null
           name?: string
           sort_order?: number | null
         }
@@ -1380,6 +1454,13 @@ export type Database = {
             columns: ["chapter_id"]
             isOneToOne: false
             referencedRelation: "chapters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "topics_institute_id_fkey"
+            columns: ["institute_id"]
+            isOneToOne: false
+            referencedRelation: "institutes"
             referencedColumns: ["id"]
           },
         ]
@@ -1424,22 +1505,33 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          institute_id: string | null
           role: Database["public"]["Enums"]["app_role"]
           user_id: string
         }
         Insert: {
           created_at?: string
           id?: string
+          institute_id?: string | null
           role: Database["public"]["Enums"]["app_role"]
           user_id: string
         }
         Update: {
           created_at?: string
           id?: string
+          institute_id?: string | null
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "user_roles_institute_id_fkey"
+            columns: ["institute_id"]
+            isOneToOne: false
+            referencedRelation: "institutes"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
@@ -1490,7 +1582,12 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "student" | "admin"
+      app_role:
+        | "student"
+        | "admin"
+        | "faculty"
+        | "subject_coordinator"
+        | "institute_admin"
       study_goal: "neet_ug" | "neet_pg"
       test_mode: "timed" | "practice"
       test_type:
@@ -1628,7 +1725,13 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["student", "admin"],
+      app_role: [
+        "student",
+        "admin",
+        "faculty",
+        "subject_coordinator",
+        "institute_admin",
+      ],
       study_goal: ["neet_ug", "neet_pg"],
       test_mode: ["timed", "practice"],
       test_type: [
