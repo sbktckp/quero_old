@@ -1062,6 +1062,7 @@ export type Database = {
         Row: {
           chapter_id: string | null
           created_at: string
+          created_by: string | null
           difficulty: string | null
           explanation: string | null
           id: string
@@ -1070,6 +1071,10 @@ export type Database = {
           pyq_exam: string | null
           pyq_year: number | null
           question_text: string
+          rejection_reason: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
           subject_id: string
           topic_id: string | null
           updated_at: string
@@ -1078,6 +1083,7 @@ export type Database = {
         Insert: {
           chapter_id?: string | null
           created_at?: string
+          created_by?: string | null
           difficulty?: string | null
           explanation?: string | null
           id?: string
@@ -1086,6 +1092,10 @@ export type Database = {
           pyq_exam?: string | null
           pyq_year?: number | null
           question_text: string
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
           subject_id: string
           topic_id?: string | null
           updated_at?: string
@@ -1094,6 +1104,7 @@ export type Database = {
         Update: {
           chapter_id?: string | null
           created_at?: string
+          created_by?: string | null
           difficulty?: string | null
           explanation?: string | null
           id?: string
@@ -1102,6 +1113,10 @@ export type Database = {
           pyq_exam?: string | null
           pyq_year?: number | null
           question_text?: string
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
           subject_id?: string
           topic_id?: string | null
           updated_at?: string
@@ -1557,6 +1572,7 @@ export type Database = {
       }
       user_roles: {
         Row: {
+          assigned_subject_id: string | null
           created_at: string
           id: string
           institute_id: string | null
@@ -1564,6 +1580,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          assigned_subject_id?: string | null
           created_at?: string
           id?: string
           institute_id?: string | null
@@ -1571,6 +1588,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          assigned_subject_id?: string | null
           created_at?: string
           id?: string
           institute_id?: string | null
@@ -1578,6 +1596,13 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "user_roles_assigned_subject_id_fkey"
+            columns: ["assigned_subject_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "user_roles_institute_id_fkey"
             columns: ["institute_id"]
@@ -1632,6 +1657,15 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      institute_add_faculty: {
+        Args: { _email: string; _institute_id: string; _subject_id: string }
+        Returns: Json
+      }
+      institute_faculty_list: { Args: { _institute_id: string }; Returns: Json }
+      institute_remove_faculty: {
+        Args: { _role_id: string }
+        Returns: undefined
       }
       is_mentor_owner: { Args: { _mentor_id: string }; Returns: boolean }
       submit_answer: {

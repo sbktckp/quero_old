@@ -14,6 +14,8 @@ export interface BuildTestInput {
   subjectId?: string | null;
   chapterId?: string | null;
   topicId?: string | null;
+  /** When set, the pool is the global bank plus this institute's approved questions, and the test is tagged with it. */
+  instituteId?: string | null;
   filters?: {
     subjectIds?: string[];
     difficulties?: string[];
@@ -25,7 +27,9 @@ export interface BuildTestInput {
 
 export async function buildAndStartTest(input: BuildTestInput): Promise<string> {
   // 1) Sample question IDs
-  let q = supabase.from("questions").select("id");
+  let q = supabase.from("questions").select("id").eq("status", "approved");
+  if (input.instituteId) q = q.or(`institute_id.is.null,institute_id.eq.${input.instituteId}`);
+  else q = q.is("institute_id", null);
   if (input.chapterId) q = q.eq("chapter_id", input.chapterId);
   else if (input.topicId) q = q.eq("topic_id", input.topicId);
   else if (input.subjectId) q = q.eq("subject_id", input.subjectId);
@@ -56,6 +60,7 @@ export async function buildAndStartTest(input: BuildTestInput): Promise<string> 
       duration_seconds: input.durationMinutes * 60,
       question_count: chosen.length,
       created_by: input.userId,
+      institute_id: input.instituteId ?? null,
     })
     .select()
     .single();
