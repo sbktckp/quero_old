@@ -13,7 +13,7 @@ import {
   validateCouponForPlan,
 } from "@/lib/razorpay.functions";
 
-export const Route = createFileRoute("/_authenticated/pricing")({
+export const Route = createFileRoute("/_authenticated/upgrade")({
   head: () => ({
     meta: [
       { title: "Pricing — Quero" },
