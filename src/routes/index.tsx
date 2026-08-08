@@ -1,12 +1,10 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
-import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { LandingHeader } from "@/components/landing/landing-header";
-import { LandingFooter } from "@/components/landing/landing-footer";
-import heroStudent from "@/assets/hero-student.png.asset.json";
+import heroStudent from "@/assets/hero-student-illustration.png";
 import { GraduationCap, Clock, BarChart3, ShieldCheck, ArrowRight, Play, TrendingUp } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -67,10 +65,8 @@ function LandingPage() {
       <main>
         <Hero />
         <Features />
-        <Pricing />
         <CtaBanner />
       </main>
-      <LandingFooter />
     </div>
   );
 }
@@ -80,7 +76,7 @@ const fadeUp = {
   show: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: "easeOut" as const, delay: i * 0.08 },
+    transition: { duration: 0.6, ease: "easeOut" as const, delay: i * 0.1 },
   }),
 };
 
@@ -138,19 +134,26 @@ function Hero() {
             custom={3}
             className="mt-8 flex flex-wrap items-center gap-4"
           >
-            <Link
-              to="/auth"
-              className="group inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground shadow-elevated transition-transform hover:-translate-y-0.5"
+            <motion.div whileHover={{ scale: 1.04, y: -2 }} whileTap={{ scale: 0.98 }}>
+              <Link
+                to="/auth"
+                className="group inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground shadow-card transition-shadow hover:shadow-elevated"
+              >
+                Start Free Now
+                <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
+              </Link>
+            </motion.div>
+            <motion.a
+              href="#features"
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.98 }}
+              className="inline-flex items-center gap-3 text-sm font-semibold"
             >
-              Start Free Now
-              <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
-            </Link>
-            <a href="#features" className="inline-flex items-center gap-3 text-sm font-semibold">
               <span className="flex h-11 w-11 items-center justify-center rounded-full border border-primary/30 text-primary transition-colors hover:bg-primary/5">
                 <Play size={14} className="fill-current" />
               </span>
               See How It Works
-            </a>
+            </motion.a>
           </motion.div>
 
           <motion.div
@@ -171,11 +174,36 @@ function Hero() {
   );
 }
 
-function float(duration: number, distance = 10, delay = 0) {
-  return {
-    animate: { y: [0, -distance, 0] },
-    transition: { duration, repeat: Infinity, ease: "easeInOut" as const, delay },
-  };
+/** Reveal-then-float: card slides in, then drifts gently forever. */
+function StatCard({
+  className,
+  delay,
+  duration,
+  distance,
+  children,
+}: {
+  className: string;
+  delay: number;
+  duration: number;
+  distance: number;
+  children: React.ReactNode;
+}) {
+  return (
+    <motion.div
+      className={className}
+      initial={{ opacity: 0, y: 24, scale: 0.94 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.55, delay, ease: "easeOut" }}
+    >
+      <motion.div
+        animate={{ y: [0, -distance, 0] }}
+        transition={{ duration, repeat: Infinity, ease: "easeInOut", delay: delay + 0.6 }}
+        className="rounded-2xl border border-border bg-card p-3.5 shadow-elevated"
+      >
+        {children}
+      </motion.div>
+    </motion.div>
+  );
 }
 
 function HeroVisual() {
@@ -189,19 +217,17 @@ function HeroVisual() {
       <div className="absolute inset-x-6 bottom-6 top-10 rounded-[3rem] bg-primary/5" aria-hidden />
 
       <motion.img
-        src={heroStudent.url}
-        alt="Medical student in a Quero hoodie holding a notebook and phone"
-        width={1041}
-        height={1941}
+        src={heroStudent}
+        alt="Illustration of a medical student in a purple hoodie holding a notebook and phone"
+        width={912}
+        height={1200}
         className="relative z-10 mx-auto w-full max-w-[19rem] select-none object-contain md:max-w-[26rem]"
-        {...float(7, 12)}
+        animate={{ y: [0, -12, 0] }}
+        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
       />
 
       {/* Illustrative product-preview cards (static demo content) */}
-      <motion.div
-        className="absolute -top-2 -right-2 z-20 w-44 rounded-2xl md:w-52 border border-border bg-card p-3.5 shadow-elevated md:-right-4"
-        {...float(6, 9, 0.4)}
-      >
+      <StatCard className="absolute -top-2 -right-2 z-20 w-44 md:w-52 md:-right-4" delay={0.35} duration={6} distance={9}>
         <div className="text-xs font-semibold">Mock Test • 01</div>
         <div className="mt-2 flex items-center gap-3">
           <ScoreRing percent={85} />
@@ -215,11 +241,13 @@ function HeroVisual() {
             <div key={i} className="flex-1 rounded-sm bg-primary/70" style={{ height: `${h}%` }} />
           ))}
         </div>
-      </motion.div>
+      </StatCard>
 
-      <motion.div
-        className="absolute -right-2 top-1/2 z-20 w-40 -translate-y-1/2 rounded-2xl md:w-52 border border-border bg-card p-3.5 shadow-elevated md:-right-8"
-        {...float(8, 11, 1)}
+      <StatCard
+        className="absolute -right-2 top-1/2 z-20 w-40 -translate-y-1/2 md:w-52 md:-right-8"
+        delay={0.55}
+        duration={8}
+        distance={11}
       >
         <div className="text-xs font-semibold">Weak Topics</div>
         <div className="mt-2 space-y-2">
@@ -232,12 +260,9 @@ function HeroVisual() {
             </div>
           ))}
         </div>
-      </motion.div>
+      </StatCard>
 
-      <motion.div
-        className="absolute bottom-2 -right-2 z-20 w-44 rounded-2xl md:w-52 border border-border bg-card p-3.5 shadow-elevated md:-right-2"
-        {...float(7.5, 8, 0.8)}
-      >
+      <StatCard className="absolute bottom-2 -right-2 z-20 w-44 md:w-52 md:-right-2" delay={0.75} duration={7.5} distance={8}>
         <div className="text-xs font-semibold">Questions Practiced</div>
         <div className="mt-1 flex items-center gap-2">
           <span className="text-xl font-extrabold">12,540</span>
@@ -254,7 +279,7 @@ function HeroVisual() {
             strokeLinejoin="round"
           />
         </svg>
-      </motion.div>
+      </StatCard>
 
       <p className="relative z-10 mt-4 text-center text-[11px] text-muted-foreground">
         Product preview — illustrative data.
@@ -321,82 +346,6 @@ function Features() {
   );
 }
 
-type PlanRow = {
-  id: string;
-  name: string;
-  tier: string;
-  price_inr: number;
-  billing_period: string;
-};
-
-function Pricing() {
-  const { data: plans, isLoading } = useQuery({
-    queryKey: ["landing-plans"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("plans")
-        .select("id,name,tier,price_inr,billing_period")
-        .eq("is_active", true)
-        .order("price_inr", { ascending: true });
-      if (error) throw error;
-      return (data ?? []) as PlanRow[];
-    },
-    staleTime: 5 * 60 * 1000,
-  });
-
-  return (
-    <section id="pricing" className="scroll-mt-20 px-5 py-10 md:py-14">
-      <div className="mx-auto max-w-6xl">
-        <h2 className="text-center text-2xl font-extrabold tracking-tight md:text-3xl">Simple, honest pricing</h2>
-        <p className="mt-2 text-center text-sm text-muted-foreground">Start free. Upgrade whenever you&apos;re ready.</p>
-
-        {isLoading ? (
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
-            {[0, 1, 2].map((i) => (
-              <div key={i} className="h-40 animate-pulse rounded-2xl border border-border bg-muted/40" />
-            ))}
-          </div>
-        ) : !plans || plans.length === 0 ? (
-          <div className="mx-auto mt-8 max-w-md rounded-2xl border border-border bg-card p-8 text-center shadow-card">
-            <div className="font-semibold">Pricing coming soon</div>
-            <p className="mt-1 text-sm text-muted-foreground">
-              We&apos;re finalising our plans. Create a free account and start practising today.
-            </p>
-            <Link
-              to="/auth"
-              className="mt-4 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground"
-            >
-              Start Free Now <ArrowRight size={15} />
-            </Link>
-          </div>
-        ) : (
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
-            {plans.map((p) => (
-              <div
-                key={p.id}
-                className="rounded-2xl border border-border bg-card p-6 shadow-card transition-transform hover:-translate-y-1"
-              >
-                <div className="text-xs font-semibold uppercase tracking-wider text-primary">{p.tier}</div>
-                <div className="mt-1 text-lg font-extrabold">{p.name}</div>
-                <div className="mt-3 flex items-end gap-1">
-                  <span className="text-3xl font-extrabold">₹{Number(p.price_inr).toLocaleString("en-IN")}</span>
-                  <span className="pb-1 text-sm text-muted-foreground">/ {p.billing_period}</span>
-                </div>
-                <Link
-                  to="/auth"
-                  className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground"
-                >
-                  Get Started <ArrowRight size={15} />
-                </Link>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </section>
-  );
-}
-
 function CtaBanner() {
   return (
     <section className="px-5 pb-14 pt-4">
@@ -410,13 +359,15 @@ function CtaBanner() {
             Ready to take your preparation to the{" "}
             <span className="text-[oklch(0.82_0.11_290)]">next level?</span>
           </h2>
-          <Link
-            to="/auth"
-            className="group mt-6 inline-flex items-center gap-2 rounded-full bg-card px-7 py-3.5 text-sm font-semibold text-primary shadow-elevated transition-transform hover:-translate-y-0.5"
-          >
-            Start Free Now
-            <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
-          </Link>
+          <motion.div whileHover={{ scale: 1.04, y: -2 }} whileTap={{ scale: 0.98 }} className="inline-block">
+            <Link
+              to="/auth"
+              className="group mt-6 inline-flex items-center gap-2 rounded-full bg-card px-7 py-3.5 text-sm font-semibold text-primary shadow-card transition-shadow hover:shadow-elevated"
+            >
+              Start Free Now
+              <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
+            </Link>
+          </motion.div>
         </div>
         <RocketIllustration />
       </div>

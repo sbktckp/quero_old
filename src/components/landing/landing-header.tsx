@@ -2,14 +2,28 @@ import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 
-const nav = [
-  { label: "For Students", href: "#features" },
-  { label: "Features", href: "#features" },
-  { label: "Pricing", href: "#pricing" },
-] as const;
-
 export function LandingHeader() {
   const [open, setOpen] = useState(false);
+
+  const navLinks = (
+    <>
+      <a href="#features" onClick={() => setOpen(false)} className="transition-colors hover:text-primary">
+        For Students
+      </a>
+      <Link to="/for-institutes" onClick={() => setOpen(false)} className="transition-colors hover:text-primary">
+        For Institutes
+      </Link>
+      <a href="#features" onClick={() => setOpen(false)} className="transition-colors hover:text-primary">
+        Features
+      </a>
+      <Link to="/pricing" onClick={() => setOpen(false)} className="transition-colors hover:text-primary">
+        Pricing
+      </Link>
+      <Link to="/about" onClick={() => setOpen(false)} className="transition-colors hover:text-primary">
+        About Us
+      </Link>
+    </>
+  );
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-xl">
@@ -25,14 +39,7 @@ export function LandingHeader() {
           <span className="text-xl font-extrabold tracking-tight">Quero</span>
         </Link>
 
-        <nav className="hidden items-center gap-7 text-sm font-medium text-foreground/70 md:flex">
-          {nav.map((n) => (
-            <a key={n.label} href={n.href} className="transition-colors hover:text-primary">
-              {n.label}
-            </a>
-          ))}
-          <Link to="/about" className="transition-colors hover:text-primary">About Us</Link>
-        </nav>
+        <nav className="hidden items-center gap-7 text-sm font-medium text-foreground/70 md:flex">{navLinks}</nav>
 
         <div className="hidden items-center gap-2 md:flex">
           <Link
@@ -43,7 +50,7 @@ export function LandingHeader() {
           </Link>
           <Link
             to="/auth"
-            className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-card transition-transform hover:-translate-y-0.5"
+            className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-card transition-all hover:-translate-y-0.5 hover:shadow-elevated"
           >
             Sign Up Free
           </Link>
@@ -61,13 +68,8 @@ export function LandingHeader() {
 
       {open && (
         <div className="border-t border-border/60 bg-background px-5 py-4 md:hidden">
-          <div className="flex flex-col gap-3 text-sm font-medium">
-            {nav.map((n) => (
-              <a key={n.label} href={n.href} onClick={() => setOpen(false)} className="text-foreground/80">
-                {n.label}
-              </a>
-            ))}
-            <Link to="/about" onClick={() => setOpen(false)} className="text-foreground/80">About Us</Link>
+          <div className="flex flex-col gap-3 text-sm font-medium text-foreground/80">
+            {navLinks}
             <div className="mt-2 grid grid-cols-2 gap-2">
               <Link
                 to="/auth"

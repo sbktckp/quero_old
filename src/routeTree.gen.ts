@@ -13,6 +13,8 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RefundPolicyRouteImport } from './routes/refund-policy'
 import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
+import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as ForInstitutesRouteImport } from './routes/for-institutes'
 import { Route as DeleteAccountRouteImport } from './routes/delete-account'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -21,10 +23,10 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
 import { Route as ApiRazorpayWebhookRouteImport } from './routes/api/razorpay-webhook'
+import { Route as AuthenticatedUpgradeRouteImport } from './routes/_authenticated/upgrade'
 import { Route as AuthenticatedSearchRouteImport } from './routes/_authenticated/search'
 import { Route as AuthenticatedPyqRouteImport } from './routes/_authenticated/pyq'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
-import { Route as AuthenticatedPricingRouteImport } from './routes/_authenticated/pricing'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
 import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated/home'
@@ -52,6 +54,7 @@ import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminTeamRouteImport } from './routes/_authenticated/admin.team'
 import { Route as AuthenticatedAdminMentorsRouteImport } from './routes/_authenticated/admin.mentors'
 import { Route as AuthenticatedAdminLegalRouteImport } from './routes/_authenticated/admin.legal'
+import { Route as AuthenticatedAdminLeadsRouteImport } from './routes/_authenticated/admin.leads'
 import { Route as AuthenticatedAdminCounselingRouteImport } from './routes/_authenticated/admin.counseling'
 import { Route as AuthenticatedAdminContactRouteImport } from './routes/_authenticated/admin.contact'
 import { Route as AuthenticatedAdminBillingRouteImport } from './routes/_authenticated/admin.billing'
@@ -87,6 +90,16 @@ const RefundPolicyRoute = RefundPolicyRouteImport.update({
 const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
   id: '/privacy-policy',
   path: '/privacy-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForInstitutesRoute = ForInstitutesRouteImport.update({
+  id: '/for-institutes',
+  path: '/for-institutes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DeleteAccountRoute = DeleteAccountRouteImport.update({
@@ -128,6 +141,11 @@ const ApiRazorpayWebhookRoute = ApiRazorpayWebhookRouteImport.update({
   path: '/api/razorpay-webhook',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedUpgradeRoute = AuthenticatedUpgradeRouteImport.update({
+  id: '/upgrade',
+  path: '/upgrade',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedSearchRoute = AuthenticatedSearchRouteImport.update({
   id: '/search',
   path: '/search',
@@ -141,11 +159,6 @@ const AuthenticatedPyqRoute = AuthenticatedPyqRouteImport.update({
 const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedPricingRoute = AuthenticatedPricingRouteImport.update({
-  id: '/pricing',
-  path: '/pricing',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedOnboardingRoute = AuthenticatedOnboardingRouteImport.update({
@@ -300,6 +313,11 @@ const AuthenticatedAdminLegalRoute = AuthenticatedAdminLegalRouteImport.update({
   path: '/legal',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminLeadsRoute = AuthenticatedAdminLeadsRouteImport.update({
+  id: '/leads',
+  path: '/leads',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedAdminCounselingRoute =
   AuthenticatedAdminCounselingRouteImport.update({
     id: '/counseling',
@@ -403,6 +421,8 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/delete-account': typeof DeleteAccountRoute
+  '/for-institutes': typeof ForInstitutesRoute
+  '/pricing': typeof PricingRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/refund-policy': typeof RefundPolicyRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -412,16 +432,17 @@ export interface FileRoutesByFullPath {
   '/home': typeof AuthenticatedHomeRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
-  '/pricing': typeof AuthenticatedPricingRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/pyq': typeof AuthenticatedPyqRoute
   '/search': typeof AuthenticatedSearchRoute
+  '/upgrade': typeof AuthenticatedUpgradeRoute
   '/api/razorpay-webhook': typeof ApiRazorpayWebhookRoute
   '/legal/$slug': typeof LegalSlugRoute
   '/admin/activity': typeof AuthenticatedAdminActivityRoute
   '/admin/billing': typeof AuthenticatedAdminBillingRoute
   '/admin/contact': typeof AuthenticatedAdminContactRoute
   '/admin/counseling': typeof AuthenticatedAdminCounselingRouteWithChildren
+  '/admin/leads': typeof AuthenticatedAdminLeadsRoute
   '/admin/legal': typeof AuthenticatedAdminLegalRoute
   '/admin/mentors': typeof AuthenticatedAdminMentorsRoute
   '/admin/team': typeof AuthenticatedAdminTeamRoute
@@ -463,6 +484,8 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/delete-account': typeof DeleteAccountRoute
+  '/for-institutes': typeof ForInstitutesRoute
+  '/pricing': typeof PricingRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/refund-policy': typeof RefundPolicyRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -470,15 +493,16 @@ export interface FileRoutesByTo {
   '/home': typeof AuthenticatedHomeRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
-  '/pricing': typeof AuthenticatedPricingRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/pyq': typeof AuthenticatedPyqRoute
   '/search': typeof AuthenticatedSearchRoute
+  '/upgrade': typeof AuthenticatedUpgradeRoute
   '/api/razorpay-webhook': typeof ApiRazorpayWebhookRoute
   '/legal/$slug': typeof LegalSlugRoute
   '/admin/activity': typeof AuthenticatedAdminActivityRoute
   '/admin/billing': typeof AuthenticatedAdminBillingRoute
   '/admin/contact': typeof AuthenticatedAdminContactRoute
+  '/admin/leads': typeof AuthenticatedAdminLeadsRoute
   '/admin/legal': typeof AuthenticatedAdminLegalRoute
   '/admin/mentors': typeof AuthenticatedAdminMentorsRoute
   '/admin/team': typeof AuthenticatedAdminTeamRoute
@@ -522,6 +546,8 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/delete-account': typeof DeleteAccountRoute
+  '/for-institutes': typeof ForInstitutesRoute
+  '/pricing': typeof PricingRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/refund-policy': typeof RefundPolicyRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -531,16 +557,17 @@ export interface FileRoutesById {
   '/_authenticated/home': typeof AuthenticatedHomeRoute
   '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
-  '/_authenticated/pricing': typeof AuthenticatedPricingRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/pyq': typeof AuthenticatedPyqRoute
   '/_authenticated/search': typeof AuthenticatedSearchRoute
+  '/_authenticated/upgrade': typeof AuthenticatedUpgradeRoute
   '/api/razorpay-webhook': typeof ApiRazorpayWebhookRoute
   '/legal/$slug': typeof LegalSlugRoute
   '/_authenticated/admin/activity': typeof AuthenticatedAdminActivityRoute
   '/_authenticated/admin/billing': typeof AuthenticatedAdminBillingRoute
   '/_authenticated/admin/contact': typeof AuthenticatedAdminContactRoute
   '/_authenticated/admin/counseling': typeof AuthenticatedAdminCounselingRouteWithChildren
+  '/_authenticated/admin/leads': typeof AuthenticatedAdminLeadsRoute
   '/_authenticated/admin/legal': typeof AuthenticatedAdminLegalRoute
   '/_authenticated/admin/mentors': typeof AuthenticatedAdminMentorsRoute
   '/_authenticated/admin/team': typeof AuthenticatedAdminTeamRoute
@@ -584,6 +611,8 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/delete-account'
+    | '/for-institutes'
+    | '/pricing'
     | '/privacy-policy'
     | '/refund-policy'
     | '/reset-password'
@@ -593,16 +622,17 @@ export interface FileRouteTypes {
     | '/home'
     | '/notifications'
     | '/onboarding'
-    | '/pricing'
     | '/profile'
     | '/pyq'
     | '/search'
+    | '/upgrade'
     | '/api/razorpay-webhook'
     | '/legal/$slug'
     | '/admin/activity'
     | '/admin/billing'
     | '/admin/contact'
     | '/admin/counseling'
+    | '/admin/leads'
     | '/admin/legal'
     | '/admin/mentors'
     | '/admin/team'
@@ -644,6 +674,8 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/delete-account'
+    | '/for-institutes'
+    | '/pricing'
     | '/privacy-policy'
     | '/refund-policy'
     | '/reset-password'
@@ -651,15 +683,16 @@ export interface FileRouteTypes {
     | '/home'
     | '/notifications'
     | '/onboarding'
-    | '/pricing'
     | '/profile'
     | '/pyq'
     | '/search'
+    | '/upgrade'
     | '/api/razorpay-webhook'
     | '/legal/$slug'
     | '/admin/activity'
     | '/admin/billing'
     | '/admin/contact'
+    | '/admin/leads'
     | '/admin/legal'
     | '/admin/mentors'
     | '/admin/team'
@@ -702,6 +735,8 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/delete-account'
+    | '/for-institutes'
+    | '/pricing'
     | '/privacy-policy'
     | '/refund-policy'
     | '/reset-password'
@@ -711,16 +746,17 @@ export interface FileRouteTypes {
     | '/_authenticated/home'
     | '/_authenticated/notifications'
     | '/_authenticated/onboarding'
-    | '/_authenticated/pricing'
     | '/_authenticated/profile'
     | '/_authenticated/pyq'
     | '/_authenticated/search'
+    | '/_authenticated/upgrade'
     | '/api/razorpay-webhook'
     | '/legal/$slug'
     | '/_authenticated/admin/activity'
     | '/_authenticated/admin/billing'
     | '/_authenticated/admin/contact'
     | '/_authenticated/admin/counseling'
+    | '/_authenticated/admin/leads'
     | '/_authenticated/admin/legal'
     | '/_authenticated/admin/mentors'
     | '/_authenticated/admin/team'
@@ -764,6 +800,8 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ContactRoute: typeof ContactRoute
   DeleteAccountRoute: typeof DeleteAccountRoute
+  ForInstitutesRoute: typeof ForInstitutesRoute
+  PricingRoute: typeof PricingRoute
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   RefundPolicyRoute: typeof RefundPolicyRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
@@ -800,6 +838,20 @@ declare module '@tanstack/react-router' {
       path: '/privacy-policy'
       fullPath: '/privacy-policy'
       preLoaderRoute: typeof PrivacyPolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/for-institutes': {
+      id: '/for-institutes'
+      path: '/for-institutes'
+      fullPath: '/for-institutes'
+      preLoaderRoute: typeof ForInstitutesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/delete-account': {
@@ -858,6 +910,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiRazorpayWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/upgrade': {
+      id: '/_authenticated/upgrade'
+      path: '/upgrade'
+      fullPath: '/upgrade'
+      preLoaderRoute: typeof AuthenticatedUpgradeRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/search': {
       id: '/_authenticated/search'
       path: '/search'
@@ -877,13 +936,6 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof AuthenticatedProfileRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/pricing': {
-      id: '/_authenticated/pricing'
-      path: '/pricing'
-      fullPath: '/pricing'
-      preLoaderRoute: typeof AuthenticatedPricingRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/onboarding': {
@@ -1075,6 +1127,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminLegalRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/leads': {
+      id: '/_authenticated/admin/leads'
+      path: '/leads'
+      fullPath: '/admin/leads'
+      preLoaderRoute: typeof AuthenticatedAdminLeadsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/counseling': {
       id: '/_authenticated/admin/counseling'
       path: '/counseling'
@@ -1236,6 +1295,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminBillingRoute: typeof AuthenticatedAdminBillingRoute
   AuthenticatedAdminContactRoute: typeof AuthenticatedAdminContactRoute
   AuthenticatedAdminCounselingRoute: typeof AuthenticatedAdminCounselingRouteWithChildren
+  AuthenticatedAdminLeadsRoute: typeof AuthenticatedAdminLeadsRoute
   AuthenticatedAdminLegalRoute: typeof AuthenticatedAdminLegalRoute
   AuthenticatedAdminMentorsRoute: typeof AuthenticatedAdminMentorsRoute
   AuthenticatedAdminTeamRoute: typeof AuthenticatedAdminTeamRoute
@@ -1252,6 +1312,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminContactRoute: AuthenticatedAdminContactRoute,
   AuthenticatedAdminCounselingRoute:
     AuthenticatedAdminCounselingRouteWithChildren,
+  AuthenticatedAdminLeadsRoute: AuthenticatedAdminLeadsRoute,
   AuthenticatedAdminLegalRoute: AuthenticatedAdminLegalRoute,
   AuthenticatedAdminMentorsRoute: AuthenticatedAdminMentorsRoute,
   AuthenticatedAdminTeamRoute: AuthenticatedAdminTeamRoute,
@@ -1321,10 +1382,10 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedHomeRoute: typeof AuthenticatedHomeRoute
   AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
-  AuthenticatedPricingRoute: typeof AuthenticatedPricingRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedPyqRoute: typeof AuthenticatedPyqRoute
   AuthenticatedSearchRoute: typeof AuthenticatedSearchRoute
+  AuthenticatedUpgradeRoute: typeof AuthenticatedUpgradeRoute
   AuthenticatedComingSoonFeatureRoute: typeof AuthenticatedComingSoonFeatureRoute
   AuthenticatedMentorsIdRoute: typeof AuthenticatedMentorsIdRoute
   AuthenticatedMentorsApplyRoute: typeof AuthenticatedMentorsApplyRoute
@@ -1343,10 +1404,10 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedHomeRoute: AuthenticatedHomeRoute,
   AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
-  AuthenticatedPricingRoute: AuthenticatedPricingRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedPyqRoute: AuthenticatedPyqRoute,
   AuthenticatedSearchRoute: AuthenticatedSearchRoute,
+  AuthenticatedUpgradeRoute: AuthenticatedUpgradeRoute,
   AuthenticatedComingSoonFeatureRoute: AuthenticatedComingSoonFeatureRoute,
   AuthenticatedMentorsIdRoute: AuthenticatedMentorsIdRoute,
   AuthenticatedMentorsApplyRoute: AuthenticatedMentorsApplyRoute,
@@ -1369,6 +1430,8 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ContactRoute: ContactRoute,
   DeleteAccountRoute: DeleteAccountRoute,
+  ForInstitutesRoute: ForInstitutesRoute,
+  PricingRoute: PricingRoute,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
   RefundPolicyRoute: RefundPolicyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
