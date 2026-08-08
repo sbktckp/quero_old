@@ -89,6 +89,7 @@ function NewTestPage() {
         subjectId: type === "custom" ? subjectId : chapters.find((c) => c.id === chapterId)?.subject_id ?? subjectId,
         chapterId: type === "chapter" ? chapterId : null,
         topicId: type === "topic" ? topicId : null,
+        instituteId,
         filters: type === "custom" ? { subjectIds: [subjectId], difficulties } : undefined,
       });
       navigate({ to: "/test/$attemptId", params: { attemptId } });
@@ -109,6 +110,15 @@ function NewTestPage() {
       </header>
 
       <main className="mx-auto max-w-lg px-5 py-5 space-y-5">
+        {instituteId && (
+          <div className="flex items-center gap-2 rounded-2xl border border-primary/30 bg-primary-soft px-4 py-3 text-xs">
+            <Building2 size={14} className="text-primary shrink-0" />
+            <span>
+              Building for <strong>{instituteInfo?.instituteName ?? "your institute"}</strong> —
+              draws from the Quero question bank plus your institute&apos;s approved questions.
+            </span>
+          </div>
+        )}
         <section>
           <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Type</div>
           <div className="grid grid-cols-3 gap-2">
