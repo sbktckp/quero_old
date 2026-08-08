@@ -2,11 +2,7 @@ import { useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
-import {
-  QUESTION_STATUS_LABEL,
-  statusClasses,
-  type InstituteRoleInfo,
-} from "@/lib/institute";
+import { QUESTION_STATUS_LABEL, statusClasses, type InstituteRoleInfo } from "@/lib/institute";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -127,9 +123,7 @@ export function FacultyDashboard({ info }: { info: InstituteRoleInfo }) {
       <div className="rounded-3xl bg-card border border-border p-5 shadow-card">
         <h2 className="font-semibold text-sm mb-3">My Questions</h2>
         {questions.length === 0 && (
-          <p className="text-xs text-muted-foreground">
-            No questions yet. Start with “Add MCQ”.
-          </p>
+          <p className="text-xs text-muted-foreground">No questions yet. Start with “Add MCQ”.</p>
         )}
         <ul className="space-y-2">
           {questions.map((q) => (
@@ -143,9 +137,7 @@ export function FacultyDashboard({ info }: { info: InstituteRoleInfo }) {
                 </span>
               </div>
               {q.status === "rejected" && q.rejection_reason && (
-                <p className="mt-2 text-[11px] text-destructive">
-                  Reason: {q.rejection_reason}
-                </p>
+                <p className="mt-2 text-[11px] text-destructive">Reason: {q.rejection_reason}</p>
               )}
               {(q.status === "draft" || q.status === "rejected") && (
                 <Button
@@ -165,11 +157,7 @@ export function FacultyDashboard({ info }: { info: InstituteRoleInfo }) {
   );
 }
 
-async function loadForEdit(
-  id: string,
-  info: InstituteRoleInfo,
-  setDraft: (d: Draft) => void,
-) {
+async function loadForEdit(id: string, info: InstituteRoleInfo, setDraft: (d: Draft) => void) {
   const { data: q } = await supabase
     .from("questions")
     .select("id, subject_id, chapter_id, topic_id, question_text, explanation, difficulty")
@@ -192,7 +180,10 @@ async function loadForEdit(
     explanation: q.explanation ?? "",
     difficulty: q.difficulty ?? "medium",
     options: list.slice(0, 4),
-    correctIndex: Math.max(0, (opts ?? []).findIndex((o) => o.is_correct)),
+    correctIndex: Math.max(
+      0,
+      (opts ?? []).findIndex((o) => o.is_correct),
+    ),
   });
 }
 
@@ -220,15 +211,25 @@ function QuestionForm({
     queryKey: ["inst-chapters", draft.subject_id],
     enabled: !!draft.subject_id,
     queryFn: async () =>
-      (await supabase.from("chapters").select("id, name").eq("subject_id", draft.subject_id).order("sort_order"))
-        .data ?? [],
+      (
+        await supabase
+          .from("chapters")
+          .select("id, name")
+          .eq("subject_id", draft.subject_id)
+          .order("sort_order")
+      ).data ?? [],
   });
   const { data: topics = [] } = useQuery({
     queryKey: ["inst-topics", draft.chapter_id],
     enabled: !!draft.chapter_id,
     queryFn: async () =>
-      (await supabase.from("topics").select("id, name").eq("chapter_id", draft.chapter_id).order("sort_order"))
-        .data ?? [],
+      (
+        await supabase
+          .from("topics")
+          .select("id, name")
+          .eq("chapter_id", draft.chapter_id)
+          .order("sort_order")
+      ).data ?? [],
   });
 
   async function save(status: "draft" | "submitted") {
@@ -258,7 +259,11 @@ function QuestionForm({
         if (error) throw error;
         await supabase.from("options").delete().eq("question_id", questionId);
       } else {
-        const { data, error } = await supabase.from("questions").insert(payload).select("id").single();
+        const { data, error } = await supabase
+          .from("questions")
+          .insert(payload)
+          .select("id")
+          .single();
         if (error) throw error;
         questionId = data.id;
       }
@@ -295,12 +300,16 @@ function QuestionForm({
           <Label className="text-xs">Subject</Label>
           <select
             value={draft.subject_id}
-            onChange={(e) => setDraft({ ...draft, subject_id: e.target.value, chapter_id: "", topic_id: "" })}
+            onChange={(e) =>
+              setDraft({ ...draft, subject_id: e.target.value, chapter_id: "", topic_id: "" })
+            }
             className="w-full rounded-2xl border border-border bg-background px-4 py-2.5 text-sm"
           >
             <option value="">Select subject…</option>
             {subjects.map((s) => (
-              <option key={s.id} value={s.id}>{s.name}</option>
+              <option key={s.id} value={s.id}>
+                {s.name}
+              </option>
             ))}
           </select>
         </div>
@@ -321,7 +330,9 @@ function QuestionForm({
           >
             <option value="">—</option>
             {chapters.map((c) => (
-              <option key={c.id} value={c.id}>{c.name}</option>
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
             ))}
           </select>
         </div>
@@ -334,7 +345,9 @@ function QuestionForm({
           >
             <option value="">—</option>
             {topics.map((t) => (
-              <option key={t.id} value={t.id}>{t.name}</option>
+              <option key={t.id} value={t.id}>
+                {t.name}
+              </option>
             ))}
           </select>
         </div>
@@ -390,13 +403,20 @@ function QuestionForm({
           className="w-full rounded-2xl border border-border bg-background px-4 py-2.5 text-sm"
         >
           {["easy", "medium", "hard"].map((d) => (
-            <option key={d} value={d} className="capitalize">{d}</option>
+            <option key={d} value={d} className="capitalize">
+              {d}
+            </option>
           ))}
         </select>
       </div>
 
       <div className="flex gap-2 pt-1">
-        <Button variant="outline" className="flex-1 rounded-2xl" disabled={saving} onClick={() => save("draft")}>
+        <Button
+          variant="outline"
+          className="flex-1 rounded-2xl"
+          disabled={saving}
+          onClick={() => save("draft")}
+        >
           Save as Draft
         </Button>
         <Button className="flex-1 rounded-2xl" disabled={saving} onClick={() => save("submitted")}>

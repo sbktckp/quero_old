@@ -29,9 +29,7 @@ export function useInstituteRole() {
         .eq("user_id", user!.id)
         .not("institute_id", "is", null);
       if (error) throw error;
-      const rows = (data ?? []).filter((r) =>
-        PRIORITY.includes(r.role as InstituteRoleName),
-      );
+      const rows = (data ?? []).filter((r) => PRIORITY.includes(r.role as InstituteRoleName));
       if (!rows.length) return null;
       rows.sort(
         (a, b) =>
@@ -42,8 +40,7 @@ export function useInstituteRole() {
       return {
         role: top.role as InstituteRoleName,
         instituteId: top.institute_id as string,
-        instituteName:
-          (top.institutes as { name: string } | null)?.name ?? null,
+        instituteName: (top.institutes as { name: string } | null)?.name ?? null,
         assignedSubjectId: top.assigned_subject_id ?? null,
       };
     },

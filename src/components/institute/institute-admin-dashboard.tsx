@@ -107,7 +107,12 @@ function FacultySection({ info }: { info: InstituteRoleInfo }) {
     <div className="rounded-3xl bg-card border border-border p-5 shadow-card">
       <div className="flex items-center justify-between">
         <h2 className="font-semibold text-sm">Faculty</h2>
-        <Button size="sm" variant="outline" className="rounded-full" onClick={() => setAdding((a) => !a)}>
+        <Button
+          size="sm"
+          variant="outline"
+          className="rounded-full"
+          onClick={() => setAdding((a) => !a)}
+        >
           <Plus size={14} /> Add faculty
         </Button>
       </div>
@@ -116,7 +121,11 @@ function FacultySection({ info }: { info: InstituteRoleInfo }) {
         <div className="mt-3 space-y-2 rounded-2xl bg-muted/40 p-3">
           <div>
             <Label className="text-xs">Email of an existing Quero account</Label>
-            <Input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="teacher@example.com" />
+            <Input
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="teacher@example.com"
+            />
           </div>
           <div>
             <Label className="text-xs">Assigned subject (optional)</Label>
@@ -127,7 +136,9 @@ function FacultySection({ info }: { info: InstituteRoleInfo }) {
             >
               <option value="">No default subject</option>
               {subjects.map((s) => (
-                <option key={s.id} value={s.id}>{s.name}</option>
+                <option key={s.id} value={s.id}>
+                  {s.name}
+                </option>
               ))}
             </select>
           </div>
@@ -142,7 +153,10 @@ function FacultySection({ info }: { info: InstituteRoleInfo }) {
       ) : (
         <ul className="mt-3 space-y-2">
           {faculty.map((f) => (
-            <li key={f.role_id} className="flex items-center gap-3 rounded-2xl border border-border p-3">
+            <li
+              key={f.role_id}
+              className="flex items-center gap-3 rounded-2xl border border-border p-3"
+            >
               <div className="flex-1 min-w-0">
                 <div className="text-sm font-medium truncate">{f.display_name ?? f.email}</div>
                 <div className="text-[11px] text-muted-foreground truncate">{f.email}</div>
@@ -183,7 +197,9 @@ function ReviewQueue({ info }: { info: InstituteRoleInfo }) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("questions")
-        .select("id, question_text, explanation, difficulty, created_by, options(option_text, is_correct, sort_order)")
+        .select(
+          "id, question_text, explanation, difficulty, created_by, options(option_text, is_correct, sort_order)",
+        )
         .eq("institute_id", info.instituteId)
         .eq("status", "submitted")
         .order("created_at", { ascending: true });
@@ -246,7 +262,11 @@ function ReviewQueue({ info }: { info: InstituteRoleInfo }) {
                 onChange={(e) => setReasons((r) => ({ ...r, [q.id]: e.target.value }))}
               />
               <div className="mt-2 flex gap-2">
-                <Button size="sm" className="flex-1 rounded-2xl" onClick={() => review(q.id, "approved")}>
+                <Button
+                  size="sm"
+                  className="flex-1 rounded-2xl"
+                  onClick={() => review(q.id, "approved")}
+                >
                   Approve
                 </Button>
                 <Button

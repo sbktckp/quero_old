@@ -84,8 +84,8 @@ function InstituteWorkspacePage() {
           Your institute workspace is being built
         </h1>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-          We&apos;ll notify you as soon as it&apos;s ready. There&apos;s nothing to manage here
-          yet for your role.
+          We&apos;ll notify you as soon as it&apos;s ready. There&apos;s nothing to manage here yet
+          for your role.
         </p>
         <div className="mt-7 flex flex-col gap-2">
           <Link
