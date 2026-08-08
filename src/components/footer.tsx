@@ -15,7 +15,6 @@ const links = [
   { to: "/delete-account", label: "Delete Account" },
 ] as const;
 
-
 type FooterSettings = {
   support_whatsapp: string | null;
   instagram_url: string | null;
@@ -52,7 +51,8 @@ export function Footer() {
   });
 
   const socials: { label: string; href: string; icon: typeof Instagram }[] = [];
-  if (data?.instagram_url) socials.push({ label: "Instagram", href: data.instagram_url, icon: Instagram });
+  if (data?.instagram_url)
+    socials.push({ label: "Instagram", href: data.instagram_url, icon: Instagram });
   if (data?.youtube_url) socials.push({ label: "YouTube", href: data.youtube_url, icon: Youtube });
   if (data?.telegram_url) socials.push({ label: "Telegram", href: data.telegram_url, icon: Send });
   if (data?.show_whatsapp_social !== false && data?.support_whatsapp) {
@@ -125,41 +125,71 @@ export function Footer() {
 
           {/* Links */}
           <div>
-            <div className="text-xs font-semibold uppercase tracking-wider text-white/50">Company</div>
+            <div className="text-xs font-semibold uppercase tracking-wider text-white/50">
+              Company
+            </div>
             <ul className="mt-3 space-y-2 text-sm">
               {links.slice(0, 4).map((l) => (
                 <li key={l.to}>
-                  <Link to={l.to} className="text-white/70 hover:text-white transition-colors">{l.label}</Link>
+                  <Link to={l.to} className="text-white/70 hover:text-white transition-colors">
+                    {l.label}
+                  </Link>
                 </li>
               ))}
             </ul>
           </div>
 
           <div>
-            <div className="text-xs font-semibold uppercase tracking-wider text-white/50">Platform</div>
+            <div className="text-xs font-semibold uppercase tracking-wider text-white/50">
+              Platform
+            </div>
             <ul className="mt-3 space-y-2 text-sm">
               <li>
-                <Link to="/" hash="features" className="text-white/70 hover:text-white transition-colors">Features</Link>
+                <Link
+                  to="/"
+                  hash="features"
+                  className="text-white/70 hover:text-white transition-colors"
+                >
+                  Features
+                </Link>
               </li>
               <li>
-                <Link to="/pricing" className="text-white/70 hover:text-white transition-colors">Pricing</Link>
+                <Link to="/pricing" className="text-white/70 hover:text-white transition-colors">
+                  Pricing
+                </Link>
               </li>
               <li>
-                <Link to="/for-institutes" className="text-white/70 hover:text-white transition-colors">For Institutes</Link>
+                <Link
+                  to="/for-institutes"
+                  className="text-white/70 hover:text-white transition-colors"
+                >
+                  For Institutes
+                </Link>
               </li>
             </ul>
 
-            <div className="mt-6 text-xs font-semibold uppercase tracking-wider text-white/50">Account</div>
+            <div className="mt-6 text-xs font-semibold uppercase tracking-wider text-white/50">
+              Account
+            </div>
             <ul className="mt-3 space-y-2 text-sm">
               <li>
-                <Link to="/delete-account" className="text-white/70 hover:text-white transition-colors">Delete Account</Link>
+                <Link
+                  to="/delete-account"
+                  className="text-white/70 hover:text-white transition-colors"
+                >
+                  Delete Account
+                </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <div className="text-xs font-semibold uppercase tracking-wider text-white/50">Stay Updated</div>
-            <p className="mt-3 text-sm text-white/60">Subscribe for tips &amp; the latest updates.</p>
+            <div className="text-xs font-semibold uppercase tracking-wider text-white/50">
+              Stay Updated
+            </div>
+            <p className="mt-3 text-sm text-white/60">
+              Subscribe for tips &amp; the latest updates.
+            </p>
             {done ? (
               <div className="mt-3 rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-sm font-medium text-white">
                 You&apos;re on the list 💜

@@ -60,7 +60,9 @@ function AdminLeadsPage() {
     <div className="space-y-4">
       <div>
         <h2 className="text-lg font-bold">Institute Leads</h2>
-        <p className="text-sm text-muted-foreground">Interest requests submitted from the For Institutes page.</p>
+        <p className="text-sm text-muted-foreground">
+          Interest requests submitted from the For Institutes page.
+        </p>
       </div>
 
       <div className="flex flex-wrap gap-2">
@@ -70,7 +72,9 @@ function AdminLeadsPage() {
             type="button"
             onClick={() => setFilter(s)}
             className={`rounded-full border px-3 py-1.5 text-xs font-semibold capitalize transition-colors ${
-              filter === s ? "border-primary bg-primary text-primary-foreground" : "border-border text-muted-foreground"
+              filter === s
+                ? "border-primary bg-primary text-primary-foreground"
+                : "border-border text-muted-foreground"
             }`}
           >
             {s}
@@ -79,7 +83,9 @@ function AdminLeadsPage() {
       </div>
 
       {isLoading ? (
-        <div className="flex justify-center py-10"><Loader2 className="animate-spin" /></div>
+        <div className="flex justify-center py-10">
+          <Loader2 className="animate-spin" />
+        </div>
       ) : leads.length === 0 ? (
         <div className="rounded-2xl border border-border bg-card p-8 text-center text-sm text-muted-foreground">
           No leads {filter === "all" ? "yet" : `with status "${filter}"`}.
@@ -99,11 +105,17 @@ function AdminLeadsPage() {
               </div>
 
               <div className="mt-2 flex flex-wrap gap-4 text-sm text-muted-foreground">
-                <a href={`mailto:${l.email}`} className="inline-flex items-center gap-1.5 hover:text-primary">
+                <a
+                  href={`mailto:${l.email}`}
+                  className="inline-flex items-center gap-1.5 hover:text-primary"
+                >
                   <Mail size={14} /> {l.email}
                 </a>
                 {l.phone && (
-                  <a href={`tel:${l.phone}`} className="inline-flex items-center gap-1.5 hover:text-primary">
+                  <a
+                    href={`tel:${l.phone}`}
+                    className="inline-flex items-center gap-1.5 hover:text-primary"
+                  >
                     <Phone size={14} /> {l.phone}
                   </a>
                 )}

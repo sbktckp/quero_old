@@ -19,7 +19,8 @@ export const Route = createFileRoute("/for-institutes")({
       { property: "og:title", content: "Quero for Institutes" },
       {
         property: "og:description",
-        content: "Faculty-verified question banks, a secure exam engine and student analytics for institutes.",
+        content:
+          "Faculty-verified question banks, a secure exam engine and student analytics for institutes.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -103,15 +104,22 @@ function ForInstitutesPage() {
       <LandingHeader />
       <main className="px-5 py-12 md:py-16">
         <div className="mx-auto max-w-5xl">
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
             <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
               Early access for institutes
             </span>
-            <h1 className="mt-5 text-3xl font-extrabold tracking-tight md:text-4xl">Quero for Institutes</h1>
+            <h1 className="mt-5 text-3xl font-extrabold tracking-tight md:text-4xl">
+              Quero for Institutes
+            </h1>
             <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">
-              We&apos;re building an institute edition of Quero: your faculty&apos;s question banks, our exam engine and
-              analytics, under your institute&apos;s roof. The institute admin and faculty panels are still in
-              development — this page is an honest invitation to shape them with us, not a live product sign-up.
+              We&apos;re building an institute edition of Quero: your faculty&apos;s question banks,
+              our exam engine and analytics, under your institute&apos;s roof. The institute admin
+              and faculty panels are still in development — this page is an honest invitation to
+              shape them with us, not a live product sign-up.
             </p>
           </motion.div>
 
@@ -135,7 +143,9 @@ function ForInstitutesPage() {
           </div>
 
           <section className="mt-12 rounded-3xl border border-border bg-card p-6 shadow-card md:p-10">
-            <h2 className="text-xl font-extrabold tracking-tight md:text-2xl">Register your interest</h2>
+            <h2 className="text-xl font-extrabold tracking-tight md:text-2xl">
+              Register your interest
+            </h2>
             <p className="mt-1.5 text-sm text-muted-foreground">
               Tell us about your institute and we&apos;ll reach out as onboarding opens.
             </p>
@@ -222,7 +232,15 @@ function ForInstitutesPage() {
 const inputCls =
   "w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-primary";
 
-function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
+function Field({
+  label,
+  required,
+  children,
+}: {
+  label: string;
+  required?: boolean;
+  children: React.ReactNode;
+}) {
   return (
     <label className="block">
       <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">

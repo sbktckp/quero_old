@@ -7,19 +7,39 @@ export function LandingHeader() {
 
   const navLinks = (
     <>
-      <a href="#features" onClick={() => setOpen(false)} className="transition-colors hover:text-primary">
+      <a
+        href="#features"
+        onClick={() => setOpen(false)}
+        className="transition-colors hover:text-primary"
+      >
         For Students
       </a>
-      <Link to="/for-institutes" onClick={() => setOpen(false)} className="transition-colors hover:text-primary">
+      <Link
+        to="/for-institutes"
+        onClick={() => setOpen(false)}
+        className="transition-colors hover:text-primary"
+      >
         For Institutes
       </Link>
-      <a href="#features" onClick={() => setOpen(false)} className="transition-colors hover:text-primary">
+      <a
+        href="#features"
+        onClick={() => setOpen(false)}
+        className="transition-colors hover:text-primary"
+      >
         Features
       </a>
-      <Link to="/pricing" onClick={() => setOpen(false)} className="transition-colors hover:text-primary">
+      <Link
+        to="/pricing"
+        onClick={() => setOpen(false)}
+        className="transition-colors hover:text-primary"
+      >
         Pricing
       </Link>
-      <Link to="/about" onClick={() => setOpen(false)} className="transition-colors hover:text-primary">
+      <Link
+        to="/about"
+        onClick={() => setOpen(false)}
+        className="transition-colors hover:text-primary"
+      >
         About Us
       </Link>
     </>
@@ -39,7 +59,9 @@ export function LandingHeader() {
           <span className="text-xl font-extrabold tracking-tight">Quero</span>
         </Link>
 
-        <nav className="hidden items-center gap-7 text-sm font-medium text-foreground/70 md:flex">{navLinks}</nav>
+        <nav className="hidden items-center gap-7 text-sm font-medium text-foreground/70 md:flex">
+          {navLinks}
+        </nav>
 
         <div className="hidden items-center gap-2 md:flex">
           <Link

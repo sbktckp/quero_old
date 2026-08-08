@@ -15,7 +15,10 @@ export const Route = createFileRoute("/pricing")({
           "Simple, honest pricing for Quero. Start free and upgrade for unlimited NEET UG & PG practice, mock tests and analytics.",
       },
       { property: "og:title", content: "Pricing — Quero NEET Preparation Plans" },
-      { property: "og:description", content: "Start free. Upgrade whenever you're ready — transparent Quero plans." },
+      {
+        property: "og:description",
+        content: "Start free. Upgrade whenever you're ready — transparent Quero plans.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -64,14 +67,21 @@ function PublicPricingPage() {
             transition={{ duration: 0.5 }}
             className="text-center"
           >
-            <h1 className="text-3xl font-extrabold tracking-tight md:text-4xl">Simple, honest pricing</h1>
-            <p className="mt-2 text-sm text-muted-foreground">Start free. Upgrade whenever you&apos;re ready.</p>
+            <h1 className="text-3xl font-extrabold tracking-tight md:text-4xl">
+              Simple, honest pricing
+            </h1>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Start free. Upgrade whenever you&apos;re ready.
+            </p>
           </motion.div>
 
           {isLoading ? (
             <div className="mt-10 grid gap-4 md:grid-cols-3">
               {[0, 1, 2].map((i) => (
-                <div key={i} className="h-56 animate-pulse rounded-2xl border border-border bg-muted/40" />
+                <div
+                  key={i}
+                  className="h-56 animate-pulse rounded-2xl border border-border bg-muted/40"
+                />
               ))}
             </div>
           ) : !plans || plans.length === 0 ? (
@@ -97,10 +107,14 @@ function PublicPricingPage() {
                   transition={{ duration: 0.45, delay: i * 0.08 }}
                   className="rounded-2xl border border-border bg-card p-6 shadow-card transition-transform hover:-translate-y-1"
                 >
-                  <div className="text-xs font-semibold uppercase tracking-wider text-primary">{p.tier}</div>
+                  <div className="text-xs font-semibold uppercase tracking-wider text-primary">
+                    {p.tier}
+                  </div>
                   <div className="mt-1 text-lg font-extrabold">{p.name}</div>
                   <div className="mt-3 flex items-end gap-1">
-                    <span className="text-3xl font-extrabold">₹{Number(p.price_inr).toLocaleString("en-IN")}</span>
+                    <span className="text-3xl font-extrabold">
+                      ₹{Number(p.price_inr).toLocaleString("en-IN")}
+                    </span>
                     <span className="pb-1 text-sm text-muted-foreground">/ {p.billing_period}</span>
                   </div>
                   <ul className="mt-4 space-y-2 text-sm text-muted-foreground">

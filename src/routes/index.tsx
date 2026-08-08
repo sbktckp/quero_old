@@ -5,7 +5,15 @@ import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { LandingHeader } from "@/components/landing/landing-header";
 import heroStudent from "@/assets/hero-student-illustration.png";
-import { GraduationCap, Clock, BarChart3, ShieldCheck, ArrowRight, Play, TrendingUp } from "lucide-react";
+import {
+  GraduationCap,
+  Clock,
+  BarChart3,
+  ShieldCheck,
+  ArrowRight,
+  Play,
+  TrendingUp,
+} from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -140,7 +148,10 @@ function Hero() {
                 className="group inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground shadow-card transition-shadow hover:shadow-elevated"
               >
                 Start Free Now
-                <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
+                <ArrowRight
+                  size={16}
+                  className="transition-transform duration-300 group-hover:translate-x-1"
+                />
               </Link>
             </motion.div>
             <motion.a
@@ -227,7 +238,12 @@ function HeroVisual() {
       />
 
       {/* Illustrative product-preview cards (static demo content) */}
-      <StatCard className="absolute -top-2 -right-2 z-20 w-44 md:w-52 md:-right-4" delay={0.35} duration={6} distance={9}>
+      <StatCard
+        className="absolute -top-2 -right-2 z-20 w-44 md:w-52 md:-right-4"
+        delay={0.35}
+        duration={6}
+        distance={9}
+      >
         <div className="text-xs font-semibold">Mock Test • 01</div>
         <div className="mt-2 flex items-center gap-3">
           <ScoreRing percent={85} />
@@ -251,7 +267,11 @@ function HeroVisual() {
       >
         <div className="text-xs font-semibold">Weak Topics</div>
         <div className="mt-2 space-y-2">
-          {[["Pharmacology", 62], ["Microbiology", 45], ["Pathology", 38]].map(([label, v]) => (
+          {[
+            ["Pharmacology", 62],
+            ["Microbiology", 45],
+            ["Pathology", 38],
+          ].map(([label, v]) => (
             <div key={label as string}>
               <div className="text-[10px] text-muted-foreground">{label}</div>
               <div className="mt-1 h-1.5 rounded-full bg-muted">
@@ -262,7 +282,12 @@ function HeroVisual() {
         </div>
       </StatCard>
 
-      <StatCard className="absolute bottom-2 -right-2 z-20 w-44 md:w-52 md:-right-2" delay={0.75} duration={7.5} distance={8}>
+      <StatCard
+        className="absolute bottom-2 -right-2 z-20 w-44 md:w-52 md:-right-2"
+        delay={0.75}
+        duration={7.5}
+        distance={8}
+      >
         <div className="text-xs font-semibold">Questions Practiced</div>
         <div className="mt-1 flex items-center gap-2">
           <span className="text-xl font-extrabold">12,540</span>
@@ -305,7 +330,14 @@ function ScoreRing({ percent }: { percent: number }) {
         strokeDasharray={c}
         strokeDashoffset={c * (1 - percent / 100)}
       />
-      <text x="22" y="23" transform="rotate(90 22 22)" textAnchor="middle" dominantBaseline="middle" className="fill-foreground text-[9px] font-bold">
+      <text
+        x="22"
+        y="23"
+        transform="rotate(90 22 22)"
+        textAnchor="middle"
+        dominantBaseline="middle"
+        className="fill-foreground text-[9px] font-bold"
+      >
         {percent}%
       </text>
     </svg>
@@ -359,13 +391,20 @@ function CtaBanner() {
             Ready to take your preparation to the{" "}
             <span className="text-[oklch(0.82_0.11_290)]">next level?</span>
           </h2>
-          <motion.div whileHover={{ scale: 1.04, y: -2 }} whileTap={{ scale: 0.98 }} className="inline-block">
+          <motion.div
+            whileHover={{ scale: 1.04, y: -2 }}
+            whileTap={{ scale: 0.98 }}
+            className="inline-block"
+          >
             <Link
               to="/auth"
               className="group mt-6 inline-flex items-center gap-2 rounded-full bg-card px-7 py-3.5 text-sm font-semibold text-primary shadow-card transition-shadow hover:shadow-elevated"
             >
               Start Free Now
-              <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
+              <ArrowRight
+                size={16}
+                className="transition-transform duration-300 group-hover:translate-x-1"
+              />
             </Link>
           </motion.div>
         </div>
