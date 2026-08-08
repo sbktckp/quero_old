@@ -3,7 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { useUserGoal } from "@/lib/user-goal";
-import { ArrowLeft, Timer, BookOpen } from "lucide-react";
+import { useInstituteRole } from "@/lib/institute";
+import { ArrowLeft, Timer, BookOpen, Building2 } from "lucide-react";
 import { useState, useMemo } from "react";
 import { toast } from "sonner";
 import { buildAndStartTest } from "@/lib/test-builder";
@@ -40,6 +41,9 @@ function NewTestPage() {
   const [durationMinutes, setDurationMinutes] = useState(15);
   const [submitting, setSubmitting] = useState(false);
 
+  const { info: instituteInfo } = useInstituteRole();
+  const instituteId =
+    instituteInfo?.role === "institute_admin" ? instituteInfo.instituteId : null;
   const { goal, examType } = useUserGoal();
   const { data: subjects = [] } = useQuery({
     queryKey: ["subjects", goal],
