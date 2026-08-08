@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import { motion } from "framer-motion";
 import { z } from "zod";
@@ -210,7 +210,7 @@ function ForInstitutesPage() {
                     />
                   </Field>
                 </div>
-                <div className="md:col-span-2">
+                <div className="md:col-span-2 flex flex-wrap items-center gap-x-5 gap-y-3">
                   <button
                     type="submit"
                     disabled={busy}
@@ -219,6 +219,12 @@ function ForInstitutesPage() {
                     {busy && <Loader2 size={16} className="animate-spin" />}
                     Register interest
                   </button>
+                  <span className="text-sm text-muted-foreground">
+                    Already registered?{" "}
+                    <Link to="/auth" className="font-medium text-primary underline underline-offset-4">
+                      Institute Login
+                    </Link>
+                  </span>
                 </div>
               </form>
             )}

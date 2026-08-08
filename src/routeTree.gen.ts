@@ -29,6 +29,7 @@ import { Route as AuthenticatedPyqRouteImport } from './routes/_authenticated/py
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
+import { Route as AuthenticatedInstituteWorkspaceRouteImport } from './routes/_authenticated/institute-workspace'
 import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated/home'
 import { Route as AuthenticatedCounselingRouteImport } from './routes/_authenticated/counseling'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
@@ -170,6 +171,12 @@ const AuthenticatedNotificationsRoute =
   AuthenticatedNotificationsRouteImport.update({
     id: '/notifications',
     path: '/notifications',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedInstituteWorkspaceRoute =
+  AuthenticatedInstituteWorkspaceRouteImport.update({
+    id: '/institute-workspace',
+    path: '/institute-workspace',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedHomeRoute = AuthenticatedHomeRouteImport.update({
@@ -430,6 +437,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/counseling': typeof AuthenticatedCounselingRouteWithChildren
   '/home': typeof AuthenticatedHomeRoute
+  '/institute-workspace': typeof AuthenticatedInstituteWorkspaceRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/profile': typeof AuthenticatedProfileRoute
@@ -491,6 +499,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/terms': typeof TermsRoute
   '/home': typeof AuthenticatedHomeRoute
+  '/institute-workspace': typeof AuthenticatedInstituteWorkspaceRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/profile': typeof AuthenticatedProfileRoute
@@ -555,6 +564,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/counseling': typeof AuthenticatedCounselingRouteWithChildren
   '/_authenticated/home': typeof AuthenticatedHomeRoute
+  '/_authenticated/institute-workspace': typeof AuthenticatedInstituteWorkspaceRoute
   '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
@@ -620,6 +630,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/counseling'
     | '/home'
+    | '/institute-workspace'
     | '/notifications'
     | '/onboarding'
     | '/profile'
@@ -681,6 +692,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/terms'
     | '/home'
+    | '/institute-workspace'
     | '/notifications'
     | '/onboarding'
     | '/profile'
@@ -744,6 +756,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/_authenticated/counseling'
     | '/_authenticated/home'
+    | '/_authenticated/institute-workspace'
     | '/_authenticated/notifications'
     | '/_authenticated/onboarding'
     | '/_authenticated/profile'
@@ -950,6 +963,13 @@ declare module '@tanstack/react-router' {
       path: '/notifications'
       fullPath: '/notifications'
       preLoaderRoute: typeof AuthenticatedNotificationsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/institute-workspace': {
+      id: '/_authenticated/institute-workspace'
+      path: '/institute-workspace'
+      fullPath: '/institute-workspace'
+      preLoaderRoute: typeof AuthenticatedInstituteWorkspaceRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/home': {
@@ -1380,6 +1400,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedCounselingRoute: typeof AuthenticatedCounselingRouteWithChildren
   AuthenticatedHomeRoute: typeof AuthenticatedHomeRoute
+  AuthenticatedInstituteWorkspaceRoute: typeof AuthenticatedInstituteWorkspaceRoute
   AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
@@ -1402,6 +1423,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedCounselingRoute: AuthenticatedCounselingRouteWithChildren,
   AuthenticatedHomeRoute: AuthenticatedHomeRoute,
+  AuthenticatedInstituteWorkspaceRoute: AuthenticatedInstituteWorkspaceRoute,
   AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
@@ -1442,13 +1464,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
