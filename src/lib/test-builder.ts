@@ -60,6 +60,7 @@ export async function buildAndStartTest(input: BuildTestInput): Promise<string> 
       duration_seconds: input.durationMinutes * 60,
       question_count: chosen.length,
       created_by: input.userId,
+      institute_id: input.instituteId ?? null,
     })
     .select()
     .single();

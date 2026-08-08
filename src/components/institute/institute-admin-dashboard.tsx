@@ -31,6 +31,7 @@ export function InstituteAdminDashboard({ info }: { info: InstituteRoleInfo }) {
         <p className="text-xs text-muted-foreground mt-1">Institute admin</p>
         <Link
           to="/tests/new"
+          search={{ type: "custom" as const }}
           className="mt-4 inline-flex items-center justify-center gap-2 rounded-2xl gradient-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-card"
         >
           <FilePlus2 size={16} /> Create institute test
@@ -74,7 +75,7 @@ function FacultySection({ info }: { info: InstituteRoleInfo }) {
       const { data, error } = await supabase.rpc("institute_add_faculty", {
         _institute_id: info.instituteId,
         _email: email.trim(),
-        _subject_id: subjectId || undefined,
+        _subject_id: (subjectId || null) as unknown as string,
       });
       if (error) throw error;
       const res = data as unknown as { ok: boolean; reason?: string };
