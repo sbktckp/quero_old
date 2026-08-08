@@ -480,6 +480,39 @@ export type Database = {
           },
         ]
       }
+      institute_interest_leads: {
+        Row: {
+          contact_name: string
+          created_at: string
+          email: string
+          id: string
+          institute_name: string
+          message: string | null
+          phone: string | null
+          status: string
+        }
+        Insert: {
+          contact_name: string
+          created_at?: string
+          email: string
+          id?: string
+          institute_name: string
+          message?: string | null
+          phone?: string | null
+          status?: string
+        }
+        Update: {
+          contact_name?: string
+          created_at?: string
+          email?: string
+          id?: string
+          institute_name?: string
+          message?: string | null
+          phone?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
       institutes: {
         Row: {
           created_at: string
