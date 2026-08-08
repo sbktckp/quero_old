@@ -44,6 +44,18 @@ function LandingPage() {
     if (loading || !session) return;
     let cancelled = false;
     (async () => {
+      const { data: instituteRoles } = await supabase
+        .from("user_roles")
+        .select("role, institute_id")
+        .eq("user_id", session.user.id)
+        .not("institute_id", "is", null)
+        .in("role", ["institute_admin", "faculty", "subject_coordinator"])
+        .limit(1);
+      if (cancelled) return;
+      if (instituteRoles && instituteRoles.length > 0) {
+        navigate({ to: "/institute-workspace" });
+        return;
+      }
       const { data } = await supabase
         .from("user_preferences")
         .select("onboarding_completed")
