@@ -7,7 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, X } from "lucide-react";
+import { FacultyCsvImport } from "@/components/institute/faculty-csv-import";
+import { FacultyPdfImport } from "@/components/institute/faculty-pdf-import";
+import { Plus, X, FileSpreadsheet, FileText } from "lucide-react";
 import { toast } from "sonner";
 
 type Draft = {
@@ -39,6 +41,7 @@ export function FacultyDashboard({ info }: { info: InstituteRoleInfo }) {
   const { user } = useAuth();
   const qc = useQueryClient();
   const [draft, setDraft] = useState<Draft | null>(null);
+  const [importMode, setImportMode] = useState<"csv" | "pdf" | null>(null);
 
   const { data: questions = [] } = useQuery({
     queryKey: ["faculty-questions", user?.id, info.instituteId],
@@ -98,15 +101,49 @@ export function FacultyDashboard({ info }: { info: InstituteRoleInfo }) {
             </div>
           ))}
         </div>
-        {!draft && (
-          <Button
-            className="mt-4 w-full rounded-2xl"
-            onClick={() => setDraft(emptyDraft(info.assignedSubjectId ?? ""))}
-          >
-            <Plus size={16} /> Add MCQ
-          </Button>
+        {!draft && !importMode && (
+          <div className="mt-4 space-y-2">
+            <Button
+              className="w-full rounded-2xl"
+              onClick={() => setDraft(emptyDraft(info.assignedSubjectId ?? ""))}
+            >
+              <Plus size={16} /> Add MCQ
+            </Button>
+            <div className="grid grid-cols-2 gap-2">
+              <Button
+                variant="outline"
+                className="rounded-2xl"
+                onClick={() => setImportMode("csv")}
+              >
+                <FileSpreadsheet size={16} /> Bulk (CSV)
+              </Button>
+              <Button
+                variant="outline"
+                className="rounded-2xl"
+                onClick={() => setImportMode("pdf")}
+              >
+                <FileText size={16} /> Bulk (PDF)
+              </Button>
+            </div>
+          </div>
         )}
       </div>
+
+      {importMode === "csv" && (
+        <FacultyCsvImport
+          info={info}
+          onClose={() => setImportMode(null)}
+          onDone={() => qc.invalidateQueries({ queryKey: ["faculty-questions"] })}
+        />
+      )}
+
+      {importMode === "pdf" && (
+        <FacultyPdfImport
+          info={info}
+          onClose={() => setImportMode(null)}
+          onDone={() => qc.invalidateQueries({ queryKey: ["faculty-questions"] })}
+        />
+      )}
 
       {draft && (
         <QuestionForm
