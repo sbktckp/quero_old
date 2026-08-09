@@ -41,6 +41,7 @@ export function FacultyDashboard({ info }: { info: InstituteRoleInfo }) {
   const { user } = useAuth();
   const qc = useQueryClient();
   const [draft, setDraft] = useState<Draft | null>(null);
+  const [importMode, setImportMode] = useState<"csv" | "pdf" | null>(null);
 
   const { data: questions = [] } = useQuery({
     queryKey: ["faculty-questions", user?.id, info.instituteId],
