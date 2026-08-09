@@ -7,7 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, X } from "lucide-react";
+import { FacultyCsvImport } from "@/components/institute/faculty-csv-import";
+import { FacultyPdfImport } from "@/components/institute/faculty-pdf-import";
+import { Plus, X, FileSpreadsheet, FileText } from "lucide-react";
 import { toast } from "sonner";
 
 type Draft = {
