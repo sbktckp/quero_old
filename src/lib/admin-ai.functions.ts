@@ -17,11 +17,41 @@ function gateway() {
   });
 }
 
+type SbLike = {
+  rpc: (
+    fn: "has_role",
+    args: { _user_id: string; _role: "admin" | "student" },
+  ) => Promise<{ data: boolean | null; error: { message: string } | null }>;
+  from: (t: "user_roles") => {
+    select: (c: string) => {
+      eq: (
+        c: string,
+        v: string,
+      ) => {
+        not: (
+          c: string,
+          op: string,
+          v: null,
+        ) => {
+          limit: (n: number) => Promise<{ data: unknown[] | null; error: { message: string } | null }>;
+        };
+      };
+    };
+  };
+};
+
+/** Allow global admins and institute-scoped staff (faculty / institute admins). */
 async function assertAdmin(ctx: { supabase: unknown; userId: string }) {
-  const sb = ctx.supabase as { rpc: (fn: "has_role", args: { _user_id: string; _role: "admin" | "student" }) => Promise<{ data: boolean | null; error: { message: string } | null }> };
+  const sb = ctx.supabase as SbLike;
   const { data, error } = await sb.rpc("has_role", { _user_id: ctx.userId, _role: "admin" });
   if (error) throw new Error(error.message);
-  if (!data) throw new Error("Forbidden");
+  if (data) return;
+
+  const inst = await sb.from("user_roles").select("id").eq("user_id", ctx.userId).not("institute_id", "is", null).limit(1);
+  if (inst.error) throw new Error(inst.error.message);
+  if (inst.data && inst.data.length > 0) return;
+
+  throw new Error("Forbidden");
 }
 
 // Extract the first JSON block from a model response (```json ... ``` or bare JSON).
