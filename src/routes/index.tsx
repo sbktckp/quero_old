@@ -1,9 +1,11 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { LandingHeader } from "@/components/landing/landing-header";
+import { HomeDashboard } from "@/components/home/home-dashboard";
 import heroStudent from "@/assets/hero-student-illustration.png";
 import {
   GraduationCap,
@@ -30,63 +32,79 @@ export const Route = createFileRoute("/")({
         content: "Exam-oriented MCQs, mock tests and performance insights for NEET aspirants.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://quero.in/" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [{ rel: "canonical", href: "https://quero.in/" }],
   }),
-  component: LandingPage,
+  component: RootPage,
 });
 
-function LandingPage() {
+type Landing = { kind: "landing" };
+type Dashboard = { kind: "dashboard" };
+type Redirects = { kind: "institute" } | { kind: "onboarding" };
+type Destination = Landing | Dashboard | Redirects;
+
+/**
+ * "/" serves double duty: marketing page for signed-out visitors, dashboard for
+ * signed-in students. Institute staff and users who have not finished onboarding
+ * still get routed to their own screens.
+ */
+function RootPage() {
   const { session, loading } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (loading || !session) return;
-    let cancelled = false;
-    (async () => {
+  const { data: destination, isPending } = useQuery<Destination>({
+    queryKey: ["root-destination", session?.user.id],
+    enabled: !loading && !!session,
+    queryFn: async () => {
+      const userId = session!.user.id;
+
       const { data: instituteRoles } = await supabase
         .from("user_roles")
         .select("role, institute_id")
-        .eq("user_id", session.user.id)
+        .eq("user_id", userId)
         .not("institute_id", "is", null)
         .in("role", ["institute_admin", "faculty", "subject_coordinator"])
         .limit(1);
-      if (cancelled) return;
-      if (instituteRoles && instituteRoles.length > 0) {
-        navigate({ to: "/institute-workspace" });
-        return;
-      }
+      if (instituteRoles && instituteRoles.length > 0) return { kind: "institute" };
+
       const { data } = await supabase
         .from("user_preferences")
         .select("onboarding_completed")
-        .eq("user_id", session.user.id)
+        .eq("user_id", userId)
         .maybeSingle();
-      if (cancelled) return;
-      navigate({ to: data?.onboarding_completed ? "/home" : "/onboarding" });
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [session, loading, navigate]);
+      return data?.onboarding_completed ? { kind: "dashboard" } : { kind: "onboarding" };
+    },
+  });
 
-  if (loading || session) {
+  useEffect(() => {
+    if (destination?.kind === "institute") navigate({ to: "/institute-workspace", replace: true });
+    if (destination?.kind === "onboarding") navigate({ to: "/onboarding", replace: true });
+  }, [destination, navigate]);
+
+  if (!loading && !session) {
     return (
-      <div className="flex min-h-screen items-center justify-center gradient-soft">
-        <div className="flex h-20 w-20 items-center justify-center rounded-3xl gradient-primary shadow-elevated">
-          <span className="text-4xl font-extrabold text-primary-foreground">Q</span>
-        </div>
+      <div className="min-h-screen bg-background">
+        <LandingHeader />
+        <main>
+          <Hero />
+          <Features />
+          <CtaBanner />
+        </main>
       </div>
     );
   }
 
+  if (destination?.kind === "dashboard") return <HomeDashboard />;
+
+  // Signed in, still resolving where this user belongs.
+  void isPending;
   return (
-    <div className="min-h-screen bg-background">
-      <LandingHeader />
-      <main>
-        <Hero />
-        <Features />
-        <CtaBanner />
-      </main>
+    <div className="flex min-h-screen items-center justify-center gradient-soft">
+      <div className="flex h-20 w-20 items-center justify-center rounded-3xl gradient-primary shadow-elevated">
+        <span className="text-4xl font-extrabold text-primary-foreground">Q</span>
+      </div>
     </div>
   );
 }
