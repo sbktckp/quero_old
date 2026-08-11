@@ -1,8 +1,10 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Home, Search, Bell, User } from "lucide-react";
 
+// Home is "/" — the dashboard renders there for signed-in users so the URL
+// stays clean. "/home" still exists but only as a redirect back to "/".
 const items = [
-  { to: "/home", icon: Home, label: "Home" },
+  { to: "/", icon: Home, label: "Home" },
   { to: "/search", icon: Search, label: "Search" },
   { to: "/notifications", icon: Bell, label: "Notifications" },
   { to: "/profile", icon: User, label: "Profile" },
