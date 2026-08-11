@@ -13,8 +13,11 @@ Report vulnerabilities privately to the repository owner. Do not open a public i
 
 ## Database
 
-- Row Level Security must be enabled on every table holding user data. The service role client is for trusted server handlers only.
-- Authenticated server functions must go through `requireSupabaseAuth`, which verifies the bearer token rather than trusting a client supplied user id.
+- Row Level Security must be enabled on every table holding user data.
+- Institute scoped tables must scope reads through `is_institute_member()` or `has_institute_role()`. A `USING (true)` SELECT policy on any institute scoped table is a tenant leak.
+- Role mutation goes only through SECURITY DEFINER functions. `user_roles` has no write grant for `authenticated` by design.
+- After every migration, run `select * from public.rls_grant_gaps;`. It must return zero rows. A non-empty result means a policy exists for a command the role has no base GRANT for, which makes the feature silently fail.
+- Verify tenant isolation with `supabase/tests/institute_isolation_test.sql`. Every row must read PASS.
 
 ## Dependencies
 
