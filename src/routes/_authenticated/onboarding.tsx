@@ -197,7 +197,7 @@ function Onboarding() {
               </div>
 
               <button
-                onClick={() => navigate({ to: "/home" })}
+                onClick={() => navigate({ to: "/", replace: true })}
                 className="w-full max-w-sm rounded-2xl gradient-primary px-4 py-3.5 text-sm font-semibold text-primary-foreground shadow-card"
               >
                 Go to Dashboard
