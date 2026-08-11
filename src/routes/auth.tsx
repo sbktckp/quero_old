@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import { siteOrigin, siteUrl } from "@/lib/site-url";
 import { toast } from "sonner";
 import { Eye, EyeOff, Mail } from "lucide-react";
 
@@ -65,7 +66,7 @@ function GoogleButton() {
   const handleGoogle = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: window.location.origin },
+      options: { redirectTo: siteOrigin() },
     });
     if (error) toast.error(error.message);
   };
@@ -135,7 +136,7 @@ function SignupForm({ onSwitch }: { onSwitch: (m: Mode) => void }) {
     const { error } = await supabase.auth.signUp({
       email: v.email,
       password: v.password,
-      options: { emailRedirectTo: window.location.origin },
+      options: { emailRedirectTo: siteOrigin() },
     });
     setBusy(false);
     if (error) toast.error(error.message);
@@ -179,7 +180,7 @@ function ForgotForm({ onSwitch }: { onSwitch: (m: Mode) => void }) {
   const onSubmit = handleSubmit(async (v) => {
     setBusy(true);
     const { error } = await supabase.auth.resetPasswordForEmail(v.email, {
-      redirectTo: `${window.location.origin}/reset-password`,
+      redirectTo: siteUrl("/reset-password"),
     });
     setBusy(false);
     if (error) toast.error(error.message);
