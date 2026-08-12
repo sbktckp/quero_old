@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useInstituteRole } from "@/lib/institute";
 import { FacultyDashboard } from "@/components/institute/faculty-dashboard";
 import { InstituteAdminDashboard } from "@/components/institute/institute-admin-dashboard";
+import { StudentRoster } from "@/components/institute/student-roster";
 import { Building2, LogOut, User } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/institute-workspace")({
@@ -47,7 +48,12 @@ function InstituteWorkspacePage() {
     );
   }
 
-  if (info?.role === "institute_admin" || info?.role === "faculty") {
+  const isStaff =
+    info?.role === "institute_admin" ||
+    info?.role === "faculty" ||
+    info?.role === "subject_coordinator";
+
+  if (isStaff && info) {
     return (
       <div className="min-h-screen gradient-soft">
         <header className="sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur">
@@ -65,9 +71,18 @@ function InstituteWorkspacePage() {
         </header>
         <main className="mx-auto max-w-lg px-5 py-5">
           {info.role === "institute_admin" ? (
+            // The admin dashboard renders its own roster alongside approvals.
             <InstituteAdminDashboard info={info} />
           ) : (
-            <FacultyDashboard info={info} />
+            <div className="space-y-5">
+              <FacultyDashboard info={info} />
+              {/* Faculty see every student in their institute; the filter inside
+                  narrows attempt stats by subject rather than hiding people. */}
+              <StudentRoster
+                instituteId={info.instituteId}
+                defaultSubjectId={info.assignedSubjectId}
+              />
+            </div>
           )}
         </main>
       </div>
