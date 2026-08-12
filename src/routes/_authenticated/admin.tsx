@@ -50,7 +50,7 @@ function AdminLayout() {
       <div className="min-h-screen flex flex-col items-center justify-center gap-3 p-6 text-center">
         <h1 className="text-xl font-bold">Admins only</h1>
         <p className="text-sm text-muted-foreground">You don't have access to this area.</p>
-        <Link to="/home" className="text-primary underline text-sm">
+        <Link to="/" className="text-primary underline text-sm">
           Back to home
         </Link>
       </div>
@@ -76,7 +76,7 @@ function AdminLayout() {
       <header className="sticky top-0 z-30 bg-background/95 backdrop-blur border-b border-border">
         <div className="mx-auto max-w-6xl flex items-center justify-between px-5 py-3">
           <div className="flex items-center gap-3">
-            <Link to="/home" className="text-muted-foreground hover:text-foreground">
+            <Link to="/" className="text-muted-foreground hover:text-foreground">
               <ArrowLeft size={18} />
             </Link>
             <h1 className="font-bold">Quero Admin</h1>
