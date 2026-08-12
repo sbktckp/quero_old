@@ -49,6 +49,57 @@ export function useInstituteRole() {
   return { info: q.data ?? null, isLoading: q.isLoading };
 }
 
+export interface InstituteContext {
+  institute_id: string;
+  institute_name: string;
+  institute_slug: string;
+  roles: string[];
+  enrollment_status: "pending" | "active" | "rejected" | "removed" | null;
+  join_code: string | null;
+}
+
+/**
+ * Single source of truth for "which institute am I in, and as what".
+ * Covers staff (via user_roles) and students (via institute_enrollments),
+ * so the student join/pending state is available without a second query.
+ */
+export function useInstituteContext() {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: ["institute-context", user?.id],
+    enabled: !!user,
+    queryFn: async (): Promise<InstituteContext | null> => {
+      const { data, error } = await supabase.rpc("my_institute_context");
+      if (error) throw error;
+      return (data as unknown as InstituteContext) ?? null;
+    },
+  });
+}
+
+export type EnrollmentStatus = "pending" | "active" | "rejected" | "removed";
+
+export type StudentRosterRow = {
+  user_id: string;
+  display_name: string | null;
+  email: string | null;
+  status: EnrollmentStatus;
+  enrolled_at: string | null;
+  attempts: number;
+  avg_score: number | null;
+  last_active: string | null;
+};
+
+export type StaffRosterRow = {
+  user_id: string | null;
+  display_name: string | null;
+  email: string | null;
+  role: string;
+  assigned_subject_id: string | null;
+  is_invite: boolean;
+  invite_id: string | null;
+  invite_status: string | null;
+};
+
 export const QUESTION_STATUS_LABEL: Record<string, string> = {
   draft: "Draft",
   submitted: "Under review",
@@ -59,10 +110,13 @@ export const QUESTION_STATUS_LABEL: Record<string, string> = {
 export function statusClasses(status: string) {
   switch (status) {
     case "approved":
+    case "active":
       return "bg-emerald-500/10 text-emerald-600";
     case "submitted":
+    case "pending":
       return "bg-amber-500/10 text-amber-600";
     case "rejected":
+    case "removed":
       return "bg-destructive/10 text-destructive";
     default:
       return "bg-muted text-muted-foreground";
