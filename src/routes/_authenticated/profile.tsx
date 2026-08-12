@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { BottomNav } from "@/components/bottom-nav";
 import { StudyPreferences } from "@/components/study-preferences";
+import { InstituteJoinCard } from "@/components/institute/institute-join-card";
 import { LogOut, Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -76,6 +77,8 @@ function ProfilePage() {
             <div className="text-sm text-muted-foreground truncate">{user?.email}</div>
           </div>
         </div>
+
+        <InstituteJoinCard />
 
         <StudyPreferences prefs={prefs as never} />
 
