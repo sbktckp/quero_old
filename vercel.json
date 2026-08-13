@@ -8,12 +8,6 @@
       "destination": "https://quero.in/:path*",
       "permanent": true
     },
-    {
-      "source": "/:path*",
-      "has": [{ "type": "host", "value": "www.quero.in" }],
-      "destination": "https://quero.in/:path*",
-      "permanent": true
-    },
     { "source": "/home", "destination": "/", "permanent": true },
     { "source": "/index.html", "destination": "/", "permanent": true }
   ]
