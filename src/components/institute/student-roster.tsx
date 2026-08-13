@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { rpc } from "@/lib/supabase-rpc";
 import { statusClasses, type StudentRosterRow } from "@/lib/institute";
 import { Users, Search } from "lucide-react";
 
@@ -13,12 +14,10 @@ export function StudentRoster({
   instituteId,
   defaultSubjectId,
   showPending = false,
-  renderRowAction,
 }: {
   instituteId: string;
   defaultSubjectId?: string | null;
   showPending?: boolean;
-  renderRowAction?: (row: StudentRosterRow) => React.ReactNode;
 }) {
   const [subjectId, setSubjectId] = useState<string>(defaultSubjectId ?? "");
   const [q, setQ] = useState("");
@@ -30,15 +29,15 @@ export function StudentRoster({
         .data ?? [],
   });
 
-  const { data: rows = [], isLoading } = useQuery({
+  const { data: rows = [], isPending } = useQuery({
     queryKey: ["student-roster", instituteId, subjectId],
     queryFn: async () => {
-      const { data, error } = await supabase.rpc("institute_student_roster", {
+      const { data, error } = await rpc<StudentRosterRow[]>("institute_student_roster", {
         _institute_id: instituteId,
         _subject_id: subjectId || null,
       });
-      if (error) throw error;
-      return (data ?? []) as unknown as StudentRosterRow[];
+      if (error) throw new Error(error.message);
+      return data ?? [];
     },
   });
 
@@ -64,7 +63,10 @@ export function StudentRoster({
 
       <div className="mt-3 flex flex-col gap-2 sm:flex-row">
         <div className="relative flex-1">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          <Search
+            size={14}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+          />
           <input
             value={q}
             onChange={(e) => setQ(e.target.value)}
@@ -92,7 +94,7 @@ export function StudentRoster({
         </p>
       )}
 
-      {isLoading ? (
+      {isPending ? (
         <p className="mt-3 text-xs text-muted-foreground">Loading roster…</p>
       ) : visible.length === 0 ? (
         <p className="mt-3 text-xs text-muted-foreground">
@@ -113,7 +115,7 @@ export function StudentRoster({
                 </div>
                 <div className="truncate text-[11px] text-muted-foreground">{s.email}</div>
                 <div className="text-[11px] text-muted-foreground">
-                  {s.attempts} attempt{s.attempts === 1 ? "" : "s"}
+                  {s.attempts} attempt{Number(s.attempts) === 1 ? "" : "s"}
                   {s.avg_score !== null && ` · avg ${s.avg_score}`}
                   {s.last_active && ` · last ${new Date(s.last_active).toLocaleDateString()}`}
                 </div>
@@ -123,7 +125,6 @@ export function StudentRoster({
               >
                 {s.status === "active" ? "Enrolled" : "Pending"}
               </span>
-              {renderRowAction?.(s)}
             </li>
           ))}
         </ul>
