@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { rpc } from "@/lib/supabase-rpc";
 import { useInstituteContext } from "@/lib/institute";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,23 +14,31 @@ import { toast } from "sonner";
  */
 export function InstituteJoinCard() {
   const qc = useQueryClient();
-  const { data: ctx, isLoading } = useInstituteContext();
+  const { data: ctx, isPending } = useInstituteContext();
   const [code, setCode] = useState("");
   const [busy, setBusy] = useState(false);
 
   const isStaff = (ctx?.roles ?? []).some((r) =>
     ["institute_admin", "faculty", "subject_coordinator"].includes(r),
   );
-  if (isLoading || isStaff) return null;
+
+  // Only hide while the first fetch is genuinely in flight, or for staff.
+  // A null context (no institute yet) is the common case and must still render
+  // the join form. Gating on isLoading instead kept the card invisible forever
+  // whenever the query errored and retried.
+  if (isPending || isStaff) return null;
 
   async function join() {
     if (!code.trim()) return toast.error("Enter your institute code");
     setBusy(true);
-    const { data, error } = await supabase.rpc("student_join_by_code", { _code: code.trim() });
+    const { data, error } = await rpc<{
+      status: string;
+      institute_name: string;
+      message: string;
+    }>("student_join_by_code", { _code: code.trim() });
     setBusy(false);
     if (error) return toast.error(error.message);
-    const res = data as unknown as { status: string; institute_name: string; message: string };
-    toast.success(`${res.institute_name}: ${res.message}`);
+    toast.success(`${data?.institute_name}: ${data?.message}`);
     setCode("");
     qc.invalidateQueries({ queryKey: ["institute-context"] });
   }
@@ -42,7 +50,7 @@ export function InstituteJoinCard() {
       )
     )
       return;
-    const { error } = await supabase.rpc("student_leave_institute");
+    const { error } = await rpc("student_leave_institute");
     if (error) return toast.error(error.message);
     toast.success("You have left the institute");
     qc.invalidateQueries({ queryKey: ["institute-context"] });
