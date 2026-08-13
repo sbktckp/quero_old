@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { rpc } from "@/lib/supabase-rpc";
 import { useAuth } from "@/lib/auth";
 
 export type InstituteRoleName = "institute_admin" | "faculty" | "subject_coordinator";
@@ -60,18 +61,23 @@ export interface InstituteContext {
 
 /**
  * Single source of truth for "which institute am I in, and as what".
- * Covers staff (via user_roles) and students (via institute_enrollments),
- * so the student join/pending state is available without a second query.
+ * Covers staff (via user_roles) and students (via institute_enrollments), so a
+ * student's pending/active state is available without a second query.
+ *
+ * Returns null for a user with no institute. That is the normal case, not an
+ * error, so callers must not treat null as "still loading".
  */
 export function useInstituteContext() {
   const { user } = useAuth();
   return useQuery({
     queryKey: ["institute-context", user?.id],
     enabled: !!user,
+    retry: false,
+    staleTime: 30_000,
     queryFn: async (): Promise<InstituteContext | null> => {
-      const { data, error } = await supabase.rpc("my_institute_context");
-      if (error) throw error;
-      return (data as unknown as InstituteContext) ?? null;
+      const { data, error } = await rpc<InstituteContext>("my_institute_context");
+      if (error) throw new Error(error.message);
+      return data ?? null;
     },
   });
 }
@@ -98,6 +104,17 @@ export type StaffRosterRow = {
   is_invite: boolean;
   invite_id: string | null;
   invite_status: string | null;
+};
+
+export type ReviewQueueRow = {
+  id: string;
+  question_text: string;
+  explanation: string | null;
+  difficulty: string | null;
+  created_by: string | null;
+  author_name: string | null;
+  created_at: string;
+  options: { option_text: string; is_correct: boolean; sort_order: number | null }[];
 };
 
 export const QUESTION_STATUS_LABEL: Record<string, string> = {
