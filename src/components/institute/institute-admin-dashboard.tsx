@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
-import type { InstituteRoleInfo, StaffRosterRow, StudentRosterRow } from "@/lib/institute";
+import { rpc } from "@/lib/supabase-rpc";
+import type { InstituteRoleInfo, ReviewQueueRow, StaffRosterRow } from "@/lib/institute";
 import { statusClasses } from "@/lib/institute";
 import { StudentRoster } from "@/components/institute/student-roster";
 import { Button } from "@/components/ui/button";
@@ -66,9 +67,7 @@ function JoinCodeCard({ instituteId }: { instituteId: string }) {
     )
       return;
     setBusy(true);
-    const { error } = await supabase.rpc("institute_rotate_join_code", {
-      _institute_id: instituteId,
-    });
+    const { error } = await rpc("institute_rotate_join_code", { _institute_id: instituteId });
     setBusy(false);
     if (error) return toast.error(error.message);
     toast.success("New join code generated");
@@ -99,13 +98,7 @@ function JoinCodeCard({ instituteId }: { instituteId: string }) {
         >
           <Copy size={15} />
         </Button>
-        <Button
-          size="icon"
-          variant="outline"
-          className="rounded-2xl"
-          disabled={busy}
-          onClick={rotate}
-        >
+        <Button size="icon" variant="outline" className="rounded-2xl" disabled={busy} onClick={rotate}>
           <RefreshCw size={15} />
         </Button>
       </div>
@@ -137,7 +130,7 @@ function PendingApprovals({ instituteId }: { instituteId: string }) {
   });
 
   async function decide(id: string, decision: "active" | "rejected") {
-    const { error } = await supabase.rpc("institute_review_enrollment", {
+    const { error } = await rpc("institute_review_enrollment", {
       _enrollment_id: id,
       _decision: decision,
     });
@@ -159,10 +152,7 @@ function PendingApprovals({ instituteId }: { instituteId: string }) {
       </h2>
       <ul className="mt-3 space-y-2">
         {pending.map((p) => (
-          <li
-            key={p.id}
-            className="flex items-center gap-2 rounded-2xl border border-border bg-card p-3"
-          >
+          <li key={p.id} className="flex items-center gap-2 rounded-2xl border border-border bg-card p-3">
             <div className="min-w-0 flex-1">
               <div className="truncate text-sm font-medium">
                 {p.profiles?.display_name ?? p.profiles?.email ?? "Student"}
@@ -175,12 +165,7 @@ function PendingApprovals({ instituteId }: { instituteId: string }) {
             <Button size="sm" className="rounded-full" onClick={() => decide(p.id, "active")}>
               <Check size={14} /> Approve
             </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              className="rounded-full"
-              onClick={() => decide(p.id, "rejected")}
-            >
+            <Button size="sm" variant="outline" className="rounded-full" onClick={() => decide(p.id, "rejected")}>
               <X size={14} />
             </Button>
           </li>
@@ -201,39 +186,32 @@ function StaffSection({ info }: { info: InstituteRoleInfo }) {
   const { data: staff = [] } = useQuery({
     queryKey: ["institute-staff", info.instituteId],
     queryFn: async () => {
-      const { data, error } = await supabase.rpc("institute_staff_roster", {
+      const { data, error } = await rpc<StaffRosterRow[]>("institute_staff_roster", {
         _institute_id: info.instituteId,
       });
-      if (error) throw error;
-      return (data ?? []) as unknown as StaffRosterRow[];
+      if (error) throw new Error(error.message);
+      return data ?? [];
     },
   });
 
   async function invite() {
     if (!email.trim()) return toast.error("Enter an email");
     setBusy(true);
-    try {
-      const { data, error } = await supabase.rpc("institute_invite_staff", {
-        _institute_id: info.instituteId,
-        _email: email.trim(),
-        _role: role,
-      });
-      if (error) throw error;
-      const res = data as unknown as { status: string; message: string };
-      toast.success(res.message);
-      setEmail("");
-      setAdding(false);
-      qc.invalidateQueries({ queryKey: ["institute-staff"] });
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Could not send invite");
-    } finally {
-      setBusy(false);
-    }
+    const { data, error } = await rpc<{ status: string; message: string }>(
+      "institute_invite_staff",
+      { _institute_id: info.instituteId, _email: email.trim(), _role: role },
+    );
+    setBusy(false);
+    if (error) return toast.error(error.message);
+    toast.success(data?.message ?? "Invite sent");
+    setEmail("");
+    setAdding(false);
+    qc.invalidateQueries({ queryKey: ["institute-staff"] });
   }
 
   async function removeStaff(userId: string) {
     if (!confirm("Remove this staff member? Their questions stay with the institute.")) return;
-    const { error } = await supabase.rpc("institute_remove_staff", {
+    const { error } = await rpc("institute_remove_staff", {
       _institute_id: info.instituteId,
       _user_id: userId,
     });
@@ -243,7 +221,7 @@ function StaffSection({ info }: { info: InstituteRoleInfo }) {
   }
 
   async function revokeInvite(inviteId: string) {
-    const { error } = await supabase.rpc("institute_revoke_invite", { _invite_id: inviteId });
+    const { error } = await rpc("institute_revoke_invite", { _invite_id: inviteId });
     if (error) return toast.error(error.message);
     toast.success("Invite revoked");
     qc.invalidateQueries({ queryKey: ["institute-staff"] });
@@ -253,12 +231,7 @@ function StaffSection({ info }: { info: InstituteRoleInfo }) {
     <div className="rounded-3xl bg-card border border-border p-5 shadow-card">
       <div className="flex items-center justify-between">
         <h2 className="text-sm font-semibold">Faculty &amp; staff</h2>
-        <Button
-          size="sm"
-          variant="outline"
-          className="rounded-full"
-          onClick={() => setAdding((a) => !a)}
-        >
+        <Button size="sm" variant="outline" className="rounded-full" onClick={() => setAdding((a) => !a)}>
           <Plus size={14} /> Invite
         </Button>
       </div>
@@ -322,9 +295,7 @@ function StaffSection({ info }: { info: InstituteRoleInfo }) {
               <Button
                 size="icon"
                 variant="ghost"
-                onClick={() =>
-                  s.is_invite ? revokeInvite(s.invite_id!) : removeStaff(s.user_id!)
-                }
+                onClick={() => (s.is_invite ? revokeInvite(s.invite_id!) : removeStaff(s.user_id!))}
               >
                 <Trash2 size={14} />
               </Button>
@@ -336,41 +307,27 @@ function StaffSection({ info }: { info: InstituteRoleInfo }) {
   );
 }
 
-type PendingQuestion = {
-  id: string;
-  question_text: string;
-  explanation: string | null;
-  difficulty: string | null;
-  created_by: string | null;
-};
-
 function ReviewQueue({ info }: { info: InstituteRoleInfo }) {
   const qc = useQueryClient();
   const [reasons, setReasons] = useState<Record<string, string>>({});
 
+  // Uses institute_review_queue() rather than selecting questions directly:
+  // options.is_correct is column-revoked for authenticated users so students
+  // can't read the answer key, and that function is the authorized exception
+  // that lets a reviewer see which option is correct.
   const { data: pending = [] } = useQuery({
     queryKey: ["institute-review-queue", info.instituteId],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("questions")
-        .select(
-          "id, question_text, explanation, difficulty, created_by, options(option_text, sort_order)",
-        )
-        .eq("institute_id", info.instituteId)
-        .eq("status", "submitted")
-        .order("created_at", { ascending: true });
-      if (error) throw error;
-      return data as unknown as (PendingQuestion & {
-        options: { option_text: string; sort_order: number | null }[];
-      })[];
+      const { data, error } = await rpc<ReviewQueueRow[]>("institute_review_queue", {
+        _institute_id: info.instituteId,
+      });
+      if (error) throw new Error(error.message);
+      return data ?? [];
     },
   });
 
-  // Routed through a SECURITY DEFINER function rather than a direct table
-  // update, so the status transition and the authorization check live together
-  // in the database instead of relying on RLS alone.
   async function review(id: string, decision: "approved" | "rejected") {
-    const { error } = await supabase.rpc("institute_review_question", {
+    const { error } = await rpc("institute_review_question", {
       _question_id: id,
       _decision: decision,
       _reason: reasons[id]?.trim() || null,
@@ -394,14 +351,23 @@ function ReviewQueue({ info }: { info: InstituteRoleInfo }) {
           {pending.map((q) => (
             <li key={q.id} className="rounded-2xl border border-border p-3">
               <p className="text-sm font-medium">{q.question_text}</p>
+              {q.author_name && (
+                <p className="mt-0.5 text-[11px] text-muted-foreground">by {q.author_name}</p>
+              )}
               <ul className="mt-2 space-y-1">
-                {[...(q.options ?? [])]
-                  .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
-                  .map((o, i) => (
-                    <li key={i} className="rounded-xl bg-muted/40 px-3 py-1.5 text-xs">
-                      {String.fromCharCode(65 + i)}. {o.option_text}
-                    </li>
-                  ))}
+                {(q.options ?? []).map((o, i) => (
+                  <li
+                    key={i}
+                    className={`rounded-xl px-3 py-1.5 text-xs ${
+                      o.is_correct
+                        ? "bg-emerald-500/10 font-semibold text-emerald-700"
+                        : "bg-muted/40"
+                    }`}
+                  >
+                    {String.fromCharCode(65 + i)}. {o.option_text}
+                    {o.is_correct && " ✓"}
+                  </li>
+                ))}
               </ul>
               {q.explanation && (
                 <p className="mt-2 text-[11px] text-muted-foreground">{q.explanation}</p>
@@ -413,11 +379,7 @@ function ReviewQueue({ info }: { info: InstituteRoleInfo }) {
                 onChange={(e) => setReasons((r) => ({ ...r, [q.id]: e.target.value }))}
               />
               <div className="mt-2 flex gap-2">
-                <Button
-                  size="sm"
-                  className="flex-1 rounded-2xl"
-                  onClick={() => review(q.id, "approved")}
-                >
+                <Button size="sm" className="flex-1 rounded-2xl" onClick={() => review(q.id, "approved")}>
                   Approve
                 </Button>
                 <Button
