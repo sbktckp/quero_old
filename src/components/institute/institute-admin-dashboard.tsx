@@ -106,26 +106,61 @@ function JoinCodeCard({ instituteId }: { instituteId: string }) {
   );
 }
 
+type PendingRow = {
+  id: string;
+  user_id: string;
+  requested_at: string;
+  profiles: { display_name: string | null; email: string | null } | null;
+};
+
 /** Enrollment requests waiting on a decision. */
 function PendingApprovals({ instituteId }: { instituteId: string }) {
   const qc = useQueryClient();
 
-  const { data: pending = [] } = useQuery({
+  const { data: pending = [], error: pendingError } = useQuery({
     queryKey: ["pending-enrollments", instituteId],
-    queryFn: async () => {
-      const { data, error } = await supabase
+    queryFn: async (): Promise<PendingRow[]> => {
+      /*
+        Two queries instead of one PostgREST embed.
+
+        institute_enrollments.user_id has a foreign key to auth.users, NOT to
+        public.profiles. PostgREST resolves an embed hint by the foreign key on
+        that column, so `profiles:user_id(...)` cannot be resolved here and the
+        whole request fails. React Query then falls back to the [] default and
+        this card returns null, which is why a real pending request rendered as
+        nothing at all rather than as an error.
+
+        Adding a second FK to profiles would leave two relationships on the same
+        column and make the hint ambiguous, so the join is done here instead.
+      */
+      const { data: rows, error } = await supabase
         .from("institute_enrollments")
-        .select("id, user_id, requested_at, profiles:user_id(display_name, email)")
+        .select("id, user_id, requested_at")
         .eq("institute_id", instituteId)
         .eq("status", "pending")
         .order("requested_at");
       if (error) throw error;
-      return (data ?? []) as unknown as {
-        id: string;
-        user_id: string;
-        requested_at: string;
-        profiles: { display_name: string | null; email: string | null } | null;
-      }[];
+      if (!rows?.length) return [];
+
+      const { data: people, error: peopleError } = await supabase
+        .from("profiles")
+        .select("id, display_name, email")
+        .in(
+          "id",
+          rows.map((r) => r.user_id),
+        );
+      if (peopleError) throw peopleError;
+
+      const byId = new Map((people ?? []).map((p) => [p.id, p]));
+      return rows.map((r) => {
+        const p = byId.get(r.user_id);
+        return {
+          id: r.id,
+          user_id: r.user_id,
+          requested_at: r.requested_at,
+          profiles: p ? { display_name: p.display_name, email: p.email } : null,
+        };
+      });
     },
   });
 
@@ -138,6 +173,22 @@ function PendingApprovals({ instituteId }: { instituteId: string }) {
     toast.success(decision === "active" ? "Student approved" : "Request rejected");
     qc.invalidateQueries({ queryKey: ["pending-enrollments"] });
     qc.invalidateQueries({ queryKey: ["student-roster"] });
+  }
+
+  // Surface a failure rather than silently rendering nothing. A hidden card is
+  // indistinguishable from "no requests", which is how the embed bug above went
+  // unnoticed while a student sat waiting for approval.
+  if (pendingError) {
+    return (
+      <div className="rounded-3xl border border-destructive/30 bg-destructive/5 p-5 shadow-card">
+        <h2 className="flex items-center gap-2 text-sm font-semibold text-destructive">
+          <UserPlus size={16} /> Pending requests
+        </h2>
+        <p className="mt-2 text-xs text-muted-foreground">
+          Could not load enrollment requests. {pendingError.message}
+        </p>
+      </div>
+    );
   }
 
   if (pending.length === 0) return null;
