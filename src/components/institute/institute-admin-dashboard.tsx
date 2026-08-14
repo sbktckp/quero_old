@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  Plus, Trash2, ClipboardList, FilePlus2, KeyRound, Copy, RefreshCw, UserPlus, Check, X,
+  Plus, Trash2, ClipboardList, FilePlus2, KeyRound, Copy, RefreshCw, UserPlus, Check, X, Mail,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -109,58 +109,34 @@ function JoinCodeCard({ instituteId }: { instituteId: string }) {
 type PendingRow = {
   id: string;
   user_id: string;
+  display_name: string | null;
+  email: string | null;
   requested_at: string;
-  profiles: { display_name: string | null; email: string | null } | null;
 };
 
 /** Enrollment requests waiting on a decision. */
 function PendingApprovals({ instituteId }: { instituteId: string }) {
   const qc = useQueryClient();
 
+  /*
+    Goes through institute_pending_enrollments() rather than reading the tables
+    directly, for the same reason ReviewQueue uses institute_review_queue().
+
+    public.profiles only grants SELECT on your own row, or on everything if you
+    are a global admin. An institute admin is neither, so reading profiles as
+    the caller returns nothing and every request renders as a nameless
+    "Student". That policy is correct and should stay: the definer function is
+    the authorized exception, exposing only the name and email needed to decide
+    on a request.
+  */
   const { data: pending = [], error: pendingError } = useQuery({
     queryKey: ["pending-enrollments", instituteId],
-    queryFn: async (): Promise<PendingRow[]> => {
-      /*
-        Two queries instead of one PostgREST embed.
-
-        institute_enrollments.user_id has a foreign key to auth.users, NOT to
-        public.profiles. PostgREST resolves an embed hint by the foreign key on
-        that column, so `profiles:user_id(...)` cannot be resolved here and the
-        whole request fails. React Query then falls back to the [] default and
-        this card returns null, which is why a real pending request rendered as
-        nothing at all rather than as an error.
-
-        Adding a second FK to profiles would leave two relationships on the same
-        column and make the hint ambiguous, so the join is done here instead.
-      */
-      const { data: rows, error } = await supabase
-        .from("institute_enrollments")
-        .select("id, user_id, requested_at")
-        .eq("institute_id", instituteId)
-        .eq("status", "pending")
-        .order("requested_at");
-      if (error) throw error;
-      if (!rows?.length) return [];
-
-      const { data: people, error: peopleError } = await supabase
-        .from("profiles")
-        .select("id, display_name, email")
-        .in(
-          "id",
-          rows.map((r) => r.user_id),
-        );
-      if (peopleError) throw peopleError;
-
-      const byId = new Map((people ?? []).map((p) => [p.id, p]));
-      return rows.map((r) => {
-        const p = byId.get(r.user_id);
-        return {
-          id: r.id,
-          user_id: r.user_id,
-          requested_at: r.requested_at,
-          profiles: p ? { display_name: p.display_name, email: p.email } : null,
-        };
+    queryFn: async () => {
+      const { data, error } = await rpc<PendingRow[]>("institute_pending_enrollments", {
+        _institute_id: instituteId,
       });
+      if (error) throw new Error(error.message);
+      return data ?? [];
     },
   });
 
@@ -176,7 +152,7 @@ function PendingApprovals({ instituteId }: { instituteId: string }) {
   }
 
   // Surface a failure rather than silently rendering nothing. A hidden card is
-  // indistinguishable from "no requests", which is how the embed bug above went
+  // indistinguishable from "no requests", which is how an earlier bug here went
   // unnoticed while a student sat waiting for approval.
   if (pendingError) {
     return (
@@ -203,22 +179,41 @@ function PendingApprovals({ instituteId }: { instituteId: string }) {
       </h2>
       <ul className="mt-3 space-y-2">
         {pending.map((p) => (
-          <li key={p.id} className="flex items-center gap-2 rounded-2xl border border-border bg-card p-3">
-            <div className="min-w-0 flex-1">
-              <div className="truncate text-sm font-medium">
-                {p.profiles?.display_name ?? p.profiles?.email ?? "Student"}
+          <li key={p.id} className="rounded-2xl border border-border bg-card p-3">
+            <div className="min-w-0">
+              <div className="truncate text-sm font-semibold">
+                {p.display_name ?? p.email ?? "Student"}
               </div>
-              <div className="truncate text-[11px] text-muted-foreground">{p.profiles?.email}</div>
-              <div className="text-[11px] text-muted-foreground">
-                Asked {new Date(p.requested_at).toLocaleDateString()}
+              {p.email && (
+                <div className="mt-0.5 flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                  <Mail size={11} className="shrink-0" />
+                  <span className="truncate">{p.email}</span>
+                </div>
+              )}
+              <div className="mt-0.5 text-[11px] text-muted-foreground">
+                Requested{" "}
+                {new Date(p.requested_at).toLocaleString(undefined, {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                  hour: "numeric",
+                  minute: "2-digit",
+                })}
               </div>
             </div>
-            <Button size="sm" className="rounded-full" onClick={() => decide(p.id, "active")}>
-              <Check size={14} /> Approve
-            </Button>
-            <Button size="sm" variant="outline" className="rounded-full" onClick={() => decide(p.id, "rejected")}>
-              <X size={14} />
-            </Button>
+            <div className="mt-3 flex gap-2">
+              <Button size="sm" className="flex-1 rounded-full" onClick={() => decide(p.id, "active")}>
+                <Check size={14} /> Approve
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                className="flex-1 rounded-full"
+                onClick={() => decide(p.id, "rejected")}
+              >
+                <X size={14} /> Reject
+              </Button>
+            </div>
           </li>
         ))}
       </ul>
