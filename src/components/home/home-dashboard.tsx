@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { useUserGoal } from "@/lib/user-goal";
 import { BottomNav } from "@/components/bottom-nav";
+import { AssignedTests } from "@/components/home/assigned-tests";
 import {
   Search, ChevronRight, Trophy, Flame, BookOpen, FileText, Calendar, HelpCircle, Users,
   GraduationCap,
@@ -89,6 +90,10 @@ export function HomeDashboard() {
           <p className="text-sm text-muted-foreground">Hi {profile?.display_name || "there"} 👋</p>
           <h1 className="text-xl font-bold">Let's ace NEET today</h1>
         </div>
+
+        {/* Tests the student's institute has published. Renders nothing when
+            they are not enrolled anywhere. */}
+        <AssignedTests />
 
         {/* Daily PYQ Challenge */}
         <motion.div initial={{ y: 8, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
