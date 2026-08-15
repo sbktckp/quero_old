@@ -5,6 +5,7 @@ import { useInstituteRole } from "@/lib/institute";
 import { FacultyDashboard } from "@/components/institute/faculty-dashboard";
 import { InstituteAdminDashboard } from "@/components/institute/institute-admin-dashboard";
 import { StudentRoster } from "@/components/institute/student-roster";
+import { TestPipeline } from "@/components/institute/test-pipeline";
 import { Building2, LogOut, User } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/institute-workspace")({
@@ -76,6 +77,9 @@ function InstituteWorkspacePage() {
           ) : (
             <div className="space-y-5">
               <FacultyDashboard info={info} />
+              {/* Faculty fill the sections they were assigned but cannot create,
+                  schedule or publish a test, hence canManage={false}. */}
+              <TestPipeline instituteId={info.instituteId} canManage={false} />
               {/* Faculty see every student in their institute; the filter inside
                   narrows attempt stats by subject rather than hiding people. */}
               <StudentRoster
