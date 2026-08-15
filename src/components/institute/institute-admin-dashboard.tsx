@@ -1,16 +1,17 @@
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { rpc } from "@/lib/supabase-rpc";
 import type { InstituteRoleInfo, ReviewQueueRow, StaffRosterRow } from "@/lib/institute";
 import { statusClasses } from "@/lib/institute";
 import { StudentRoster } from "@/components/institute/student-roster";
+import { TestPipeline } from "@/components/institute/test-pipeline";
+import { QuestionImport } from "@/components/institute/question-import";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  Plus, Trash2, ClipboardList, FilePlus2, KeyRound, Copy, RefreshCw, UserPlus, Check, X, Mail,
+  Plus, Trash2, ClipboardList, KeyRound, Copy, RefreshCw, UserPlus, Check, X, Mail,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -22,17 +23,13 @@ export function InstituteAdminDashboard({ info }: { info: InstituteRoleInfo }) {
           {info.instituteName ?? "Your institute"}
         </h1>
         <p className="text-xs text-muted-foreground mt-1">Institute admin</p>
-        <Link
-          to="/tests/new"
-          search={{ type: "custom" as const }}
-          className="mt-4 inline-flex items-center justify-center gap-2 rounded-2xl gradient-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-card"
-        >
-          <FilePlus2 size={16} /> Create institute test
-        </Link>
       </div>
 
       <JoinCodeCard instituteId={info.instituteId} />
       <PendingApprovals instituteId={info.instituteId} />
+      {/* Build a test out of the approved bank, then publish it to students. */}
+      <TestPipeline instituteId={info.instituteId} canManage />
+      <QuestionImport instituteId={info.instituteId} />
       <StudentRoster instituteId={info.instituteId} />
       <StaffSection info={info} />
       <ReviewQueue info={info} />
