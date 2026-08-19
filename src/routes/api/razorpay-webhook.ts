@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-// Public webhook endpoint. `/api/public/*` bypasses Lovable's published-site auth.
-// Security lives in this handler: verify HMAC over the RAW body before any DB write.
+// Public webhook endpoint — reachable with no session/auth cookie.
+// Security lives entirely in this handler: verify HMAC over the RAW body before any DB write.
 export const Route = createFileRoute("/api/razorpay-webhook")({
   server: {
     handlers: {
