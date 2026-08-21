@@ -12,12 +12,14 @@ export const Route = createFileRoute("/_authenticated/pyq")({
   component: PyqLibrary,
 });
 
+const UG_SUBJECT_SLUGS = new Set(["physics", "chemistry", "botany", "zoology"]);
+
 function PyqLibrary() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [year, setYear] = useState<number | null>(null);
   const [subjectId, setSubjectId] = useState<string | null>(null);
-  const [exam, setExam] = useState<string>("NEET-UG");
+  const exam = "NEET-UG";
   const [starting, setStarting] = useState(false);
 
   const { data: subjects = [] } = useQuery({
@@ -25,10 +27,12 @@ function PyqLibrary() {
     queryFn: async () => (await supabase.from("subjects").select("*").order("sort_order")).data ?? [],
   });
 
+  const ugSubjects = subjects.filter((s) => UG_SUBJECT_SLUGS.has(s.slug));
+
   const { data: years = [] } = useQuery({
-    queryKey: ["pyq-years"],
+    queryKey: ["pyq-years", exam],
     queryFn: async () => {
-      const { data } = await supabase.from("questions").select("pyq_year").eq("is_pyq", true).not("pyq_year", "is", null);
+      const { data } = await supabase.from("questions").select("pyq_year").eq("is_pyq", true).eq("pyq_exam", exam).not("pyq_year", "is", null);
       const set = new Set<number>();
       data?.forEach((r) => r.pyq_year != null && set.add(r.pyq_year));
       return Array.from(set).sort((a, b) => b - a);
@@ -82,16 +86,6 @@ function PyqLibrary() {
       </header>
 
       <main className="mx-auto max-w-lg px-5 py-4 space-y-4">
-        {/* Exam filter */}
-        <div className="flex gap-2">
-          {["NEET-UG", "NEET-PG"].map((e) => (
-            <button key={e} onClick={() => setExam(e)}
-              className={`rounded-full px-4 py-1.5 text-xs font-semibold border ${exam === e ? "gradient-primary text-primary-foreground border-transparent" : "bg-card border-border"}`}>
-              {e}
-            </button>
-          ))}
-        </div>
-
         {/* Year chips */}
         <div>
           <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Year</div>
@@ -106,7 +100,7 @@ function PyqLibrary() {
           <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Subject</div>
           <div className="flex gap-2 overflow-x-auto pb-1">
             <Chip active={subjectId === null} onClick={() => setSubjectId(null)}>All</Chip>
-            {subjects.map((s) => <Chip key={s.id} active={subjectId === s.id} onClick={() => setSubjectId(s.id)}>{s.name}</Chip>)}
+            {ugSubjects.map((s) => <Chip key={s.id} active={subjectId === s.id} onClick={() => setSubjectId(s.id)}>{s.name}</Chip>)}
           </div>
         </div>
 
