@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { rpc } from "@/lib/supabase-rpc";
 import { useAuth } from "@/lib/auth";
+import { supabase } from "@/lib/supabase/client";
+import { rpc } from "@/lib/supabase/rpc";
 
 export type InstituteRoleName = "institute_admin" | "faculty" | "subject_coordinator";
 
@@ -14,10 +14,7 @@ export interface InstituteRoleInfo {
 
 const PRIORITY: InstituteRoleName[] = ["institute_admin", "faculty", "subject_coordinator"];
 
-/**
- * The current user's institute-scoped role (highest privilege first).
- * Returns null when the user has no institute role.
- */
+/** The current user's institute-scoped role (highest privilege first). */
 export function useInstituteRole() {
   const { user } = useAuth();
   const q = useQuery({
@@ -37,7 +34,7 @@ export function useInstituteRole() {
           PRIORITY.indexOf(a.role as InstituteRoleName) -
           PRIORITY.indexOf(b.role as InstituteRoleName),
       );
-      const top = rows[0];
+      const top = rows[0]!;
       return {
         role: top.role as InstituteRoleName,
         instituteId: top.institute_id as string,
@@ -46,7 +43,6 @@ export function useInstituteRole() {
       };
     },
   });
-
   return { info: q.data ?? null, isLoading: q.isLoading };
 }
 
@@ -59,14 +55,7 @@ export interface InstituteContext {
   join_code: string | null;
 }
 
-/**
- * Single source of truth for "which institute am I in, and as what".
- * Covers staff (via user_roles) and students (via institute_enrollments), so a
- * student's pending/active state is available without a second query.
- *
- * Returns null for a user with no institute. That is the normal case, not an
- * error, so callers must not treat null as "still loading".
- */
+/** Single source of truth for "which institute am I in, and as what". */
 export function useInstituteContext() {
   const { user } = useAuth();
   return useQuery({

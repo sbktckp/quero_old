@@ -71,6 +71,36 @@ integration — not mentioned in the original project knowledge doc. Must be
 identified and ported carefully; payment flow regressions are unacceptable-risk
 for a demo, more so for production.
 
+**Server-function auth architecture** (`src/integrations/supabase/`) — this is
+the single biggest structural gap in the migration, bigger than routing:
+- `client.ts` / `client.server.ts`: browser and service-role Supabase clients.
+  Both share a hand-rolled `fetch` wrapper that strips a stale `Authorization`
+  header for Supabase's newer opaque API-key format — a real fix, not
+  boilerplate, and must be preserved exactly on both sides.
+- `client.server.ts` carries a service-role key that bypasses RLS entirely.
+  Its own comment states the safety property explicitly: "top-level import is
+  safe only in other `.server.ts` modules — route files and `*.functions.ts`
+  ship to the client bundle." That guarantee comes from TanStack Start's
+  `.server.ts` filename convention, which Next.js does not have. The Next port
+  MUST use `import 'server-only'` (Next's actual mechanism for this) in the
+  equivalent module, and the build output should be checked to confirm the
+  service-role key never reaches a client chunk — this is a silent, high-
+  severity leak if missed, not a build-time error.
+- `auth-attacher.ts` (client middleware) + `auth-middleware.ts` (server
+  middleware) implement TanStack Start's server-function RPC pattern: every
+  server-function call has the Supabase access token attached as a Bearer
+  header client-side, then verified server-side via `getClaims()` (JWT
+  structural checks, claims validation) before an RLS-scoped client is built
+  per request. This is a `createMiddleware({ type: 'function' })` pattern with
+  no 1:1 Next.js equivalent — Next Server Actions/Route Handlers don't have
+  paired client/server middleware in this shape. The port replaces this with a
+  single shared `requireAuth()` server helper (reading the session from
+  Supabase's cookie-based SSR session, Next's idiomatic approach, rather than
+  manually attaching a Bearer token) called explicitly at the top of every
+  Server Action and Route Handler that needs it. This is new code, not a
+  translation, and needs the same JWT/claims verification rigor as the
+  original.
+
 **Root layout** (`src/routes/__root.tsx`): sets up `QueryClientProvider`,
 `AuthProvider`, global meta/SEO tags, a global `Footer`, `Toaster`. Straightforward
 port to Next's root `app/layout.tsx`.
@@ -96,10 +126,12 @@ demo.
 1. **Scaffold** — new Next.js 15 (App Router) project in a separate branch
    (`feat/nextjs-migration`), not touching `main`. TypeScript, Tailwind v4,
    same design tokens copied from `src/styles.css`.
-2. **Foundations** — Supabase client init (browser + server client split, since
-   Next distinguishes these more strictly than TanStack Start does), auth
-   context/provider, RPC wrapper (copy as-is), middleware-based route
-   protection replacing `_authenticated/route.tsx`.
+2. **Foundations** — Supabase browser + service-role clients (port the
+   fetch-header fix exactly; enforce `server-only` on the service-role
+   module), a new `requireAuth()` server helper replacing the
+   attacher/middleware pair (see architecture note above — this is written
+   fresh, not translated), auth context/provider, RPC wrapper (copy as-is),
+   Next middleware replacing `_authenticated/route.tsx` for route protection.
 3. **Auth route** (`/auth`) — needed before anything else is testable end-to-end.
 4. **The three dashboards** (the actual ask) — student, institute-admin,
    faculty. This is also where the visual revamp happens (Section 3).
@@ -151,6 +183,17 @@ optional:
 - `quero.in` canonical domain / env vars carry over to whatever new Vercel
   project config Next.js requires (Vercel project settings likely need
   updating — Next has different build output than Vite/Nitro).
+
+## 4a. Code density instruction
+
+The person has asked for maximally lean code: no unused lines, compress where
+possible. Applied as follows — tight, idiomatic, no dead code or unnecessary
+abstraction everywhere; but the auth/RPC/Razorpay/RLS-adjacent modules stay
+explicit and named rather than golfed, since that is exactly the surface
+category the project's past incidents came from (a one-line detached-`this`
+RPC call, a filename-convention-based security guarantee). Density is a
+readability/maintenance choice for UI and utility code; it is not applied in a
+way that trades away verifiability in security-sensitive paths.
 
 ## 5. Open questions for Shubham/Smit before execution
 

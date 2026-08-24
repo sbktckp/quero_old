@@ -1,8 +1,10 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+"use client";
+
 import type { Session, User } from "@supabase/supabase-js";
-import { supabase } from "@/integrations/supabase/client";
-import { useRouter } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { supabase } from "./supabase/client";
 
 interface AuthContextValue {
   session: Session | null;
@@ -26,7 +28,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { data: sub } = supabase.auth.onAuthStateChange((event, s) => {
       setSession(s);
       if (event === "SIGNED_IN" || event === "SIGNED_OUT" || event === "USER_UPDATED") {
-        router.invalidate();
+        router.refresh();
         if (event !== "SIGNED_OUT") queryClient.invalidateQueries();
       }
     });
